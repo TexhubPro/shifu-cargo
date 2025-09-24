@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('lang')->nullable();
             $table->foreignId('warehouse_id')->nullable();
             $table->string('step')->nullable();
+            $table->string('sex')->nullable();
             $table->string('sub_step')->nullable();
             $table->enum('role', ['admin', 'deliver', 'customer', 'manager', 'cashier'])->default('customer');
             $table->boolean('status')->default(true);
