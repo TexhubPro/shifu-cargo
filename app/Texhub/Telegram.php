@@ -4,6 +4,8 @@ namespace App\Texhub;
 
 use App\Models\Chat;
 use App\Models\User;
+use App\Models\Setting;
+use App\Models\Trackcode;
 use Illuminate\Http\Request;
 use DefStudio\Telegraph\Telegraph;
 use Illuminate\Support\Stringable;
@@ -108,60 +110,6 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     }
     public function handleChatMessage(Stringable $text): void
     {
-        $chat_id = $this->chat->chat_id;
-        $customer = User::where('chat_id', $chat_id)->first();
-        if ($text == '❌ Закрыт чат' || $text == '❌ Пушидани чат') {
-            $customer->step = null;
-            $customer->save();
-            $chat_sec = Chat::where('chat_id', $customer->id)->first();
-            if ($chat_sec) {
-                $chat_sec->status = 'closed';
-                $chat_sec->save();
-            }
-
-            if ($this->chat->lang == 'ru') {
-                $this->ru_keys();
-            } else {
-                $this->tj_keys();
-            }
-            return;
-        }
-
-        if ($customer && $customer->step == 'delivery_phone') {
-            // Изменено на поиск Chat по chat_id
-            $delivery = new OrderDelivery();
-            $delivery->code = $customer->code;
-            $delivery->phone = str($text);
-            $delivery->address = 'null';
-            $delivery->save();
-            $customer->step = 'delivery_address';
-            $customer->save();
-            $this->chat->message('Сурогаи худро дохил кунед (ба тарзи фахмо бо ориентир)')->send();
-            return;
-        }
-        if ($customer && $customer->step == 'delivery_address') {
-            // Изменено на поиск Chat по chat_id
-            $delivery = OrderDelivery::where('code', $customer->code)->orderBy('created_at', 'desc')->first();
-            $delivery->address = str($text);
-            $delivery->save();
-            $customer->step = null;
-            $customer->save();
-            $this->chat->message("Дархости шумо тахти раками # " . $delivery->id . " кабул шуд! Занги курерро интизор шавед борхоятонро бурда мерасонанд!")->send();
-            return;
-        }
-        if ($customer && $customer->step == 'chat') {
-            // Изменено на поиск Chat по chat_id
-            $chat = Chat::where('chat_id', $customer->id)->first();
-            if ($chat) {
-                Message::create([
-                    'chat_id' => $chat->id,
-                    'user_id' => $chat->id,
-                    'message' => $text,
-                    'status' => 'pending',
-                ]);
-            }
-            return;
-        }
         if ($text == '📍 Сурогаи склади Душанбе' || $text == '📍 Адрес склада Душанбе') {
             $this->chat->deleteMessage($this->messageId)->send();
             $this->chat->location(38.56834699185991, 68.73575168818122)->send();
@@ -297,10 +245,6 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                     $this->chat->message("Вы успешно подписались с номером <b>" . $this->message->contact()->phoneNumber() . "</b> Ваш специальный код <b>($newCode)</b>. Нажимайте на кнопку <b>✅ Как заполнить поля адреса</b> и получите подробную информацию о как заполнит адреса!")->send();
                 }
             }
-            return;
-        }
-        if ($this->message->video()) {
-            $this->chat->message($this->message->video()->id())->send();
             return;
         }
         if ($text == 'admin shuhrat') {
