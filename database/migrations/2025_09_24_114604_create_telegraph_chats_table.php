@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration {
+return new class () extends Migration {
     public function up(): void
     {
         Schema::create('telegraph_chats', function (Blueprint $table) {
@@ -12,6 +12,7 @@ return new class() extends Migration {
             $table->string('chat_id');
             $table->string('name')->nullable();
             $table->string('lang')->nullable();
+            $table->foreignId('user_id')->nullable();
 
             $table->foreignId('telegraph_bot_id')->constrained('telegraph_bots')->cascadeOnDelete();
             $table->timestamps();

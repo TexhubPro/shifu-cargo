@@ -2,6 +2,7 @@
 
 namespace App\Texhub;
 
+use App\Models\Application;
 use App\Models\Chat;
 use App\Models\User;
 use App\Models\Setting;
@@ -70,7 +71,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             ->replyKeyboard(ReplyKeyboard::make()
                 ->row([
                     ReplyButton::make('🔢 Тафтиши трек-код'),
-                    ReplyButton::make('➕ Обуна шудан')->requestContact(),
+                    ReplyButton::make('➕ Обуна шудан'),
                 ])
                 ->row([
                     ReplyButton::make('✅ Сурогаи склади Иву'),
@@ -92,7 +93,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             ->replyKeyboard(ReplyKeyboard::make()
                 ->row([
                     ReplyButton::make('🔢 Проверить трек-код'),
-                    ReplyButton::make('➕ Подписаться')->requestContact(),
+                    ReplyButton::make('➕ Подписаться'),
                 ])
                 ->row([
                     ReplyButton::make('✅ Адрес склада Иву'),
@@ -108,41 +109,178 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 ])
                 ->resize())->send();
     }
+    public function edit_profile($id): void
+    {
+        $user = User::find($id);
+        $user->step = 'name';
+        $user->save();
+        if ($this->chat->lang == 'ru') {
+            $this->chat->message("✍️ Напишите своё имя, например: <b>Абдулло</b>")->send();
+        } else {
+            $this->chat->message("✍️ Номи худро нависед, масалан: <b>Абдулло</b>")->send();
+        }
+    }
     public function handleChatMessage(Stringable $text): void
     {
-        if ($text == '📍 Сурогаи склади Душанбе' || $text == '📍 Адрес склада Душанбе') {
-            $this->chat->deleteMessage($this->messageId)->send();
-            $this->chat->location(38.56834699185991, 68.73575168818122)->send();
-            $this->chat->message("ш. Душанбе, Колсовой Каленин")->send();
+        $this->chat->deleteMessage($this->messageId)->send();
+
+        $user = User::where('chat_id', $this->message->from()->id())->first();
+        if ($text == '➕ Обуна шудан' || $text == '➕ Подписаться') {
+            if (!$user) {
+                $user = new User();
+                $user->chat_id = $this->message->from()->id();
+                $user->step = 'name';
+                $user->save();
+                if ($this->chat->lang == 'ru') {
+                    $this->chat->message("✍️ Напишите своё имя, например: <b>Абдулло</b>")->send();
+                } else {
+                    $this->chat->message("✍️ Номи худро нависед, масалан: <b>Абдулло</b>")->send();
+                }
+            } else {
+                if ($this->chat->lang == 'ru') {
+                    $this->chat->message("👤 Имя: " . ($user->name ?? '—') . "\n📞 Номер телефона: " . ($user->phone ?? '—') . "\n⚧ Пол: " . ($user->sex ?? '—'))->send();
+                    $this->chat->message("✅ Вы уже подписаны. Если хотите изменить информацию, нажмите на кнопку «Изменить» ниже ⬇️")
+                        ->keyboard(
+                            Keyboard::make()
+                                ->row([
+                                    Button::make('Изменить')->action('edit_profile')->param('id', $user->id),
+                                ])
+                        )->send();
+                } else {
+                    $this->chat->message("👤 Ном: " . ($user->name ?? '—') . "\n📞 Рақами телефон: " . ($user->phone ?? '—') . "\n⚧ Ҷинс: " . ($user->sex ?? '—'))->send();
+                    $this->chat->message("✅ Шумо аллакай обуна шудаед. Барои тағйир додани маълумот, тугмаи «Тағйир додан»-ро дар поён пахш кунед ⬇️")
+                        ->keyboard(
+                            Keyboard::make()
+                                ->row([
+                                    Button::make('Тағйир додан')->action('edit_profile')->param('id', $user->id),
+                                ])
+                        )->send();
+                }
+            }
+
             return;
         }
-        if ($text == '👤 Тамос бо мушовир' || $text == '👤 Связаться с оператором') {
-            $this->chat->deleteMessage($this->messageId)->send();
+        if (!$user) {
             if ($this->chat->lang == 'ru') {
-                $this->chat->photo(public_path('assets/call_ru.jpg'))->message("<b>Режим работы</b> с Душанбе по воскресенье с <b>08:00 до 18:00</b>.\n\nВ рабочие часы свяжитесь с нами — мы обязательно ответим на ваши вопросы!\n\nСвяжитесь с нами через один из мессенджеров ниже или подключитесь к консультанту прямо в боте! ⤵️")
+                $this->chat->message("🤖 Для использования нашего бота сначала пройдите регистрацию. После этого вам будут доступны все функции. ✅")->send();
+            } else {
+                $this->chat->message("🤖 Барои истифодаи боти мо аввал сабти ном шавед. Пас аз ин ҳамаи функсияҳои дастрасро истифода бурда метавонед. ✅")->send();
+            }
+
+            return;
+        }
+        if ($user) {
+            if ($user->step == 'name') {
+                $code = User::orderBy('code', 'desc')->first();
+
+                $user->name = $text;
+                $user->code = str_pad($code ? $code->code + 1 : 1, 4, '0', STR_PAD_LEFT);
+                $user->step = "phone";
+                $user->save();
+
+                if ($this->chat->lang == 'ru') {
+                    $this->chat->message("✍️ Напишите свой номер телефона, например: <b>005335051</b>")->send();
+                } else {
+                    $this->chat->message("✍️ Рақами телефони худро нависед, масалан: <b>005335051</b>")->send();
+                }
+                return;
+            }
+            if ($user->step == 'phone') {
+                $user->phone = $text;
+                $user->step = "sex";
+                $user->save();
+                if ($this->chat->lang == 'ru') {
+                    $this->chat->message("✍️ Укажите свой пол, например: <b>Мужской</b> или <b>Женский</b>")->send();
+                } else {
+                    $this->chat->message("✍️ Ҷинси худро нишон диҳед, масалан: <b>Мард</b> ё <b>Зан</b>")->send();
+                }
+                return;
+            }
+            if ($user->step == 'sex') {
+                $user->sex = $text;
+                $user->step = null;
+                $user->save();
+
+                if ($this->chat->lang == 'ru') {
+                    $this->chat->message("✅ Вы успешно зарегистрированы! Теперь можете заказывать из Китая. Для получения адреса нашего склада в городе Иву нажмите на кнопку в меню ниже: «Адрес склада Иву» ⬇️")->send();
+                } else {
+                    $this->chat->message("✅ Шумо бо муваффақият сабти ном шудед! Ҳоло метавонед аз Чин фармоиш диҳед. Барои гирифтани суроғаи анбори мо дар шаҳри Иву тугмаи «Суроғаи анбори Иву»-ро дар менюи поён пахш кунед ⬇️")->send();
+                }
+                return;
+            }
+            if ($user->step == 'apl_phone') {
+                $application = Application::where('user_id', $user->id)->orderBy('created_at', 'desc')->first();
+                $application->phone = $text;
+                $application->save();
+                $user->step = "apl_address";
+                $user->save();
+                if ($this->chat->lang == 'ru') {
+                    $this->chat->message("📍 Отправьте свой адрес как можно подробнее, с указанием ориентиров (улица, дом, район, рядом с чем находится). Это поможет нам доставить заказ быстрее ✅")->send();
+                } else {
+                    $this->chat->message("📍 Суроғаи худро бо нишон додани тамоми ҷузъиёт ва нишонаҳои атроф (кӯча, хона, маҳалла, дар назди чӣ ҷойгир аст) фиристед. Ин ба мо кӯмак мекунад, ки фармоиши шуморо зудтар расонем ✅")->send();
+                }
+                return;
+            }
+            if ($user->step == 'apl_address') {
+                $application = Application::where('user_id', $user->id)->orderBy('created_at', 'desc')->first();
+                $application->address = $text;
+                $application->save();
+                $user->step = null;
+                $user->save();
+                if ($this->chat->lang == 'ru') {
+                    $this->chat->message("✅ Ваш заказ получен! Мы проверим, и если он уже есть на нашем складе в Душанбе, мы обязательно доставим его вам. 📦")->send();
+                } else {
+                    $this->chat->message("✅ Фармоиши шумо қабул шуд! Мо месанҷем ва агар он дар анбори мо дар шаҳри Душанбе бошад, ҳатман онро ба шумо мерасонем. 📦")->send();
+                }
+                return;
+            }
+        }
+        if ($text == '🚚 Дархости доставка' || $text == '🚚 Заказать доставку') {
+            $application = new Application();
+            $application->user_id = $user->id;
+            $application->save();
+            $user->step = "apl_phone";
+            $user->save();
+            if ($this->chat->lang == 'ru') {
+                $this->chat->message("✍️ Напишите свой номер телефона, например: <b>005335051</b>")->send();
+            } else {
+                $this->chat->message("✍️ Рақами телефони худро нависед, масалан: <b>005335051</b>")->send();
+            }
+            return;
+        }
+
+
+
+        if ($text == '📍 Сурогаи склади Душанбе' || $text == '📍 Адрес склада Душанбе') {
+            // $this->chat->location(38.56834699185991, 68.73575168818122)->send();
+            $dushanbe = Setting::where('name', 'address_dushanbe')->first();
+            $this->chat->message("$dushanbe->content")->send();
+            return;
+        }
+        if ($text == '👤 Тамос бо оператор' || $text == '👤 Связаться с оператором') {
+            if ($this->chat->lang == 'ru') {
+                $this->chat->message("<b>Режим работы</b> с Душанбе по воскресенье с <b>08:00 до 18:00</b>.\n\nВ рабочие часы свяжитесь с нами — мы обязательно ответим на ваши вопросы!\n\nСвяжитесь с нами через один из мессенджеров ниже или подключитесь к консультанту прямо в боте! ⤵️")
                     ->keyboard(
                         Keyboard::make()
                             ->row([
-                                Button::make('Telegram')->url('https://t.me/+992945100200'),
-                                Button::make('WeChat')->url('https://u.wechat.com/kHHFGH2D-GqDbFIcWiuEPX4'),
+                                Button::make('Telegram')->url('https://t.me/+992005335051'),
                             ])
                             ->row([
-                                Button::make('Телеграм канал')->url('https://t.me/TJ0007_CARGO'),
+                                Button::make('Телеграм канал')->url('https://t.me/cargoshifu'),
                             ])
                             ->row([
                                 Button::make('Тамос бо мушовир')->action('open_chat'),
                             ])
                     )->send();
             } else {
-                $this->chat->photo(public_path('assets/call_tj.jpg'))->message("<b>Реҷаи корӣ</b> аз Душанбе то Якшанбе соатҳои <b>08:00 то 18:00</b>.\n\nДар вақти корӣ бо мо тамос гиред ҳатман ба саволҳоятон ҷавоб медиҳем!\n\nБо мо тарики яке аз паёмрасонҳои зер тамос гиред, ё дар худи бот бо мушовир пайваст шавед! ⤵️")
+                $this->chat->message("<b>Реҷаи корӣ</b> аз Душанбе то Якшанбе соатҳои <b>08:00 то 18:00</b>.\n\nДар вақти корӣ бо мо тамос гиред ҳатман ба саволҳоятон ҷавоб медиҳем!\n\nБо мо тарики яке аз паёмрасонҳои зер тамос гиред, ё дар худи бот бо мушовир пайваст шавед! ⤵️")
                     ->keyboard(
                         Keyboard::make()
                             ->row([
-                                Button::make('Telegram')->url('https://t.me/+992945100200'),
-                                Button::make('WeChat')->url('https://u.wechat.com/kHHFGH2D-GqDbFIcWiuEPX4'),
+                                Button::make('Telegram')->url('https://t.me/+992005335051'),
                             ])
                             ->row([
-                                Button::make('Телеграм канал')->url('https://t.me/TJ0007_CARGO'),
+                                Button::make('Телеграм канал')->url('https://t.me/cargoshifu'),
                             ])
                             ->row([
                                 Button::make('Тамос бо мушовир')->action('open_chat'),
@@ -153,37 +291,35 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             return;
         }
         if ($text == '💲 Нархнома' || $text == '💲 Прайс лист') {
-            $this->chat->deleteMessage($this->messageId)->send();
-            $price_kg = Setting::where('name', 'price_kg')->first();
-            $price_cube = Setting::where('name', 'price_cube')->first();
+            $price_kg = Setting::where('name', 'kg_price')->first();
+            $price_cube = Setting::where('name', 'cube_price')->first();
             if ($this->chat->lang == 'ru') {
-                $this->chat->photo(public_path('assets/prise_list_ru.jpg'))->message("💡 Цена за 1 килограмм груза: $price_kg->value \n📦 Цена за 1 кубический метр груза: $price_cube->value")->send();
+                $this->chat->message("💲 Цена за 1 килограмм груза: $price_kg->content \n📦 Цена за 1 кубический метр груза: $price_cube->content")->send();
             } else {
-                $this->chat->photo(public_path('assets/prise_list_tj.jpg'))->message("💡 Нархнома барои як килограм: $price_kg->value \n📦 Нархнома барои як метри куби: $price_cube->value")->send();
+                $this->chat->message("💲 Нархнома барои як килограм: $price_kg->content \n📦 Нархнома барои як метри куби: $price_cube->content")->send();
             }
             return;
         }
         if ($text == '❌ Молҳои манъшуда' || $text == '❌ Запрещенные товары') {
-            $this->chat->deleteMessage($this->messageId)->send();
             $dangers = Setting::where('name', 'danger_products')->first();
             if ($this->chat->lang == 'ru') {
-                $this->chat->photo(public_path('assets/danger_ru.jpg'))->message($dangers->value)->send();
+                $this->chat->message($dangers->content)->send();
             } else {
-                $this->chat->photo(public_path('assets/danger_tj.jpg'))->message($dangers->value)->send();
+                $this->chat->message($dangers->content)->send();
             }
             return;
         }
         if ($text == '🔢 Тафтиши трек-код' || $text == '🔢 Проверить трек-код') {
             $this->chat->deleteMessage($this->messageId)->send();
             if ($this->chat->lang == 'ru') {
-                $this->chat->photo(public_path('assets/track_ru.jpg'))->message("Отправьте трек-код вашего груза для проверки!")
+                $this->chat->message("Отправьте трек-код вашего груза для проверки!")
                     ->replyKeyboard(ReplyKeyboard::make()
                         ->row([
                             ReplyButton::make('🔄 Основной меню'),
                         ])
                         ->resize())->send();
             } else {
-                $this->chat->photo(public_path('assets/track_tj.jpg'))->message("📦🔍 Трек-коди бори худро барои тафтиш равон кунед!")
+                $this->chat->message("📦🔍 Трек-коди бори худро барои тафтиш равон кунед!")
                     ->replyKeyboard(ReplyKeyboard::make()
                         ->row([
                             ReplyButton::make('🔄 Менюи асосӣ'),
@@ -193,7 +329,6 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             return;
         }
         if ($text == '🔄 Менюи асосӣ' || $text == '🔄 Основной меню') {
-            $this->chat->deleteMessage($this->messageId)->send();
             if ($this->chat->lang == 'ru') {
                 $this->ru_keys();
             } else {
@@ -202,18 +337,36 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             return;
         }
         if ($text == '✅ Сурогаи склади Иву' || $text == '✅ Адрес склада Иву') {
-            $this->chat->deleteMessage($this->messageId)->send();
             $location = Setting::where('name', 'address_ivu')->first();
-            if ($this->chat->lang == 'ru') {
-                $this->chat->photo(public_path('assets/ivuloc_ru.jpg'))->message("$location->value")->send();
-            } else {
-                $this->chat->photo(public_path('assets/ivuloc_tj.jpg'))->message("$location->value")->send();
+            if (!$user) {
+                if ($this->chat->lang == 'ru') {
+                    $this->chat->message("📦 Чтобы получить адрес нашего склада в городе Иву, сначала нажмите кнопку «➕ Подписаться» в меню ниже ⬇️, а затем повторите действие. ✅")->send();
+                } else {
+                    $this->chat->message("📦 Барои гирифтани суроғаи анбори мо дар шаҳри Иву, аввал тугмаи «➕ Обуна шудан»-ро дар менюи поён ⬇️ пахш кунед, баъд ин амалро такрор намоед. ✅")->send();
+                }
+                return;
             }
+            $locations = "$location->content $user->code $user->sex $user->name $user->phone";
+
+            if ($this->chat->lang == 'ru') {
+                $this->chat->message($locations)
+                    ->keyboard(function (Keyboard $keyboard) use ($locations) {
+                        return $keyboard
+                            ->button('📋 Скопировать адрес')->copyText($locations);
+                    })->send();
+            } else {
+                $this->chat->message($locations)
+                    ->keyboard(function (Keyboard $keyboard) use ($locations) {
+                        return $keyboard
+                            ->button('📋 Нусха бардоштани суроға')->copyText($locations);
+                    })->send();
+            }
+
+
             return;
         }
         if ($this->message->contact()) {
-            $this->chat->deleteMessage($this->messageId)->send();
-            $user = Customer::where('phone', str($this->message->contact()->phoneNumber()))->first();
+            $user = User::where('phone', str($this->message->contact()->phoneNumber()))->first();
             if ($user) {
                 $usercode = $user->code;
                 if ($this->chat->lang == 'ru') {
@@ -222,7 +375,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                     $this->chat->message("Шумо обуна шудагӣ ҳастед! Коди махсуси шумо <b>$usercode</b>!")->send();
                 }
             } else {
-                $lastCustomer = Customer::orderBy('id', 'desc')->first();
+                $lastCustomer = User::orderBy('id', 'desc')->first();
 
                 if ($lastCustomer) {
                     // Увеличиваем код последнего клиента на 1 и форматируем его до 4 знаков
@@ -232,7 +385,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                     $newCode = '0001';
                 }
 
-                Customer::create([
+                User::create([
                     'name' => str($this->message->from()->firstName()),
                     'phone' => str($this->message->contact()->phoneNumber()),
                     'code' => $newCode,
@@ -247,22 +400,20 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             }
             return;
         }
-        if ($text == 'admin shuhrat') {
-            $this->chat->deleteMessage($this->messageId)->send();
+        if ($text == 'supershifu') {
             $this->chat->message(('Добро пожаловать в панел управление!'))
                 ->keyboard(Keyboard::make()->buttons([
-                    Button::make('Открыт панель управлению')->webApp('https://toocars.tj/'),
+                    Button::make('Открыт панель управлению')->webApp('https://sifucargo.texhub.pro.tj/'),
                 ]))->send();
             return;
         }
-        $this->chat->deleteMessage($this->messageId)->send();
         $trackcode = Trackcode::where('trackcode', str($text))->first();
         if ($trackcode) {
             if ($trackcode->china && $trackcode->dushanbe && $trackcode->customer) {
                 if ($this->chat->lang == 'ru') {
-                    $this->chat->photo(public_path('assets/close_ru.jpg'))->message("1️⃣Ваш груз с трек-кодом <b>($trackcode->trackcode)</b> был принят на нашем складе в Иву на дату $trackcode->china!\n2️⃣На дату $trackcode->dushanbe он прибыл в Душанбе!\n3️⃣На дату $trackcode->customer вы приняли груз!")->send();
+                    $this->chat->message("1️⃣Ваш груз с трек-кодом <b>($trackcode->trackcode)</b> был принят на нашем складе в Иву на дату $trackcode->china!\n2️⃣На дату $trackcode->dushanbe он прибыл в Душанбе!\n3️⃣На дату $trackcode->customer вы приняли груз!")->send();
                 } else {
-                    $this->chat->photo(public_path('assets/close_tj.jpg'))->message("1️⃣Бори шумо бо трек-коди <b>($trackcode->trackcode)</b> санаи $trackcode->china дар склади мо дар Иву кабул шудаги аст!\n2️⃣3️Санаи $trackcode->dushanbe ба Душанбе омада расид! \n3️⃣Санаи $trackcode->customer шумо онро кабул кардаги хастед!")->send();
+                    $this->chat->message("1️⃣Бори шумо бо трек-коди <b>($trackcode->trackcode)</b> санаи $trackcode->china дар склади мо дар Иву кабул шудаги аст!\n2️⃣3️Санаи $trackcode->dushanbe ба Душанбе омада расид! \n3️⃣Санаи $trackcode->customer шумо онро кабул кардаги хастед!")->send();
                 }
             } elseif ($trackcode->china && $trackcode->dushanbe) {
                 if ($this->chat->lang == 'ru') {
@@ -281,9 +432,9 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             $trackcode->save();
         } else {
             if ($this->chat->lang == 'ru') {
-                $this->chat->photo(public_path('assets/info_tj.jpg'))->message("❌Информация по трек-коду <b>($text)</b> не найдена! 😞\nВозможно, груз ещё не поступил на наш склад в городе Иву.\nДля получения информации свяжитесь с консультантом! 📞")->send();
+                $this->chat->message("❌Информация по трек-коду <b>($text)</b> не найдена! 😞\nВозможно, груз ещё не поступил на наш склад в городе Иву.\nДля получения информации свяжитесь с консультантом! 📞")->send();
             } else {
-                $this->chat->photo(public_path('assets/info_ru.jpg'))->message("❌Маълумот дар бораи трек-код <b>($text)</b> ёфт нашуд! 😞\nМумкин аст, ки бор ба склади мо дар шахри Иву дастрас нашудааст.\nБарои гирифтани маълумот бо мушовир тамос гиред! 📞")->send();
+                $this->chat->message("❌Маълумот дар бораи трек-код <b>($text)</b> ёфт нашуд! 😞\nМумкин аст, ки бор ба склади мо дар шахри Иву дастрас нашудааст.\nБарои гирифтани маълумот бо мушовир тамос гиред! 📞")->send();
             }
         }
         return;
