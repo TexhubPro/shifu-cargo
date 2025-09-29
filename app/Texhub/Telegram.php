@@ -381,22 +381,22 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             $location = Setting::where('name', 'address_ivu')->first();
             if (!$user) {
                 if ($this->chat->lang == 'ru') {
-                    $this->chat->photo(public_path('assets/ivu_ru.png'))->message("📦 Чтобы получить адрес нашего склада в городе Иву, сначала нажмите кнопку «➕ Подписаться» в меню ниже ⬇️, а затем повторите действие. ✅")->send();
+                    $this->chat->message("📦 Чтобы получить адрес нашего склада в городе Иву, сначала нажмите кнопку «➕ Подписаться» в меню ниже ⬇️, а затем повторите действие. ✅")->send();
                 } else {
-                    $this->chat->photo(public_path('assets/ivu_tj.png'))->message("📦 Барои гирифтани суроғаи анбори мо дар шаҳри Иву, аввал тугмаи «➕ Обуна шудан»-ро дар менюи поён ⬇️ пахш кунед, баъд ин амалро такрор намоед. ✅")->send();
+                    $this->chat->message("📦 Барои гирифтани суроғаи анбори мо дар шаҳри Иву, аввал тугмаи «➕ Обуна шудан»-ро дар менюи поён ⬇️ пахш кунед, баъд ин амалро такрор намоед. ✅")->send();
                 }
                 return;
             }
             $locations = "$location->content $user->code $user->sex $user->name $user->phone";
 
             if ($this->chat->lang == 'ru') {
-                $this->chat->message($locations)
+                $this->chat->photo(public_path('assets/ivu_ru.png'))->message($locations)
                     ->keyboard(function (Keyboard $keyboard) use ($locations) {
                         return $keyboard
                             ->button('📋 Скопировать адрес')->copyText($locations);
                     })->send();
             } else {
-                $this->chat->message($locations)
+                $this->chat->photo(public_path('assets/ivu_tj.png'))->message($locations)
                     ->keyboard(function (Keyboard $keyboard) use ($locations) {
                         return $keyboard
                             ->button('📋 Нусха бардоштани суроға')->copyText($locations);
