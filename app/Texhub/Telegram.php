@@ -69,21 +69,23 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         $this->chat->message(("Бахши лозимаро дар менюи дар зер буда интихоб намоед! 🔽"))
             ->replyKeyboard(ReplyKeyboard::make()
                 ->row([
+                    ])
                     ReplyButton::make('🔢 Тафтиши трек-код'),
-                ])
+                    ReplyButton::make('🕹 Ҳуҷраи шахсӣ'),
                 ->row([
                     ReplyButton::make('➕ Обуна шудан')->requestContact(),
                     ReplyButton::make('👤 Тамос бо оператор'),
-                    ReplyButton::make('🚚 Дархости доставка'),
+                    ReplyButton::make('💲 Нархнома'),
                 ])
                 ->row([
+                    ReplyButton::make('🚚 Дархости доставка'),
                     ReplyButton::make('✅ Сурогаи склади Иву'),
                     ReplyButton::make('📍 Сурогаи склади Душанбе'),
                 ])
                 ->row([
-                    ReplyButton::make('💲 Нархнома'),
                     ReplyButton::make('❌ Молҳои манъшуда'),
                     ReplyButton::make('🧮 Ҳисобкунак'),
+                    ReplyButton::make('🎞 Дарсҳои ройгон'),
                 ])
                 ->resize())->send();
     }
@@ -93,20 +95,22 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             ->replyKeyboard(ReplyKeyboard::make()
                 ->row([
                     ReplyButton::make('🔢 Проверить трек-код'),
+                    ReplyButton::make('🕹 Личный кабинет'),
                 ])
                 ->row([
                     ReplyButton::make('➕ Подписаться')->requestContact(),
                     ReplyButton::make('👤 Связаться с оператором'),
-                    ReplyButton::make('🚚 Заказать доставку'),
+                    ReplyButton::make('💲 Прайс лист'),
                 ])
                 ->row([
+                    ReplyButton::make('🚚 Заказать доставку'),
                     ReplyButton::make('✅ Адрес склада Иву'),
                     ReplyButton::make('📍 Адрес склада Душанбе'),
                 ])
                 ->row([
-                    ReplyButton::make('💲 Прайс лист'),
                     ReplyButton::make('❌ Запрещенные товары'),
                     ReplyButton::make('🧮 Калькулятор'),
+                    ReplyButton::make('🎞 Бесплатные уроки'),
                 ])
                 ->resize())->send();
     }
