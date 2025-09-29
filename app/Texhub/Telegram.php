@@ -69,9 +69,9 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         $this->chat->message(("Бахши лозимаро дар менюи дар зер буда интихоб намоед! 🔽"))
             ->replyKeyboard(ReplyKeyboard::make()
                 ->row([
-                    ])
                     ReplyButton::make('🔢 Тафтиши трек-код'),
                     ReplyButton::make('🕹 Ҳуҷраи шахсӣ'),
+                ])
                 ->row([
                     ReplyButton::make('➕ Обуна шудан')->requestContact(),
                     ReplyButton::make('👤 Тамос бо оператор'),
