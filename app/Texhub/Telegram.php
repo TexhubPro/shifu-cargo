@@ -73,7 +73,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                     ReplyButton::make('🕹 Ҳуҷраи шахсӣ')->webApp('https://shifucargo.texhub.pro'),
                 ])
                 ->row([
-                    ReplyButton::make('➕ Обуна шудан')->requestContact(),
+                    ReplyButton::make('➕ Обуна шудан'),
                     ReplyButton::make('👤 Тамос бо оператор'),
                     ReplyButton::make('💲 Нархнома'),
                 ])
@@ -98,7 +98,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                     ReplyButton::make('🕹 Личный кабинет')->webApp('https://shifucargo.texhub.pro'),
                 ])
                 ->row([
-                    ReplyButton::make('➕ Подписаться')->requestContact(),
+                    ReplyButton::make('➕ Подписаться'),
                     ReplyButton::make('👤 Связаться с оператором'),
                     ReplyButton::make('💲 Прайс лист'),
                 ])
