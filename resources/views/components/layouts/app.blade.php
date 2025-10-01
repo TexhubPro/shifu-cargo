@@ -12,9 +12,9 @@
 </head>
 
 <body class="bg-neutral-950">
-    <div class="max-w-sm mx-auto p-4 space-y-4">
+    <div class="max-w-sm mx-auto p-4 space-y-4 mb-40">
         <div class="bg-neutral-800 rounded-xl border-neutral-700 border flex justify-between items-center p-1">
-            <flux:avatar name="Shifu Cargo" color="lime" />
+            <flux:avatar src="{{ asset('assets/photo_2025-09-25_23-47-38.jpg') }}" />
             <div class="text-center">
                 <flux:heading class="uppercase">Shifu Cargo</flux:heading>
                 <flux:text class="">Добро пожаловать</flux:text>
@@ -37,8 +37,10 @@
         </div>
 
         {{ $slot }}
+        @livewire('components.alert')
     </div>
     @include('partials.navigation')
+    @fluxScripts
 </body>
 
 </html>

@@ -3,7 +3,8 @@
         <div class="absolute bottom-3 w-full left-0 px-3">
             <div class="bg-white rounded-xl relative h-12">
                 <div class="absolute top-0 left-0 grid grid-cols-5 w-full h-full gap-2 p-2">
-                    <a href="" class="flex flex-col justify-center items-center text-black hover:text-lime-500">
+                    <a href="{{ route('profile') }}"
+                        class="flex flex-col justify-center items-center text-black hover:text-lime-500">
                         <svg class="size-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round"
@@ -14,7 +15,8 @@
                             <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
                         </svg>
                     </a>
-                    <a href="" class="flex flex-col justify-center items-center hover:text-lime-500 text-black">
+                    <a href="{{ route('all-orders') }}"
+                        class="flex flex-col justify-center items-center hover:text-lime-500 text-black">
                         <svg class="size-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round"
@@ -28,7 +30,8 @@
                     </a>
 
 
-                    <a href="" class="flex flex-col justify-center items-center  text-white bg-lime-500 rounded-lg">
+                    <a href="{{ route('add-order') }}"
+                        class="flex flex-col justify-center items-center  text-white bg-lime-500 rounded-lg">
                         <svg class="size-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round"
@@ -38,7 +41,8 @@
                             <path d="M5 12l14 0" />
                         </svg>
                     </a>
-                    <a href="" class="flex flex-col justify-center items-center hover:text-lime-500 text-black">
+                    <a href="{{ route('support') }}"
+                        class="flex flex-col justify-center items-center hover:text-lime-500 text-black">
                         <svg class="size-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round"
@@ -51,7 +55,8 @@
                                 d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z" />
                         </svg>
                     </a>
-                    <a href="" class="flex flex-col justify-center items-center hover:text-lime-500 text-black">
+                    <a href="{{ route('settings') }}"
+                        class="flex flex-col justify-center items-center hover:text-lime-500 text-black">
                         <svg class="size-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                             stroke-linecap="round" stroke-linejoin="round"

@@ -13,6 +13,7 @@
 <body class="bg-neutral-950">
     <div class="max-w-sm mx-auto p-4 space-y-4">
         {{ $slot }}
+        @livewire('components.alert')
     </div>
     @fluxScripts
 </body>

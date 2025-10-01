@@ -20,7 +20,7 @@ class Register extends Component
     {
         $user = User::where('phone', $this->phone)->first();
         if ($user) {
-            $this->message = "Аккаунт с этим номером уже существует. Войдите или используйте другой номер.";
+            $this->dispatch(['alert', "Аккаунт с этим номером уже существует. Войдите или используйте другой номер."]);
         }
         $user = User::create([
             'name' => $this->name,
