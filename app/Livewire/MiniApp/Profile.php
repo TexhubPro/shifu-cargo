@@ -10,9 +10,6 @@ class Profile extends Component
 {
     public function mount($id = null)
     {
-        if (!Auth::check()) {
-            return redirect()->route('register');
-        }
         if (Auth::check()) {
         } else {
             $user = User::where('chat_id', $id)->first();
