@@ -66,7 +66,8 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     }
     public function tj_keys(): void
     {
-        $chat_id = $this->chat->id;
+        $chat_id = $this->chat->chat_id;
+
         $this->chat->message(("Бахши лозимаро дар менюи дар зер буда интихоб намоед! 🔽"))
             ->replyKeyboard(ReplyKeyboard::make()
                 ->row([
@@ -92,7 +93,8 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     }
     public function ru_keys(): void
     {
-        $chat_id = $this->chat->id;
+        $chat_id = $this->chat->chat_id;
+
 
         $this->chat->message(("Выберите нужный раздел в меню ниже! 🔽"))
             ->replyKeyboard(ReplyKeyboard::make()

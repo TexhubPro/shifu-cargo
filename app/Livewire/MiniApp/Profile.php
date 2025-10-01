@@ -14,11 +14,11 @@ class Profile extends Component
             return redirect()->route('register');
         }
         if (Auth::check()) {
-            return redirect()->route('register');
         } else {
             $user = User::where('chat_id', $id)->first();
             Auth::login($user, true);
         }
+        // dd($id);
     }
     public function render()
     {
