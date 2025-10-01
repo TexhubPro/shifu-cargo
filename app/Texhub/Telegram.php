@@ -66,11 +66,12 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     }
     public function tj_keys(): void
     {
+        $chat_id = $this->chat->id;
         $this->chat->message(("Бахши лозимаро дар менюи дар зер буда интихоб намоед! 🔽"))
             ->replyKeyboard(ReplyKeyboard::make()
                 ->row([
                     ReplyButton::make('🔢 Тафтиши трек-код'),
-                    ReplyButton::make('🕹 Ҳуҷраи шахсӣ')->webApp('https://shifucargo.texhub.pro'),
+                    ReplyButton::make('🕹 Ҳуҷраи шахсӣ')->webApp("https://shifucargo.texhub.pro/profile/$chat_id"),
                 ])
                 ->row([
                     ReplyButton::make('➕ Обуна шудан'),
@@ -91,11 +92,13 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     }
     public function ru_keys(): void
     {
+        $chat_id = $this->chat->id;
+
         $this->chat->message(("Выберите нужный раздел в меню ниже! 🔽"))
             ->replyKeyboard(ReplyKeyboard::make()
                 ->row([
                     ReplyButton::make('🔢 Проверить трек-код'),
-                    ReplyButton::make('🕹 Личный кабинет')->webApp('https://shifucargo.texhub.pro'),
+                    ReplyButton::make('🕹 Личный кабинет')->webApp("https://shifucargo.texhub.pro/profile/$chat_id"),
                 ])
                 ->row([
                     ReplyButton::make('➕ Подписаться'),
