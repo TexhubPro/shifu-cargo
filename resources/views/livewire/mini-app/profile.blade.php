@@ -1,7 +1,11 @@
 <div class="space-y-4">
     <div class="bg-neutral-800 border border-neutral-700 rounded-xl p-2">
         <div class="flex gap-4 items-center">
-            <flux:avatar size="lg" src="https://unavatar.io/x/calebporzio" />
+            @if($avatar)
+            <flux:avatar size="lg" src="{{ $avatar }}" />
+            @else
+            <flux:avatar size="lg" name="Shifu Cargo" />
+            @endif
             <div>
                 <flux:heading class="text-xl/5">{{ Auth::user()->name }}</flux:heading>
                 <flux:text>{{ Auth::user()->phone }}</flux:text>
