@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'address_ivu', 'content' => 'test'],
             ['name' => 'address_dushanbe', 'content' => 'test'],
             ['name' => 'danger_products', 'content' => 'test'],
+            ['name' => 'course_dollar', 'content' => '10'],
         ];
         Setting::insert($settings);
     }

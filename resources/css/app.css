@@ -10,3 +10,6 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 
 }
+
+@import '../../vendor/livewire/flux/dist/flux.css';
+@custom-variant dark (&:where(.dark, .dark *));
