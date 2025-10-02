@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->group(function () {
     Route::get('/register/{id?}', Register::class)->name('register');
 });
+Route::get('/profile/{id?}', Profile::class)->name('profile');
 Route::middleware('auth')->group(function () {
-    Route::get('/profile/{id?}', Profile::class)->name('profile');
     Route::get('/all-orders', AllOrders::class)->name('all-orders');
     Route::get('/add-order', AddOrder::class)->name('add-order');
     Route::get('/check-order', CheckOrder::class)->name('check-order');
