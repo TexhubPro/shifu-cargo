@@ -149,7 +149,10 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     public function handleChatMessage(Stringable $text): void
     {
         $this->chat->deleteMessage($this->messageId)->send();
-
+        if ($this->chat->lang == null) {
+            $this->chat->lang = 'ru';
+            $this->chat->save();
+        }
         $user = User::where('chat_id', $this->message->from()->id())->first();
         if ($text == '➕ Обуна шудан' || $text == '➕ Подписаться') {
             if (!$user) {
@@ -409,41 +412,6 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             }
 
 
-            return;
-        }
-        if ($this->message->contact()) {
-            $user = User::where('phone', str($this->message->contact()->phoneNumber()))->first();
-            if ($user) {
-                $usercode = $user->code;
-                if ($this->chat->lang == 'ru') {
-                    $this->chat->message("Вы уже подписались! Ваш специальный код <b>$usercode</b>!")->send();
-                } else {
-                    $this->chat->message("Шумо обуна шудагӣ ҳастед! Коди махсуси шумо <b>$usercode</b>!")->send();
-                }
-            } else {
-                $lastCustomer = User::orderBy('id', 'desc')->first();
-
-                if ($lastCustomer) {
-                    // Увеличиваем код последнего клиента на 1 и форматируем его до 4 знаков
-                    $newCode = str_pad($lastCustomer->code + 1, 4, '0', STR_PAD_LEFT);
-                } else {
-                    // Если клиентов нет, начинаем с 0001
-                    $newCode = '0001';
-                }
-
-                User::create([
-                    'name' => str($this->message->from()->firstName()),
-                    'phone' => str($this->message->contact()->phoneNumber()),
-                    'code' => $newCode,
-                    'chat_id' => str($this->message->from()->id()), // chat_id для идентификации пользователя
-                ]);
-                if ($this->chat->lang == 'tj') {
-                    $this->chat->message("✅ Шумо бо муввафақият бо рақамҳои <b>" . $this->message->contact()->phoneNumber() . "</b> обуна шудед! Коди махсуси шумо <b>($newCode)</b>! Барои маълумоти пурра гирифтан оиди тарзи пур кардани сурога тугмачаи <b>✅ Тарзи пур кардани суроға пахш кунед!</b>")->send();
-                }
-                if ($this->chat->lang == 'ru') {
-                    $this->chat->message("Вы успешно подписались с номером <b>" . $this->message->contact()->phoneNumber() . "</b> Ваш специальный код <b>($newCode)</b>. Нажимайте на кнопку <b>✅ Как заполнить поля адреса</b> и получите подробную информацию о как заполнит адреса!")->send();
-                }
-            }
             return;
         }
         if ($text == 'supershifu') {
