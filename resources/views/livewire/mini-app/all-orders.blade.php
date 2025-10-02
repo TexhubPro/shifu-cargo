@@ -4,8 +4,9 @@
             <flux:heading>Все ваши трек-коды</flux:heading>
             <flux:text class="text-xs">Отслеживайте статус всех ваших посылок</flux:text>
         </div>
-        <flux:button variant="primary" size="sm" color="lime">Добавить</flux:button>
+        <flux:button variant="primary" size="sm" color="lime" href="{{ route('add-order') }}">Добавить</flux:button>
     </div>
+    @if($orders)
     <flux:table>
         <flux:table.columns>
             <flux:table.column>Трек-код</flux:table.column>
@@ -24,4 +25,7 @@
 
         </flux:table.rows>
     </flux:table>
+    @else
+    @include('partials.empty-page')
+    @endif
 </div>

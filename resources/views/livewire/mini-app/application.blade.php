@@ -8,6 +8,7 @@
             <flux:button variant="primary" size="sm" color="lime">Заказать</flux:button>
         </flux:modal.trigger>
     </div>
+    @if($applications)
     <flux:table>
         <flux:table.columns>
             <flux:table.column>#</flux:table.column>
@@ -30,6 +31,9 @@
 
         </flux:table.rows>
     </flux:table>
+    @else
+    @include('partials.empty-page')
+    @endif
     <flux:modal name="edit-profile" class="md:w-96">
         <div class="space-y-6">
             <div>
