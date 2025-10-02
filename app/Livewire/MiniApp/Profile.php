@@ -16,7 +16,7 @@ class Profile extends Component
         } else {
             $user = User::where('chat_id', $id)->first();
             if (!$user) {
-                return redirect()->route('register');
+                return redirect()->route('register', ['id' => $id]);
             }
             Auth::login($user, true);
         }
