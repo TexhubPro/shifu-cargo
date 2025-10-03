@@ -8,7 +8,7 @@
         <path d="M21 6.727a11.05 11.05 0 0 0 -2.794 -3.727" />
         <path d="M3 6.727a11.05 11.05 0 0 1 2.792 -3.727" />
     </svg>
-    @if($notify)
+    @if($notify->count()>0)
     <span
         class="absolute -top-1 -right-1 bg-red-500 w-4 h-4 rounded-full text-white text-xs flex justify-center items-center animate-ping"></span>
     <span
