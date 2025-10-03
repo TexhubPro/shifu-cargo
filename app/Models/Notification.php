@@ -3,16 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Application extends Model
+class Notification extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
-        'phone',
-        'address',
-        'note',
-        'latitude',
-        'longitude',
+        'content',
         'status',
     ];
 }

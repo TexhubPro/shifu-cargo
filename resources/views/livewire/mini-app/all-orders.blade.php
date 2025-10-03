@@ -7,7 +7,7 @@
         <flux:button variant="primary" size="sm" color="lime" href="{{ route('add-order') }}">Добавить</flux:button>
     </div>
     @if($orders)
-    <flux:table>
+    <flux:table :paginate="$orders">
         <flux:table.columns>
             <flux:table.column>Трек-код</flux:table.column>
             <flux:table.column>Статус</flux:table.column>
@@ -15,13 +15,44 @@
         </flux:table.columns>
 
         <flux:table.rows>
+            @foreach ($orders as $order )
             <flux:table.row>
-                <flux:table.cell>001</flux:table.cell>
+                <flux:table.cell>{{ $order->code }}</flux:table.cell>
                 <flux:table.cell>
-                    <flux:badge color="green" size="sm" inset="top bottom">В ожидании</flux:badge>
+                    @switch($order->status)
+                    @case('В ожидании')
+                    <flux:badge color="orange" size="sm" inset="top bottom">
+                        {{ $order->status }}
+                    </flux:badge>
+                    @break
+
+                    @case('Получено в Иву')
+                    <flux:badge color="lime" size="sm" inset="top bottom">
+                        {{ $order->status }}
+                    </flux:badge>
+                    @break
+
+                    @case('В пункте выдачи')
+                    <flux:badge color="blue" size="sm" inset="top bottom">
+                        {{ $order->status }}
+                    </flux:badge>
+                    @break
+
+                    @case('Получено')
+                    <flux:badge color="emerald" size="sm" inset="top bottom">
+                        {{ $order->status }}
+                    </flux:badge>
+                    @break
+
+                    @default
+                    <flux:badge color="yellow" size="sm" inset="top bottom">
+                        {{ $order->status }}
+                    </flux:badge>
+                    @endswitch
                 </flux:table.cell>
-                <flux:table.cell>02.10.2025</flux:table.cell>
+                <flux:table.cell>{{ $order->created_at->format('H:i | d.m.Y') }}</flux:table.cell>
             </flux:table.row>
+            @endforeach
 
         </flux:table.rows>
     </flux:table>

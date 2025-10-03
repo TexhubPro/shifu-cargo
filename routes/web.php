@@ -6,6 +6,7 @@ use App\Livewire\MiniApp\Application;
 use App\Livewire\MiniApp\Calculator;
 use App\Livewire\MiniApp\CheckOrder;
 use App\Livewire\MiniApp\Faqs;
+use App\Livewire\MiniApp\Notify;
 use App\Livewire\MiniApp\Profile;
 use App\Livewire\MiniApp\Queue;
 use App\Livewire\MiniApp\Register;
@@ -27,4 +28,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/calculator', Calculator::class)->name('calculator');
     Route::get('/faqs', Faqs::class)->name('faqs');
     Route::get('/settings', Settings::class)->name('settings');
+    Route::get('/notify', Notify::class)->name('notify');
 });

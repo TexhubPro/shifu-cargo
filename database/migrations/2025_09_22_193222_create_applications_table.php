@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('note')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
+            $table->string('status')->default('В ожидании');
             $table->timestamps();
         });
     }

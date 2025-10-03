@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('faqs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('chat_id');
-            $table->string('message')->nullable();
-            $table->string('photo')->nullable();
-            $table->boolean('status')->default(false);
-            $table->boolean('is_admin')->default(false);
+            $table->string('question');   // Вопрос
+            $table->text('answer');       // Ответ
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('faqs');
     }
 };

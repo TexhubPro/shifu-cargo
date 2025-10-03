@@ -11,5 +11,7 @@
 
 }
 
+@import "../../node_modules/preline/variants.css";
+@source "../../node_modules/preline/dist/*.js";
 @import '../../vendor/livewire/flux/dist/flux.css';
 @custom-variant dark (&:where(.dark, .dark *));

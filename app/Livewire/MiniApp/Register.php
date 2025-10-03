@@ -18,6 +18,7 @@ class Register extends Component
     public $message;
     public function save()
     {
+        $code = User::orderBy('code', 'desc')->first();
         $user = User::where('phone', $this->phone)->first();
         if ($user) {
             $this->dispatch(['alert', "Аккаунт с этим номером уже существует. Войдите или используйте другой номер."]);
@@ -27,6 +28,7 @@ class Register extends Component
             'phone' => $this->phone,
             'sex' => $this->sex,
             'chat_id' => $this->chat_id,
+            'code' => str_pad($code ? $code->code + 1 : 1, 4, '0', STR_PAD_LEFT)
         ]);
 
         Auth::login($user, true);

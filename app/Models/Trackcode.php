@@ -15,5 +15,6 @@ class Trackcode extends Model
         'customer',
         'race',
         'weight',
+        'status',
     ];
 }

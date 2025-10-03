@@ -4,15 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Application extends Model
+class Queue extends Model
 {
     protected $fillable = [
+        'no',
+        'sex',
         'user_id',
-        'phone',
-        'address',
-        'note',
-        'latitude',
-        'longitude',
         'status',
     ];
 }

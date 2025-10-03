@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('queues', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('chat_id');
-            $table->string('message')->nullable();
-            $table->string('photo')->nullable();
-            $table->boolean('status')->default(false);
-            $table->boolean('is_admin')->default(false);
+            $table->string('no');
+            $table->enum('sex', ['m', 'z']);
+            $table->foreignId('user_id');
+            $table->string('status');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('queues');
     }
 };

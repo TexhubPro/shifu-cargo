@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Setting;
+use App\Models\Faq;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Setting;
+use App\Models\Notification;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,7 +23,10 @@ class DatabaseSeeder extends Seeder
             ['name' => 'address_dushanbe', 'content' => 'test'],
             ['name' => 'danger_products', 'content' => 'test'],
             ['name' => 'course_dollar', 'content' => '10'],
+            ['name' => 'queue', 'content' => '0053350'],
         ];
         Setting::insert($settings);
+        Faq::factory()->count(10)->create();
+        Notification::factory()->count(10)->create();
     }
 }

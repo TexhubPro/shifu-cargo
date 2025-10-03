@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('customer')->nullable();
             $table->string('race')->nullable();
             $table->string('weight')->nullable();
+            $table->string('status')->default('В ожидании');
             $table->timestamps();
         });
     }
