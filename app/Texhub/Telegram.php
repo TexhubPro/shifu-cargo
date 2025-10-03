@@ -157,9 +157,9 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 $user->step = 'name';
                 $user->save();
                 if ($this->chat->lang == 'ru') {
-                    $this->chat->message("✍️ Напишите своё имя, например: <b>Абдулло</b>")->send();
+                    $this->chat->message("👤 Напишите своё имя, например: <b>Abdullo</b>")->send();
                 } else {
-                    $this->chat->message("✍️ Номи худро нависед, масалан: <b>Абдулло</b>")->send();
+                    $this->chat->message("👤 Номи худро нависед, масалан: <b>Abdullo</b>")->send();
                 }
             } else {
                 if ($this->chat->lang == 'ru') {
@@ -204,9 +204,9 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 $user->save();
 
                 if ($this->chat->lang == 'ru') {
-                    $this->chat->message("✍️ Напишите свой номер телефона, например: <b>005335051</b>")->send();
+                    $this->chat->message("📞 Напишите свой номер телефона, например: <b>931234567</b>")->send();
                 } else {
-                    $this->chat->message("✍️ Рақами телефони худро нависед, масалан: <b>005335051</b>")->send();
+                    $this->chat->message("📞 Рақами телефони худро нависед, масалан: <b>931234567</b>")->send();
                 }
                 return;
             }
@@ -215,7 +215,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 $user->step = "sex";
                 $user->save();
                 if ($this->chat->lang == 'ru') {
-                    $this->chat->message("✍️ Укажите свой пол, например: <b>Мужской</b> или <b>Женский</b>")
+                    $this->chat->message("☑️ Укажите свой пол, например: <b>Мужской</b> или <b>Женский</b>")
                         ->keyboard(
                             Keyboard::make()
                                 ->row([
@@ -231,7 +231,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                                 ])
                         )->send();
                 } else {
-                    $this->chat->message("✍️ Ҷинси худро нишон диҳед, масалан: <b>Мард</b> ё <b>Зан</b>")
+                    $this->chat->message("☑️ Ҷинси худро нишон диҳед, масалан: <b>Мард</b> ё <b>Зан</b>")
                         ->keyboard(
                             Keyboard::make()
                                 ->row([
@@ -440,12 +440,10 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         } else {
             if ($this->chat->lang == 'ru') {
                 $this->chat
-                    ->photo(public_path('assets/track-empty_ru.png'))
                     ->message("❌Информация по трек-коду <b>($text)</b> не найдена! 😞\nВозможно, груз ещё не поступил на наш склад в городе Иву.\nДля получения информации свяжитесь с консультантом! 📞")
                     ->send();
             } else {
                 $this->chat
-                    ->photo(public_path('assets/track-empty_tj.png'))
                     ->message("❌Маълумот дар бораи трек-код <b>($text)</b> ёфт нашуд! 😞\nМумкин аст, ки бор ба склади мо дар шахри Иву дастрас нашудааст.\nБарои гирифтани маълумот бо мушовир тамос гиред! 📞")
                     ->send();
             }
