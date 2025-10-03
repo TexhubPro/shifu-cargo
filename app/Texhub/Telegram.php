@@ -414,7 +414,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 ]))->send();
             return;
         }
-        $trackcode = Trackcode::where('trackcode', str($text))->first();
+        $trackcode = Trackcode::where('code', str($text))->first();
         if ($trackcode) {
             // if ($trackcode->china && $trackcode->dushanbe && $trackcode->customer) {
             //     if ($this->chat->lang == 'ru') {
@@ -440,10 +440,12 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         } else {
             if ($this->chat->lang == 'ru') {
                 $this->chat
+                    ->photo(public_path('assets/track-empty_ru.png'))
                     ->message("❌Информация по трек-коду <b>($text)</b> не найдена! 😞\nВозможно, груз ещё не поступил на наш склад в городе Иву.\nДля получения информации свяжитесь с консультантом! 📞")
                     ->send();
             } else {
                 $this->chat
+                    ->photo(public_path('assets/track-empty_tj.png'))
                     ->message("❌Маълумот дар бораи трек-код <b>($text)</b> ёфт нашуд! 😞\nМумкин аст, ки бор ба склади мо дар шахри Иву дастрас нашудааст.\nБарои гирифтани маълумот бо мушовир тамос гиред! 📞")
                     ->send();
             }
