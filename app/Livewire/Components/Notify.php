@@ -11,7 +11,7 @@ class Notify extends Component
     public $notify;
     public function mount()
     {
-        $this->notify = Notification::where('user_id', Auth::id())->get();
+        $this->notify = Notification::where('user_id', Auth::id())->where('status', false)->get();
     }
     public function render()
     {

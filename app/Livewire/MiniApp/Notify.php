@@ -18,7 +18,7 @@ class Notify extends Component
             ->get();
         if ($this->notifications) {
             foreach ($this->notifications as $item) {
-                $item->status = false;
+                $item->status = true;
                 $item->save();
             }
         }
