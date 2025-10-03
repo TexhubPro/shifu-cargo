@@ -16,6 +16,12 @@ class Notify extends Component
         $this->notifications = Notification::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
+        if ($this->notifications) {
+            foreach ($this->notifications as $item) {
+                $item->status = false;
+                $item->save();
+            }
+        }
     }
     public function render()
     {
