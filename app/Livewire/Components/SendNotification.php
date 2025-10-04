@@ -23,7 +23,7 @@ class SendNotification extends Component
             'user_id' => $this->user_id,
             'content' => $this->content,
         ]);
-        for ($i = 1; $i <= 5000; $i++) {
+        for ($i = 1; $i <= 50; $i++) {
             $notification = Notifyqueue::create([
                 'user_id' => $this->user_id,
                 'content' => "Сообшени $i",
