@@ -424,9 +424,9 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 }
             } elseif ($trackcode->china && $trackcode->dushanbe) {
                 if ($this->chat->lang == 'ru') {
-                    $this->chat->photo(public_path('assets/dushanbe_done_ru.jpg'))->message("1️⃣Ваш груз с трек-кодом <b>($trackcode->code)</b> был принят на нашем складе в Иву на дату $trackcode->china!\n2️⃣На дату $trackcode->dushanbe он прибыл в Душанбе!")->send();
+                    $this->chat->photo(public_path('assets/dushanbe_done_ru.png'))->message("1️⃣Ваш груз с трек-кодом <b>($trackcode->code)</b> был принят на нашем складе в Иву на дату $trackcode->china!\n2️⃣На дату $trackcode->dushanbe он прибыл в Душанбе!")->send();
                 } else {
-                    $this->chat->photo(public_path('assets/dushanbe_done_tj.jpg'))->message("1️⃣Бори шумо бо трек-коди <b>($trackcode->code)</b> санаи $trackcode->china дар склади мо дар Иву кабул шудаги аст!\n2️⃣Санаи $trackcode->dushanbe ба Душанбе омада расид!")->send();
+                    $this->chat->photo(public_path('assets/dushanbe_done_tj.png'))->message("1️⃣Бори шумо бо трек-коди <b>($trackcode->code)</b> санаи $trackcode->china дар склади мо дар Иву кабул шудаги аст!\n2️⃣Санаи $trackcode->dushanbe ба Душанбе омада расид!")->send();
                 }
             } elseif ($trackcode->china) {
                 if ($this->chat->lang == 'ru') {
