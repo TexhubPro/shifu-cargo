@@ -4,6 +4,7 @@ namespace App\Livewire\MiniApp;
 
 use App\Models\Setting;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class Calculator extends Component
 {
@@ -14,7 +15,13 @@ class Calculator extends Component
 
     public $resultWeight;
     public $resultVolume;
-
+    public function mount()
+    {
+        if (Auth::check()) {
+        } else {
+            return redirect()->route('register');
+        }
+    }
     private function getKgPriceTJS()
     {
         $kg_price_usd = (float) str_replace('$', '', Setting::where('name', 'kg_price')->value('content'));
