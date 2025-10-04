@@ -418,30 +418,30 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         if ($trackcode) {
             if ($trackcode->china && $trackcode->dushanbe && $trackcode->customer) {
                 if ($this->chat->lang == 'ru') {
-                    $this->chat->photo(public_path('assets/done_ru.png'))->message("1️⃣Ваш груз с трек-кодом <b>($trackcode->trackcode)</b> был принят на нашем складе в Иву на дату $trackcode->china!\n2️⃣На дату $trackcode->dushanbe он прибыл в Душанбе!\n3️⃣На дату $trackcode->customer вы приняли груз!")->send();
+                    $this->chat->photo(public_path('assets/done_ru.png'))->message("1️⃣Ваш груз с трек-кодом <b>($trackcode->code)</b> был принят на нашем складе в Иву на дату $trackcode->china!\n2️⃣На дату $trackcode->dushanbe он прибыл в Душанбе!\n3️⃣На дату $trackcode->customer вы приняли груз!")->send();
                 } else {
-                    $this->chat->photo(public_path('assets/done_tj.png'))->message("1️⃣Бори шумо бо трек-коди <b>($trackcode->trackcode)</b> санаи $trackcode->china дар склади мо дар Иву кабул шудаги аст!\n2️⃣3️Санаи $trackcode->dushanbe ба Душанбе омада расид! \n3️⃣Санаи $trackcode->customer шумо онро кабул кардаги хастед!")->send();
+                    $this->chat->photo(public_path('assets/done_tj.png'))->message("1️⃣Бори шумо бо трек-коди <b>($trackcode->code)</b> санаи $trackcode->china дар склади мо дар Иву кабул шудаги аст!\n2️⃣3️Санаи $trackcode->dushanbe ба Душанбе омада расид! \n3️⃣Санаи $trackcode->customer шумо онро кабул кардаги хастед!")->send();
                 }
             } elseif ($trackcode->china && $trackcode->dushanbe) {
                 if ($this->chat->lang == 'ru') {
-                    $this->chat->photo(public_path('assets/dushanbe_done_ru.jpg'))->message("1️⃣Ваш груз с трек-кодом <b>($trackcode->trackcode)</b> был принят на нашем складе в Иву на дату $trackcode->china!\n2️⃣На дату $trackcode->dushanbe он прибыл в Душанбе!")->send();
+                    $this->chat->photo(public_path('assets/dushanbe_done_ru.jpg'))->message("1️⃣Ваш груз с трек-кодом <b>($trackcode->code)</b> был принят на нашем складе в Иву на дату $trackcode->china!\n2️⃣На дату $trackcode->dushanbe он прибыл в Душанбе!")->send();
                 } else {
-                    $this->chat->photo(public_path('assets/dushanbe_done_tj.jpg'))->message("1️⃣Бори шумо бо трек-коди <b>($trackcode->trackcode)</b> санаи $trackcode->china дар склади мо дар Иву кабул шудаги аст!\n2️⃣Санаи $trackcode->dushanbe ба Душанбе омада расид!")->send();
+                    $this->chat->photo(public_path('assets/dushanbe_done_tj.jpg'))->message("1️⃣Бори шумо бо трек-коди <b>($trackcode->code)</b> санаи $trackcode->china дар склади мо дар Иву кабул шудаги аст!\n2️⃣Санаи $trackcode->dushanbe ба Душанбе омада расид!")->send();
                 }
             } elseif ($trackcode->china) {
                 if ($this->chat->lang == 'ru') {
-                    $this->chat->photo(public_path('assets/ivu_done_ru.png'))->message("✅Ваш груз с трек-кодом <b>($trackcode->trackcode)</b> был принят на нашем складе в Иву на дату $trackcode->china!")->send();
+                    $this->chat->photo(public_path('assets/ivu_done_ru.png'))->message("✅Ваш груз с трек-кодом <b>($trackcode->code)</b> был принят на нашем складе в Иву на дату $trackcode->china!")->send();
                 } else {
-                    $this->chat->photo(public_path('assets/ivu_done_tj.png'))->message("✅Бори шумо бо трек-коди <b>($trackcode->trackcode)</b> санаи $trackcode->china дар склади мо дар Иву кабул шудаги аст!")->send();
+                    $this->chat->photo(public_path('assets/ivu_done_tj.png'))->message("✅Бори шумо бо трек-коди <b>($trackcode->code)</b> санаи $trackcode->china дар склади мо дар Иву кабул шудаги аст!")->send();
                 }
             } else {
                 if ($this->chat->lang == 'ru') {
                     $this->chat->photo(public_path('assets/ru_list.jpg'))->message(
-                        "⏳ Ваш груз с трек-кодом <b>($text)</b> находится в листе ожидания. Если статус изменится, мы сообщим вам!"
+                        "⏳ Ваш груз с трек-кодом <b>($trackcode->code)</b> находится в листе ожидания. Если статус изменится, мы сообщим вам!"
                     )->send();
                 } else {
                     $this->chat->photo(public_path('assets/tj_list.jpg'))->message(
-                        "⏳ Бори шумо бо трек-коди <b>($text)</b> дар рӯйхати интизорӣ қарор дорад. Агар ҳолат тағйир ёбад, мо ба шумо хабар медиҳем!"
+                        "⏳ Бори шумо бо трек-коди <b>($trackcode->code)</b> дар рӯйхати интизорӣ қарор дорад. Агар ҳолат тағйир ёбад, мо ба шумо хабар медиҳем!"
                     )->send();
                 }
             }
