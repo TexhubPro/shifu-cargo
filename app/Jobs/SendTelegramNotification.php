@@ -30,5 +30,6 @@ class SendTelegramNotification implements ShouldQueue
         $sms = new Telegram();
         $sms->sms_send($this->notification->user_id, $this->notification->content);
         $this->notification->update(['status' => 'sent']);
+        sleep(5);
     }
 }
