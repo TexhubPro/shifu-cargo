@@ -6,7 +6,7 @@
         </div>
         <flux:button variant="primary" size="sm" color="lime" href="{{ route('add-order') }}">Добавить</flux:button>
     </div>
-    @if($orders)
+    @if($orders->count()>0)
     <flux:table :paginate="$orders">
         <flux:table.columns>
             <flux:table.column>Трек-код</flux:table.column>
