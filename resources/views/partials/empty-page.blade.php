@@ -1,6 +1,6 @@
 <div class="w-full py-20 flex justify-center flex-col items-center">
-    <div class="w-36 h-36">
-        <svg class="size-20" xmlns="http://www.w3.org/2000/svg" id="Layer_2" data-name="Layer 2"
+    <div class="">
+        <svg class="size-36" xmlns="http://www.w3.org/2000/svg" id="Layer_2" data-name="Layer 2"
             viewBox="0 0 192.04 176.44">
             <defs>
                 <style>
