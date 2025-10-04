@@ -18,13 +18,18 @@ class SendNotification extends Component
             'content' => 'required|string|min:3',
         ]);
 
+
         $notification = Notifyqueue::create([
             'user_id' => $this->user_id,
             'content' => $this->content,
         ]);
-
-        // отправляем в очередь
-        SendTelegramNotification::dispatch($notification);
+        for ($i = 1; $i <= 5000; $i++) {
+            $notification = Notifyqueue::create([
+                'user_id' => $this->user_id,
+                'content' => "Сообшени $i",
+            ]);
+            SendTelegramNotification::dispatch($notification);
+        }
 
         $this->reset(['user_id', 'content']);
         $this->dispatch('alert', '✅ Уведомление добавлено в очередь!');
