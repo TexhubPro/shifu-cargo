@@ -27,7 +27,7 @@ class SendNotification extends Component
         SendTelegramNotification::dispatch($notification);
 
         $this->reset(['user_id', 'content']);
-        $this->dispatchBrowserEvent('alert', ['message' => '✅ Уведомление добавлено в очередь!']);
+        $this->dispatch('alert', '✅ Уведомление добавлено в очередь!');
     }
     public function render()
     {
