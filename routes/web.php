@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Components\SendNotification;
 use App\Livewire\MiniApp\AddOrder;
 use App\Livewire\MiniApp\AllOrders;
 use App\Livewire\MiniApp\Application;
@@ -29,4 +30,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/faqs', Faqs::class)->name('faqs');
     Route::get('/settings', Settings::class)->name('settings');
     Route::get('/notify', Notify::class)->name('notify');
+    Route::get('/testqueue', SendNotification::class)->name('testqueue');
 });
