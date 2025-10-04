@@ -5,7 +5,7 @@
         обновлений.
     </flux:text>
     @if($notifications->isEmpty())
-    <flux:text>У вас пока нет уведомлений.</flux:text>
+    @include('partials.empty-page')
     @else
     <div class="space-y-2 mt-5">
         @foreach($notifications as $notification)
