@@ -437,11 +437,11 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             } else {
                 if ($this->chat->lang == 'ru') {
                     $this->chat->photo(public_path('assets/ru_list.jpg'))->message(
-                        "⏳ Трек-код <b>($trackcode->trackcode)</b> в ожидании. При изменении статуса сообщим!"
+                        "⏳ Ваш груз с трек-кодом <b>($text)</b> находится в листе ожидания. Если статус изменится, мы сообщим вам!"
                     )->send();
                 } else {
                     $this->chat->photo(public_path('assets/tj_list.jpg'))->message(
-                        "⏳ Трек-код <b>($trackcode->trackcode)</b> дар интизорӣ аст. Агар ҳолат тағйир ёбад, хабар медиҳем!"
+                        "⏳ Бори шумо бо трек-коди <b>($text)</b> дар рӯйхати интизорӣ қарор дорад. Агар ҳолат тағйир ёбад, мо ба шумо хабар медиҳем!"
                     )->send();
                 }
             }
