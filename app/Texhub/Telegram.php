@@ -4,6 +4,7 @@ namespace App\Texhub;
 
 use App\Models\Application;
 use App\Models\Chat;
+use App\Models\Notification;
 use App\Models\User;
 use App\Models\Setting;
 use App\Models\Trackcode;
@@ -461,5 +462,15 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             }
         }
         return;
+    }
+    public function sms_send($user_id, $message)
+    {
+        $user = User::find($user_id);
+        $chat = TelegraphChat::where('chat_id', $user->chat_id)->first();
+        $chat->message($message)->send();
+        Notification::create([
+            'user_id' => $user_id,
+            'content' => $message
+        ]);
     }
 }
