@@ -463,14 +463,32 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         }
         return;
     }
-    public function sms_send($user_id, $message)
+    public function sms_send_dushanbe($user_id, $trackcode)
     {
         $user = User::find($user_id);
         $chat = TelegraphChat::where('chat_id', $user->chat_id)->first();
-        $chat->message($message)->send();
+        if ($chat->lang == 'ru') {
+            $chat->photo(public_path('assets/dushanbe_done_ru.png'))->message("1️⃣Ваш груз с трек-кодом ($trackcode->code) был принят на нашем складе в Иву на дату $trackcode->china!\n2️⃣На дату $trackcode->dushanbe он прибыл в Душанбе!")->send();
+        } else {
+            $chat->photo(public_path('assets/dushanbe_done_tj.png'))->message("1️⃣Бори шумо бо трек-коди ($trackcode->code) санаи $trackcode->china дар склади мо дар Иву кабул шудаги аст!\n2️⃣Санаи $trackcode->dushanbe ба Душанбе омада расид!")->send();
+        }
         Notification::create([
             'user_id' => $user_id,
-            'content' => $message
+            'content' => "✅Ваш груз с трек-кодом ($trackcode->code) был принят на нашем складе в Душанбе!"
+        ]);
+    }
+    public function sms_send_ivu($user_id, $trackcode)
+    {
+        $user = User::find($user_id);
+        $chat = TelegraphChat::where('chat_id', $user->chat_id)->first();
+        if ($chat->lang == 'ru') {
+            $chat->photo(public_path('assets/ivu_done_ru.png'))->message("✅Ваш груз с трек-кодом <b>($trackcode->code)</b> был принят на нашем складе в Иву на дату $trackcode->china!")->send();
+        } else {
+            $chat->photo(public_path('assets/ivu_done_tj.png'))->message("✅Бори шумо бо трек-коди <b>($trackcode->code)</b> санаи $trackcode->china дар склади мо дар Иву кабул шудаги аст!")->send();
+        }
+        Notification::create([
+            'user_id' => $user_id,
+            'content' => "✅Ваш груз с трек-кодом ($trackcode->code) был принят на нашем складе в Иву на дату $trackcode->china!"
         ]);
     }
 }

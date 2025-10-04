@@ -3,6 +3,7 @@
 namespace App\Livewire\MiniApp;
 
 use App\Models\Trackcode;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class CheckOrder extends Component
@@ -13,6 +14,8 @@ class CheckOrder extends Component
         $code = Trackcode::where('code', $this->trackcode)->first();
 
         if ($code) {
+            $code->user_id = Auth::id();
+            $code->save();
             switch ($code->status) {
                 case 'В ожидании':
                     $this->dispatch('alert', 'Ваш заказ в ожидании. ⏳');

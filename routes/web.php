@@ -1,6 +1,25 @@
 <?php
 
+use App\Http\Middleware\Admin;
+use App\Http\Middleware\Cashier;
+use App\Http\Middleware\Manager as MiddlewareManager;
+use App\Livewire\Admin\Applications;
+use App\Livewire\Admin\Chats;
+use App\Livewire\Admin\China;
+use App\Livewire\Admin\Customers;
+use App\Livewire\Admin\Dashboard;
+use App\Livewire\Admin\Dushanbe;
+use App\Livewire\Admin\Emplyones;
+use App\Livewire\Admin\PAckages;
+use App\Livewire\Admin\Settings as AdminSettings;
+use App\Livewire\Admin\Smsbulk;
+use App\Livewire\Admin\Trackcodes;
+use App\Livewire\Chashdesk;
 use App\Livewire\Components\SendNotification;
+use App\Livewire\Deliver;
+use App\Http\Middleware\Deliver as MidDeliver;
+use App\Livewire\Login;
+use App\Livewire\Manager;
 use App\Livewire\MiniApp\AddOrder;
 use App\Livewire\MiniApp\AllOrders;
 use App\Livewire\MiniApp\Application;
@@ -17,6 +36,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
     Route::get('/register/{id?}', Register::class)->name('register');
+    Route::get('/login', Login::class)->name('login');
 });
 Route::get('/profile/{id?}', Profile::class)->name('profile');
 Route::middleware('auth')->group(function () {
@@ -31,4 +51,26 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', Settings::class)->name('settings');
     Route::get('/notify', Notify::class)->name('notify');
     Route::get('/testqueue', SendNotification::class)->name('testqueue');
+});
+Route::middleware(['auth', Admin::class])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    Route::get('/china', China::class)->name('china');
+    Route::get('/dushanbe', Dushanbe::class)->name('dushanbe');
+    Route::get('/trackcodes', Trackcodes::class)->name('trackcodes');
+    Route::get('/customers', Customers::class)->name('customers');
+    Route::get('/applications', Applications::class)->name('applications');
+    Route::get('/smsbulk', Smsbulk::class)->name('smsbulk');
+    Route::get('/chats', Chats::class)->name('chats');
+    Route::get('/packages', PAckages::class)->name('packages');
+    Route::get('/emplyones', Emplyones::class)->name('emplyones');
+    Route::get('/settings', AdminSettings::class)->name('settings');
+});
+Route::middleware(['auth', Cashier::class])->group(function () {
+    Route::get('/cashier', Chashdesk::class)->name('cashier');
+});
+Route::middleware(['auth', MiddlewareManager::class])->group(function () {
+    Route::get('/manager', Manager::class)->name('manager');
+});
+Route::middleware(['auth', MidDeliver::class])->group(function () {
+    Route::get('/deliver', Deliver::class)->name('deliver');
 });

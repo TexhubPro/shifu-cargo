@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Setting;
 use App\Models\Notification;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -28,5 +29,11 @@ class DatabaseSeeder extends Seeder
         Setting::insert($settings);
         Faq::factory()->count(10)->create();
         Notification::factory()->count(10)->create();
+        User::create([
+            'name' => "Shodmehr",
+            'phone' => '005335051',
+            'password' => Hash::make('005335051'),
+            'role' => 'admin'
+        ]);
     }
 }
