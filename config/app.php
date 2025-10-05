@@ -13,7 +13,7 @@ return [
     |
     */
     'name' => env('APP_NAME', 'Laravel'),
-    // 'asset_url' => env('ASSET_URL', '/public'),
+    'asset_url' => env('ASSET_URL', '/public'),
 
     /*
     |--------------------------------------------------------------------------
