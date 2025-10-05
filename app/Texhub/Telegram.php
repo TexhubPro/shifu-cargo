@@ -192,7 +192,6 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     public function handleChatMessage(Stringable $text): void
     {
 
-        $this->chat->deleteMessage($this->messageId)->send();
         $user = User::where('chat_id', $this->message->from()->id())->first();
         if ($text == '❌ Закрыт чат' || $text == '❌ Пушидани чат') {
             $user->step = null;
@@ -344,6 +343,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 return;
             }
         }
+        $this->chat->deleteMessage($this->messageId)->send();
 
         if ($text == '🚚 Дархости доставка' || $text == '🚚 Заказать доставку') {
             $application = new Application();
