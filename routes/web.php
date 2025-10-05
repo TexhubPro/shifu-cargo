@@ -35,6 +35,7 @@ use App\Livewire\MiniApp\Queue;
 use App\Livewire\MiniApp\Register;
 use App\Livewire\MiniApp\Settings;
 use App\Livewire\MiniApp\Support;
+use App\Livewire\Queue as LivewireQueue;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -80,3 +81,4 @@ Route::middleware(['auth', MiddlewareManager::class])->group(function () {
 Route::middleware(['auth', MidDeliver::class])->group(function () {
     Route::get('/deliver', Deliver::class)->name('deliver');
 });
+Route::get('/navbat', LivewireQueue::class)->name('navbat');

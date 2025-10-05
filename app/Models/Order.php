@@ -11,6 +11,8 @@ class Order extends Model
         'weight',
         'cube',
         'subtotal',
+        'delivery_total',
+        'deliver_id',
         'discount',
         'total',
     ];

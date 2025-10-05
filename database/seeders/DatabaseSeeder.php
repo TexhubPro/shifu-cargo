@@ -9,6 +9,7 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Setting;
 use App\Models\Notification;
+use App\Models\Queue;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -61,6 +62,26 @@ class DatabaseSeeder extends Seeder
         Message::create([
             'chat_id' => '1',
             'message' => "Hello beby"
+        ]);
+        Queue::create([
+            'no' => "546546",
+            'user_id' => 1,
+            'sex' => 'm',
+            'status' => true
+
+        ]);
+        Queue::create([
+            'no' => "546546",
+            'user_id' => 2,
+            'sex' => 'z',
+            'status' => true
+        ]);
+        Queue::create([
+            'no' => "546546",
+            'user_id' => 3,
+            'sex' => 'm',
+            'status' => true
+
         ]);
     }
 }

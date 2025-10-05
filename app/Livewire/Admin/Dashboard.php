@@ -31,11 +31,21 @@ class Dashboard extends Component
     public $monttrackcodesCount;
     public $montordersSum;
     public $montexpensesSum;
+    public $ostatok;
+    public $total_delivery;
+    public $expences_dusanbe;
+    public $expences_ivu;
     public function mount()
     {
         $start = Carbon::now('Asia/Dushanbe')->startOfDay();
         $end   = Carbon::now('Asia/Dushanbe')->endOfDay();
-
+        $this->ostatok = Trackcode::where('status', 'В пункте выдачи')->get();
+        $this->total_delivery = Order::whereBetween('created_at', [$start, $end])
+            ->sum('delivery_total');
+        $this->expences_dusanbe = Expences::whereBetween('created_at', [$start, $end])->where('sklad', 'Склад Душанбе')
+            ->sum('total');
+        $this->expences_ivu = Expences::whereBetween('created_at', [$start, $end])->where('sklad', 'Склад Иву')
+            ->sum('total');
         $this->newUsersCount = User::whereBetween('created_at', [$start, $end])->count();
 
         $this->trackcodesCount = Trackcode::whereBetween('created_at', [$start, $end])->count();
