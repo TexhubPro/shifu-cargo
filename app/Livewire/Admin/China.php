@@ -26,7 +26,7 @@ class China extends Component
             $trackcode->save();
             if ($trackcode->user_id) {
                 $sms = new Telegram();
-                $sms->sms_send_ivu($trackcode->user_id, $trackcode->code);
+                $sms->sms_send_ivu($trackcode->user_id, $trackcode);
             }
         } else {
             Trackcode::create([

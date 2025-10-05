@@ -17,4 +17,8 @@ class Trackcode extends Model
         'weight',
         'status',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

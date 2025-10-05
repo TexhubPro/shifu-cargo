@@ -12,57 +12,38 @@
                 Просмотрите информацию о клиентах, специальные коды и их заказы.
             </flux:text>
         </div>
-        <form class="space-y-3" wire:submit.prevent="addSingleTrack">
+        <form class="space-y-3" wire:submit.prevent="check_user">
             <flux:input icon="user" placeholder="Введите номер телефона или специальный код клиента" clearable
-                label="Номер телефона или специальный код клиента" wire:model="singleTrack" required />
+                label="Номер телефона или специальный код клиента" wire:model="search" required />
             <flux:button variant="primary" color="lime" class="w-full" type="submit">
                 Найти
             </flux:button>
         </form>
-        <flux:table class="mt-5">
+        <flux:table :paginate="$this->customers" class="mt-5">
             <flux:table.columns>
-                <flux:table.column>Customer</flux:table.column>
-                <flux:table.column>Date</flux:table.column>
-                <flux:table.column>Status</flux:table.column>
-                <flux:table.column>Amount</flux:table.column>
+                <flux:table.column>Код</flux:table.column>
+                <flux:table.column>Имя</flux:table.column>
+                <flux:table.column>Номер тел</flux:table.column>
+                <flux:table.column>Пол</flux:table.column>
+                <flux:table.column>Все заказы</flux:table.column>
+                <flux:table.column>Сумма заказов</flux:table.column>
+                <flux:table.column>Дата присоеденения</flux:table.column>
             </flux:table.columns>
 
             <flux:table.rows>
-                <flux:table.row>
-                    <flux:table.cell>Lindsey Aminoff</flux:table.cell>
-                    <flux:table.cell>Jul 29, 10:45 AM</flux:table.cell>
-                    <flux:table.cell>
-                        <flux:badge color="green" size="sm" inset="top bottom">Paid</flux:badge>
-                    </flux:table.cell>
-                    <flux:table.cell variant="strong">$49.00</flux:table.cell>
-                </flux:table.row>
+                @foreach ($this->customers as $item)
 
                 <flux:table.row>
-                    <flux:table.cell>Hanna Lubin</flux:table.cell>
-                    <flux:table.cell>Jul 28, 2:15 PM</flux:table.cell>
-                    <flux:table.cell>
-                        <flux:badge color="green" size="sm" inset="top bottom">Paid</flux:badge>
+                    <flux:table.cell>{{ $item->code }}</flux:table.cell>
+                    <flux:table.cell>{{ $item->name }}</flux:table.cell>
+                    <flux:table.cell>{{ $item->phone }}</flux:table.cell>
+                    <flux:table.cell>{{ $item->sex == "z"?"Женский":"Мужской" }}</flux:table.cell>
+                    <flux:table.cell>{{ $item->trackcodes->count() }}</flux:table.cell>
+                    <flux:table.cell>1536с</flux:table.cell>
+                    <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
                     </flux:table.cell>
-                    <flux:table.cell variant="strong">$312.00</flux:table.cell>
                 </flux:table.row>
-
-                <flux:table.row>
-                    <flux:table.cell>Kianna Bushevi</flux:table.cell>
-                    <flux:table.cell>Jul 30, 4:05 PM</flux:table.cell>
-                    <flux:table.cell>
-                        <flux:badge color="zinc" size="sm" inset="top bottom">Refunded</flux:badge>
-                    </flux:table.cell>
-                    <flux:table.cell variant="strong">$132.00</flux:table.cell>
-                </flux:table.row>
-
-                <flux:table.row>
-                    <flux:table.cell>Gustavo Geidt</flux:table.cell>
-                    <flux:table.cell>Jul 27, 9:30 AM</flux:table.cell>
-                    <flux:table.cell>
-                        <flux:badge color="green" size="sm" inset="top bottom">Paid</flux:badge>
-                    </flux:table.cell>
-                    <flux:table.cell variant="strong">$31.00</flux:table.cell>
-                </flux:table.row>
+                @endforeach
             </flux:table.rows>
         </flux:table>
     </div>

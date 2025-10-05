@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('trackcodes', function (Blueprint $table) {
             $table->id();
             $table->string('code');
-            $table->foreignId('user_id')->nullable();
-            $table->foreignId('order_id')->nullable();
+            $table->integer('user_id')->nullable();
+            $table->integer('order_id')->nullable();
             $table->string('china')->nullable();
             $table->string('dushanbe')->nullable();
             $table->string('customer')->nullable();

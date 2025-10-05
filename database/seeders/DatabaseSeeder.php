@@ -31,9 +31,24 @@ class DatabaseSeeder extends Seeder
         Notification::factory()->count(10)->create();
         User::create([
             'name' => "Shodmehr",
+            'code' => "0001",
             'phone' => '005335051',
             'password' => Hash::make('005335051'),
             'role' => 'admin'
+        ]);
+        User::create([
+            'name' => "Shodmehr",
+            'code' => "0002",
+            'phone' => '46546546',
+            'password' => Hash::make('005335051'),
+            'role' => 'customer'
+        ]);
+        User::create([
+            'name' => "Shodmehr",
+            'code' => "0003",
+            'phone' => '4567567',
+            'password' => Hash::make('005335051'),
+            'role' => 'customer'
         ]);
     }
 }

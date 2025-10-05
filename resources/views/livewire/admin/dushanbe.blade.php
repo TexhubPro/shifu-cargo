@@ -18,62 +18,68 @@
 
                 <!-- 🔹 Вкладка 1: Добавление через Excel -->
                 <flux:tab.panel name="all">
-                    <form class="space-y-3" wire:submit.prevent="addSingleTrack">
+                    <form class="space-y-3" wire:submit="check_user">
                         <flux:input icon="user-circle" placeholder="Специалный код клиента" clearable
-                            label="Специалный код клиента" wire:model="singleTrack" required />
+                            label="Специалный код клиента" wire:model="user_code" />
                         <flux:button variant="primary" color="lime" class="w-full" type="submit">
                             Проверить
                         </flux:button>
                     </form>
-                    <flux:table class="mt-5">
+                    <flux:table :paginate="$this->trackcodes" class="mt-5">
                         <flux:table.columns>
-                            <flux:table.column>Customer</flux:table.column>
-                            <flux:table.column>Date</flux:table.column>
-                            <flux:table.column>Status</flux:table.column>
-                            <flux:table.column>Amount</flux:table.column>
+                            <flux:table.column>Трек-код</flux:table.column>
+                            <flux:table.column>Клиент</flux:table.column>
+                            <flux:table.column>Статус</flux:table.column>
+                            <flux:table.column>Дата получения</flux:table.column>
                         </flux:table.columns>
 
                         <flux:table.rows>
-                            <flux:table.row>
-                                <flux:table.cell>Lindsey Aminoff</flux:table.cell>
-                                <flux:table.cell>Jul 29, 10:45 AM</flux:table.cell>
-                                <flux:table.cell>
-                                    <flux:badge color="green" size="sm" inset="top bottom">Paid</flux:badge>
-                                </flux:table.cell>
-                                <flux:table.cell variant="strong">$49.00</flux:table.cell>
-                            </flux:table.row>
+                            @foreach ($this->trackcodes as $item)
 
                             <flux:table.row>
-                                <flux:table.cell>Hanna Lubin</flux:table.cell>
-                                <flux:table.cell>Jul 28, 2:15 PM</flux:table.cell>
+                                <flux:table.cell>{{ $item->code }}</flux:table.cell>
+                                <flux:table.cell>{{ $item->user->code }}</flux:table.cell>
                                 <flux:table.cell>
-                                    <flux:badge color="green" size="sm" inset="top bottom">Paid</flux:badge>
-                                </flux:table.cell>
-                                <flux:table.cell variant="strong">$312.00</flux:table.cell>
-                            </flux:table.row>
+                                    @switch($item->status)
+                                    @case('В ожидании')
+                                    <flux:badge color="orange" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                                    @break
 
-                            <flux:table.row>
-                                <flux:table.cell>Kianna Bushevi</flux:table.cell>
-                                <flux:table.cell>Jul 30, 4:05 PM</flux:table.cell>
-                                <flux:table.cell>
-                                    <flux:badge color="zinc" size="sm" inset="top bottom">Refunded</flux:badge>
-                                </flux:table.cell>
-                                <flux:table.cell variant="strong">$132.00</flux:table.cell>
-                            </flux:table.row>
+                                    @case('Получено в Иву')
+                                    <flux:badge color="lime" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                                    @break
 
-                            <flux:table.row>
-                                <flux:table.cell>Gustavo Geidt</flux:table.cell>
-                                <flux:table.cell>Jul 27, 9:30 AM</flux:table.cell>
-                                <flux:table.cell>
-                                    <flux:badge color="green" size="sm" inset="top bottom">Paid</flux:badge>
+                                    @case('В пункте выдачи')
+                                    <flux:badge color="blue" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                                    @break
+
+                                    @case('Получено')
+                                    <flux:badge color="emerald" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                                    @break
+
+                                    @default
+                                    <flux:badge color="yellow" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                                    @endswitch
                                 </flux:table.cell>
-                                <flux:table.cell variant="strong">$31.00</flux:table.cell>
+                                <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
+                                </flux:table.cell>
                             </flux:table.row>
+                            @endforeach
                         </flux:table.rows>
                     </flux:table>
                 </flux:tab.panel>
                 <flux:tab.panel name="excel">
-                    <form class="space-y-3" wire:submit.prevent="importExcel">
+                    <form class="space-y-3" wire:submit="importExcel">
                         <!-- 🔹 Выбор диапазона дат рейса -->
                         <flux:date-picker mode="range" label="Выберите даты рейса" wire:model="flightDates" required />
 

@@ -28,7 +28,8 @@ class SendTrackDushanbe implements ShouldQueue
     {
         $trackcode = Trackcode::where('code', $this->trackcode)->first();
         if ($trackcode) {
-            $trackcode->china = $this->date;
+            $trackcode->user_id = 1;
+            $trackcode->race = $this->date;
             $trackcode->dushanbe = Carbon::now();
             $trackcode->status = 'В пункте выдачи';
             $trackcode->save();
@@ -39,7 +40,8 @@ class SendTrackDushanbe implements ShouldQueue
         } else {
             Trackcode::create([
                 'code' => $this->trackcode,
-                'china' => $this->date,
+                'china' => Carbon::now(),
+                'race' => $this->date,
                 'dushanbe' => Carbon::now(),
                 'status' => 'В пункте выдачи'
             ]);

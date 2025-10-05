@@ -22,7 +22,7 @@
     </div> --}}
     <div>
         <div class="lg:pl-64">
-            <div class="w-full bg-neutral-950 p-3 flex justify-between lg:justify-end items-center sticky top-0">
+            <div class="w-full z-50 bg-neutral-950 p-3 flex justify-between lg:justify-end items-center sticky top-0">
                 <flux:button size="sm" class="lg:hidden" icon="bars-3" aria-haspopup="dialog" aria-expanded="false"
                     aria-controls="hs-sidebar-empty-content" aria-label="Toggle navigation"
                     data-hs-overlay="#hs-sidebar-empty-content" />
@@ -192,14 +192,30 @@ bg-lime-500 border-e border-gray-200 dark:bg-lime-500 dark:border-neutral-700" r
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round"
-                                class="icon icon-tabler icons-tabler-outline icon-tabler-stack-push">
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-dollar">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M6 10l-2 1l8 4l8 -4l-2 -1" />
-                                <path d="M4 15l8 4l8 -4" />
-                                <path d="M12 4v7" />
-                                <path d="M15 8l-3 3l-3 -3" />
+                                <path d="M13 21h-7a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v3" />
+                                <path d="M16 3v4" />
+                                <path d="M8 3v4" />
+                                <path d="M4 11h12.5" />
+                                <path d="M21 15h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
+                                <path d="M19 21v1m0 -8v1" />
                             </svg>
-                            Регистрация грузы
+                            Затраты
+                        </a>
+                        <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
+                            href="{{ route('admin.packages') }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-filter-question">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                    d="M15 19l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414" />
+                                <path d="M19 22v.01" />
+                                <path d="M19 19a2.003 2.003 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
+                            </svg>
+                            Частые вопросы
                         </a>
                         <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
                             href="{{ route('admin.emplyones') }}">
