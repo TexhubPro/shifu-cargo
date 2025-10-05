@@ -261,6 +261,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                     'chat_id' => $chatik->id,
                     'message' => $text,
                 ]);
+                return;
             }
             if ($user->step == 'name') {
                 $code = User::orderBy('code', 'desc')->first();
