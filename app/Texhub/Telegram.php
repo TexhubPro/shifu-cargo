@@ -4,6 +4,7 @@ namespace App\Texhub;
 
 use App\Models\Application;
 use App\Models\Chat;
+use App\Models\Message;
 use App\Models\Notification;
 use App\Models\User;
 use App\Models\Setting;
@@ -131,6 +132,47 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             $this->chat->message("✍️ Номи худро нависед, масалан: <b>Абдулло</b>")->send();
         }
     }
+    public function open_chat(): void
+    {
+        $this->chat->deleteMessage($this->messageId)->send();
+        $chat_id = $this->chat->chat_id;
+        $chat = User::where('chat_id', $chat_id)->first();
+        if (!$chat) {
+            if ($this->chat->lang == 'ru') {
+                $this->chat->message("🔹 Чтобы связаться с консультантом, сначала нажмите кнопку <b>➕ Подписаться</b> и 📩 оформите подписку! ✅")->send();
+            } else {
+                $this->chat->message("🔹 Барои пайваст шудан бо мушовир, аввал тугмаи <b>➕ Обуна шудан</b>-ро пахш карда 📩 обуна шавед! ✅")->send();
+            }
+            return;
+        }
+
+        $chat_open = Chat::where('user_id', $chat->id)->first();
+        if (!$chat_open) {
+            Chat::create([
+                'user_id' => $chat->id,
+                'status' => true,
+            ]);
+        } else {
+            $chat_open->status = true;
+            $chat_open->save();
+        }
+        if ($this->chat->lang == 'ru') {
+            $this->chat->message("🔹 Привет! ✍️ Опишите свою проблему в одном сообщении и 📩 отправьте. 🔄 Консультант обязательно вам ответит! ✅")->replyKeyboard(ReplyKeyboard::make()
+                ->row([
+                    ReplyButton::make('❌ Закрыт чат'),
+                ])
+                ->resize())->send();
+        } else {
+            $this->chat->message("🔹 Салом! ✍️ Мушкилии худро дар як матн навишта 📩 равон кунед. 🔄 Мушовир ҳатман ба шумо ҷавоб мегардонад! ✅")->replyKeyboard(ReplyKeyboard::make()
+
+                ->row([
+                    ReplyButton::make('❌ Пушидани чат'),
+                ])
+                ->resize())->send();
+        }
+        $chat->step = 'chat';
+        $chat->save();
+    }
     public function sex_radio($id, $sex): void
     {
         $this->chat->deleteMessage($this->messageId)->send();
@@ -149,8 +191,25 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     }
     public function handleChatMessage(Stringable $text): void
     {
+
         $this->chat->deleteMessage($this->messageId)->send();
         $user = User::where('chat_id', $this->message->from()->id())->first();
+        if ($text == '❌ Закрыт чат' || $text == '❌ Пушидани чат') {
+            $user->step = null;
+            $user->save();
+            $chat_sec = Chat::where('user_id', $user->id)->first();
+            if ($chat_sec) {
+                $chat_sec->status = false;
+                $chat_sec->save();
+            }
+
+            if ($this->chat->lang == 'ru') {
+                $this->ru_keys();
+            } else {
+                $this->tj_keys();
+            }
+            return;
+        }
         if ($text == '➕ Обуна шудан' || $text == '➕ Подписаться') {
             if (!$user) {
                 $user = new User();
@@ -196,6 +255,13 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             return;
         }
         if ($user) {
+            if ($user->step == 'chat') {
+                $chatik = Chat::where('user_id', $user->id)->first();
+                Message::create([
+                    'chat_id' => $chatik->id,
+                    'message' => $text,
+                ]);
+            }
             if ($user->step == 'name') {
                 $code = User::orderBy('code', 'desc')->first();
 
@@ -277,6 +343,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 return;
             }
         }
+
         if ($text == '🚚 Дархости доставка' || $text == '🚚 Заказать доставку') {
             $application = new Application();
             $application->user_id = $user->id;
@@ -306,13 +373,10 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                     ->keyboard(
                         Keyboard::make()
                             ->row([
-                                Button::make('Telegram')->url('https://t.me/+992005335051'),
-                            ])
-                            ->row([
                                 Button::make('Телеграм канал')->url('https://t.me/cargoshifu'),
                             ])
                             ->row([
-                                Button::make('Тамос бо мушовир')->action('open_chat'),
+                                Button::make('Тамос бо мушовир')->action('open_chat')->param('id', $user->id),
                             ])
                     )->send();
             } else {

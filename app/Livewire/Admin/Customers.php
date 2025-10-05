@@ -4,12 +4,15 @@ namespace App\Livewire\Admin;
 
 use App\Models\User;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Computed;
 
 #[Layout('components.layouts.admin')]
 class Customers extends Component
 {
+    use WithPagination;
+
     public $search = null;
     #[Computed]
     public function customers()
