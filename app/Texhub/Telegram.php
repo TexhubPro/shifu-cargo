@@ -566,4 +566,16 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             ]);
         }
     }
+    public function sms_single($user_id, $message)
+    {
+        $user = User::find($user_id);
+        if ($user->chat_id) {
+            $chat = TelegraphChat::where('chat_id', $user->chat_id)->first();
+            $chat->message($message)->send();
+            Notification::create([
+                'user_id' => $user_id,
+                'content' => "$message"
+            ]);
+        }
+    }
 }

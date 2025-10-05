@@ -4,6 +4,7 @@ namespace App\Livewire\Admin;
 
 use App\Models\Chat;
 use App\Models\Message;
+use App\Texhub\Telegram;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
@@ -22,6 +23,8 @@ class Chats extends Component
             'message' => $this->message,
             'is_admin' => true
         ]);
+        $sms = new Telegram();
+        $sms->sms_single($this->active_chat->user->id, $this->message);
         $this->message = null;
         $this->load_m();
     }
