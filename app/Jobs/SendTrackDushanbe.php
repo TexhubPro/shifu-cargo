@@ -28,7 +28,6 @@ class SendTrackDushanbe implements ShouldQueue
     {
         $trackcode = Trackcode::where('code', $this->trackcode)->first();
         if ($trackcode) {
-            $trackcode->user_id = 1;
             $trackcode->race = $this->date;
             $trackcode->dushanbe = Carbon::now();
             $trackcode->status = 'В пункте выдачи';

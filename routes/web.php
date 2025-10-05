@@ -10,6 +10,7 @@ use App\Livewire\Admin\Customers;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Dushanbe;
 use App\Livewire\Admin\Emplyones;
+use App\Livewire\Admin\Expences;
 use App\Livewire\Admin\PAckages;
 use App\Livewire\Admin\Settings as AdminSettings;
 use App\Livewire\Admin\Smsbulk;
@@ -18,6 +19,7 @@ use App\Livewire\Chashdesk;
 use App\Livewire\Components\SendNotification;
 use App\Livewire\Deliver;
 use App\Http\Middleware\Deliver as MidDeliver;
+use App\Livewire\Admin\Faqs as AdminFaqs;
 use App\Livewire\Login;
 use App\Livewire\Manager;
 use App\Livewire\MiniApp\AddOrder;
@@ -64,6 +66,8 @@ Route::middleware(['auth', Admin::class])->prefix('admin')->name('admin.')->grou
     Route::get('/packages', PAckages::class)->name('packages');
     Route::get('/emplyones', Emplyones::class)->name('emplyones');
     Route::get('/settings', AdminSettings::class)->name('settings');
+    Route::get('/expences', Expences::class)->name('expences');
+    Route::get('/faqs', AdminFaqs::class)->name('faqs');
 });
 Route::middleware(['auth', Cashier::class])->group(function () {
     Route::get('/cashier', Chashdesk::class)->name('cashier');

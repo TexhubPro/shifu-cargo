@@ -12,7 +12,7 @@
         </div>
         <form class="space-y-3" wire:submit.prevent="search_form">
             <flux:input icon="qr-code" placeholder="Сканируйте штрихкод или введите трек-код вручную" clearable
-                label="Трек-код" wire:model="search" required />
+                label="Трек-код" wire:model="search" />
             <flux:button variant="primary" color="lime" class="w-full" type="submit">
                 Проверить
             </flux:button>

@@ -188,7 +188,7 @@ bg-lime-500 border-e border-gray-200 dark:bg-lime-500 dark:border-neutral-700" r
                             Чат склиентами
                         </a>
                         <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                            href="{{ route('admin.packages') }}">
+                            href="{{ route('admin.expences') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round"
@@ -204,7 +204,7 @@ bg-lime-500 border-e border-gray-200 dark:bg-lime-500 dark:border-neutral-700" r
                             Затраты
                         </a>
                         <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                            href="{{ route('admin.packages') }}">
+                            href="{{ route('admin.faqs') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round"

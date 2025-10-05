@@ -491,4 +491,16 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             'content' => "✅Ваш груз с трек-кодом ($trackcode->code) был принят на нашем складе в Иву на дату $trackcode->china!"
         ]);
     }
+    public function sms_bulk($user_id, $message)
+    {
+        $user = User::find($user_id);
+        if ($user->chat_id) {
+            $chat = TelegraphChat::where('chat_id', $user->chat_id)->first();
+            $chat->message($message)->send();
+            Notification::create([
+                'user_id' => $user_id,
+                'content' => "$message"
+            ]);
+        }
+    }
 }

@@ -6,54 +6,78 @@
                 системе.
             </flux:text>
         </div>
-        <flux:button variant="primary" color="lime">Добавить</flux:button>
+        <flux:modal.trigger name="edit-profile">
+            <flux:button variant="primary" color="lime">Добавить</flux:button>
+        </flux:modal.trigger>
     </div>
     <div class="bg-white p-2 rounded-xl border border-gray-200 space-y-3">
-        <flux:table class="">
+        <flux:table :paginate="$this->users" class="mt-5">
             <flux:table.columns>
-                <flux:table.column>Customer</flux:table.column>
-                <flux:table.column>Date</flux:table.column>
-                <flux:table.column>Status</flux:table.column>
-                <flux:table.column>Amount</flux:table.column>
+                <flux:table.column>Имя</flux:table.column>
+                <flux:table.column>Номер тел</flux:table.column>
+                <flux:table.column>Рол</flux:table.column>
+                <flux:table.column>Статус</flux:table.column>
+                <flux:table.column>Дата</flux:table.column>
+                <flux:table.column>Действия</flux:table.column>
             </flux:table.columns>
 
             <flux:table.rows>
-                <flux:table.row>
-                    <flux:table.cell>Lindsey Aminoff</flux:table.cell>
-                    <flux:table.cell>Jul 29, 10:45 AM</flux:table.cell>
-                    <flux:table.cell>
-                        <flux:badge color="green" size="sm" inset="top bottom">Paid</flux:badge>
-                    </flux:table.cell>
-                    <flux:table.cell variant="strong">$49.00</flux:table.cell>
-                </flux:table.row>
+                @foreach ($this->users as $item)
 
                 <flux:table.row>
-                    <flux:table.cell>Hanna Lubin</flux:table.cell>
-                    <flux:table.cell>Jul 28, 2:15 PM</flux:table.cell>
+                    <flux:table.cell>{{ $item->name }}</flux:table.cell>
+                    <flux:table.cell>{{ $item->phone }}</flux:table.cell>
+                    <flux:table.cell>{{ $item->role }}</flux:table.cell>
                     <flux:table.cell>
-                        <flux:badge color="green" size="sm" inset="top bottom">Paid</flux:badge>
+                        <flux:field variant="inline">
+                            @if($item->status == true)
+                            <flux:switch wire:click="notifications({{$item->id  }})" checked />
+                            @else
+                            <flux:switch wire:click="notifications({{$item->id  }})" />
+                            @endif
+                        </flux:field>
                     </flux:table.cell>
-                    <flux:table.cell variant="strong">$312.00</flux:table.cell>
-                </flux:table.row>
-
-                <flux:table.row>
-                    <flux:table.cell>Kianna Bushevi</flux:table.cell>
-                    <flux:table.cell>Jul 30, 4:05 PM</flux:table.cell>
+                    <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
+                    </flux:table.cell>
                     <flux:table.cell>
-                        <flux:badge color="zinc" size="sm" inset="top bottom">Refunded</flux:badge>
+                        <flux:button variant="primary" size="sm" color="red" wire:click="delete({{ $item->id }})"
+                            wire:confirm>
+                            Удалить</flux:button>
                     </flux:table.cell>
-                    <flux:table.cell variant="strong">$132.00</flux:table.cell>
                 </flux:table.row>
-
-                <flux:table.row>
-                    <flux:table.cell>Gustavo Geidt</flux:table.cell>
-                    <flux:table.cell>Jul 27, 9:30 AM</flux:table.cell>
-                    <flux:table.cell>
-                        <flux:badge color="green" size="sm" inset="top bottom">Paid</flux:badge>
-                    </flux:table.cell>
-                    <flux:table.cell variant="strong">$31.00</flux:table.cell>
-                </flux:table.row>
+                @endforeach
             </flux:table.rows>
         </flux:table>
     </div>
+
+
+    <flux:modal name="edit-profile" class="md:w-96">
+        <form wire:submit="saveEmployee" class="space-y-6">
+            <div>
+                <flux:heading size="lg">Добавление сотрудника</flux:heading>
+                <flux:text class="mt-2">Заполните данные нового сотрудника.</flux:text>
+            </div>
+
+            <flux:input label="Имя сотрудника" placeholder="Введите имя" required wire:model.defer="name" />
+
+            <flux:input label="Телефон" placeholder="Введите номер телефона" required wire:model.defer="phone" />
+
+            <flux:input label="Пароль" type="password" placeholder="Введите пароль" required
+                wire:model.defer="password" />
+
+            <flux:select label="Должность (роль)" placeholder="Выберите должность..." required wire:model.defer="role">
+                <flux:select.option value="admin">Администратор</flux:select.option>
+                <flux:select.option value="deliver">Курьер</flux:select.option>
+                <flux:select.option value="manager">Менеджер</flux:select.option>
+                <flux:select.option value="cashier">Кассир</flux:select.option>
+            </flux:select>
+
+            <div class="flex">
+                <flux:spacer />
+                <flux:button type="submit" variant="primary" wire:click="saveEmployee">
+                    Добавить сотрудника
+                </flux:button>
+            </div>
+        </form>
+    </flux:modal>
 </div>

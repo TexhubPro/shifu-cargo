@@ -14,7 +14,7 @@ class Customers extends Component
     #[Computed]
     public function customers()
     {
-        $query = User::query();
+        $query = User::query()->where('role', 'customer');
 
         if (!empty($this->search)) {
             $query->where(function ($q) {
