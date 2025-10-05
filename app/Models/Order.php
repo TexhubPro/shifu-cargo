@@ -14,4 +14,9 @@ class Order extends Model
         'discount',
         'total',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -12,7 +12,7 @@
             <flux:button variant="primary" color="lime">Добавить</flux:button>
         </flux:modal.trigger>
     </div>
-    <div class="bg-white p-2 rounded-xl border border-gray-200 space-y-3 mt-5">
+    <div class="bg-white p-4 rounded-xl border border-gray-200 space-y-3 mt-5">
         <flux:table :paginate="$this->expences" class="">
             <flux:table.columns>
                 <flux:table.column>Сумма</flux:table.column>
@@ -25,7 +25,7 @@
                 @foreach ($this->expences as $item)
 
                 <flux:table.row>
-                    <flux:table.cell>{{ $item->total }}</flux:table.cell>
+                    <flux:table.cell>{{ $item->total }}c</flux:table.cell>
                     <flux:table.cell>{{ $item->content }}</flux:table.cell>
                     <flux:table.cell>{{ $item->sklad }}</flux:table.cell>
                     <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}

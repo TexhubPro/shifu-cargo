@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Chat;
 use App\Models\Faq;
+use App\Models\Message;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Setting;
@@ -36,19 +38,29 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('005335051'),
             'role' => 'admin'
         ]);
-        User::create([
-            'name' => "Shodmehr",
-            'code' => "0002",
-            'phone' => '46546546',
-            'password' => Hash::make('005335051'),
-            'role' => 'customer'
+        Chat::create([
+            'user_id' => '1',
+            'status' => true
         ]);
-        User::create([
-            'name' => "Shodmehr",
-            'code' => "0003",
-            'phone' => '4567567',
-            'password' => Hash::make('005335051'),
-            'role' => 'customer'
+        Message::create([
+            'chat_id' => '1',
+            'message' => "Hello beby"
+        ]);
+        Message::create([
+            'chat_id' => '1',
+            'message' => "Hello beby"
+        ]);
+        Message::create([
+            'chat_id' => '1',
+            'message' => "Hello beby"
+        ]);
+        Message::create([
+            'chat_id' => '1',
+            'message' => "Hello beby"
+        ]);
+        Message::create([
+            'chat_id' => '1',
+            'message' => "Hello beby"
         ]);
     }
 }
