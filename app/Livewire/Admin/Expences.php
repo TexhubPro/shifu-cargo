@@ -13,7 +13,7 @@ use Flux\Flux;
 class Expences extends Component
 {
     use WithPagination;
-    public $warehouse;
+    public $warehouse = "Склад Душанбе";
     public $amount;
     public $description;
 
