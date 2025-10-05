@@ -376,16 +376,14 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                                 Button::make('Телеграм канал')->url('https://t.me/cargoshifu'),
                             ])
                             ->row([
-                                Button::make('Тамос бо мушовир')->action('open_chat')->param('id', $user->id),
+                                Button::make('Тамос бо мушовир')->action('open_chat'),
                             ])
                     )->send();
             } else {
                 $this->chat->photo(public_path('assets/chat_tj.png'))->message("<b>Реҷаи корӣ</b> аз Душанбе то Якшанбе соатҳои <b>08:00 то 18:00</b>.\n\nДар вақти корӣ бо мо тамос гиред ҳатман ба саволҳоятон ҷавоб медиҳем!\n\nБо мо тарики яке аз паёмрасонҳои зер тамос гиред, ё дар худи бот бо мушовир пайваст шавед! ⤵️")
                     ->keyboard(
                         Keyboard::make()
-                            ->row([
-                                Button::make('Telegram')->url('https://t.me/+992005335051'),
-                            ])
+
                             ->row([
                                 Button::make('Телеграм канал')->url('https://t.me/cargoshifu'),
                             ])
