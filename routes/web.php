@@ -21,6 +21,7 @@ use App\Livewire\Deliver;
 use App\Http\Middleware\Deliver as MidDeliver;
 use App\Livewire\Admin\Faqs as AdminFaqs;
 use App\Livewire\Admin\Orders;
+use App\Livewire\Admin\RegisterPack;
 use App\Livewire\Login;
 use App\Livewire\Manager;
 use App\Livewire\MiniApp\AddOrder;
@@ -71,6 +72,7 @@ Route::middleware(['auth', Admin::class])->prefix('admin')->name('admin.')->grou
     Route::get('/expences', Expences::class)->name('expences');
     Route::get('/faqs', AdminFaqs::class)->name('faqs');
     Route::get('/orders', Orders::class)->name('orders');
+    Route::get('/register-pack', RegisterPack::class)->name('register-pack');
 });
 Route::middleware(['auth', Cashier::class])->group(function () {
     Route::get('/cashier', Chashdesk::class)->name('cashier');
