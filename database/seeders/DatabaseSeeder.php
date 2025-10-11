@@ -30,58 +30,12 @@ class DatabaseSeeder extends Seeder
             ['name' => 'queue', 'content' => '0053350'],
         ];
         Setting::insert($settings);
-        Faq::factory()->count(10)->create();
-        Notification::factory()->count(10)->create();
         User::create([
             'name' => "Shodmehr",
             'code' => "0001",
             'phone' => '005335051',
             'password' => Hash::make('005335051'),
             'role' => 'admin'
-        ]);
-        Chat::create([
-            'user_id' => '1',
-            'status' => true
-        ]);
-        Message::create([
-            'chat_id' => '1',
-            'message' => "Hello beby"
-        ]);
-        Message::create([
-            'chat_id' => '1',
-            'message' => "Hello beby"
-        ]);
-        Message::create([
-            'chat_id' => '1',
-            'message' => "Hello beby"
-        ]);
-        Message::create([
-            'chat_id' => '1',
-            'message' => "Hello beby"
-        ]);
-        Message::create([
-            'chat_id' => '1',
-            'message' => "Hello beby"
-        ]);
-        Queue::create([
-            'no' => "546546",
-            'user_id' => 1,
-            'sex' => 'm',
-            'status' => true
-
-        ]);
-        Queue::create([
-            'no' => "546546",
-            'user_id' => 2,
-            'sex' => 'z',
-            'status' => true
-        ]);
-        Queue::create([
-            'no' => "546546",
-            'user_id' => 3,
-            'sex' => 'm',
-            'status' => true
-
         ]);
     }
 }

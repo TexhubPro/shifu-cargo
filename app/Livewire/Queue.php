@@ -27,7 +27,7 @@ class Queue extends Component
         $code->save();
         $this->code = $code;
 
-        $this->navbats = ModelsQueue::whereDate('created_at', Carbon::today())->orderBy('created_at', 'desc')->get();
+        $this->navbats = ModelsQueue::whereDate('created_at', Carbon::today())->orderBy('created_at', 'asc')->get();
     }
     public function render()
     {
