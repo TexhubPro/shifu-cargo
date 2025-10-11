@@ -3,8 +3,9 @@
         <flux:modal.trigger name="add-expences">
             <flux:button>Добавит расходы</flux:button>
         </flux:modal.trigger>
-        <flux:button>Оформить доставка</flux:button>
-        <flux:button>Выбирать из очереди</flux:button>
+        <flux:modal.trigger name="select-queue">
+            <flux:button>Выбирать из очереди</flux:button>
+        </flux:modal.trigger>
     </div>
     <div class="bg-neutral-200 rounded-2xl p-4 space-y-3">
         <div>
@@ -40,21 +41,24 @@
                     @endif
                 </div>
             </div>
-            <form class="space-y-3 col-span-2">
+            <form wire:submit="order_place" class="space-y-3 col-span-2">
                 <!-- Клиент -->
-                <flux:autocomplete wire:model.live="client" label="Клиент" placeholder="Выберите клиента">
+                <flux:autocomplete wire:model.live="client" label="Клиент" placeholder="Выберите клиента" required>
                     @foreach ($users as $user)
-                    <flux:autocomplete.item value="d">{{ $user->code ." - ". $user->phone}}</flux:autocomplete.item>
+                    <flux:autocomplete.item value="d">{{ $user->phone}}</flux:autocomplete.item>
                     @endforeach
                 </flux:autocomplete>
-                <div class="grid gap-2 grid-cols-2">
+                <div class="grid gap-2 grid-cols-3">
                     <!-- Номер заявки -->
-                    <flux:input label="Номер заявки" placeholder="Введите номер заявки" wire:model.live="order_no"
-                        required />
-
+                    <flux:input label="Номер заявки" placeholder="Введите номер заявки" wire:model.live="order_no" />
+                    <flux:select wire:model="deliver_boy" label="Доставщик" placeholder="Выбкрите доставщика">
+                        @foreach ($delivers as $deliver)
+                        <flux:select.option>{{ $deliver->name }}</flux:select.option>
+                        @endforeach
+                    </flux:select>
                     <!-- Цена доставки -->
                     <flux:input label="Цена доставки (сомони)" placeholder="Введите стоимость доставки"
-                        wire:model.live="delivery_price" type="number" min="0" required />
+                        wire:model.live="delivery_price" type="number" min="0" />
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <!-- Вес груза -->
@@ -100,7 +104,7 @@
                     <span>Итог:{{ $total_final }}c</span>
                 </div>
                 <!-- Кнопка -->
-                <flux:button variant="primary" color="lime" class="w-full">
+                <flux:button type="submit" variant="primary" color="lime" class="w-full">
                     Оформить заявку
                 </flux:button>
             </form>
@@ -129,5 +133,21 @@
                 </flux:button>
             </div>
         </form>
+    </flux:modal>
+    <flux:modal name="select-queue" class="md:w-96">
+        <div>
+            <flux:heading size="lg">Выберите клиент из очереди</flux:heading>
+            <flux:text class="mt-2">
+                После выбора автоматический клиент выбирается
+            </flux:text>
+        </div>
+        <div class="space-y-3 max-h-96 overflow-y-scroll">
+            @foreach ($queues as $item)
+            <div class="bg-neutral-200 p-1 rounded-lg flex justify-between items-center">
+                {{ $item->no }} - {{ $item->user->name }} - {{ $item->sex == "m"?"Муж":"Жен" }} <flux:button
+                    variant="danger" size="sm" wire:click="select_queues({{ $item->id }})">Выбирать</flux:button>
+            </div>
+            @endforeach
+        </div>
     </flux:modal>
 </div>

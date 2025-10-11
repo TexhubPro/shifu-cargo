@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('no');
             $table->enum('sex', ['m', 'z']);
             $table->foreignId('user_id');
-            $table->string('status');
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

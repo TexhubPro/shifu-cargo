@@ -6,6 +6,7 @@ use App\Models\Application;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\Notification;
+use App\Models\Order;
 use App\Models\User;
 use App\Models\Setting;
 use App\Models\Trackcode;
@@ -576,6 +577,19 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 'user_id' => $user_id,
                 'content' => "$message"
             ]);
+        }
+    }
+    public function sms_order($user_id, $order_id)
+    {
+        $user = User::find($user_id);
+        $order = Order::find($order_id);
+        if ($user->chat_id) {
+            $chat = TelegraphChat::where('chat_id', $user->chat_id)->first();
+            if ($chat->lang == 'ru') {
+                $chat->message("📦 Добрый день, уважаемый клиент!\nВы успешно оформили доставку.\nВес: $order->weight кг\nОбъём: $order->cube м³\nПодытог: $order->subtotal с\nСкидка: $order->discount с\nДоставка: $order->delivery_total с\nИтог: $order->total с\nСпасибо, что вы с нами! 💚")->send();
+            } else {
+                $chat->message("📦 Салом, муштарии муҳтарам!\nШумо бо муваффақият фармоиши худро қабул/дархост намудед.\nВазн: $order->weight кг\nҲаҷм: $order->cube м³\nҶамъбаст: $order->subtotal с\nТахфиф: $order->discount с\nНархи бурда расонӣ: $order->delivery_total с\nҲамагӣ: $order->total с\nТашаккур, ки бо мо ҳастед! 💚")->send();
+            }
         }
     }
 }
