@@ -32,7 +32,8 @@ class Login extends Component
             return match ($user->role) {
                 'admin'    => redirect()->route('admin.dashboard'),
                 'deliver'  => redirect()->route('deliver'),
-                'manager'  => redirect()->route('applicant'),
+                'applicant'  => redirect()->route('applicant'),
+                'manager'  => redirect()->route('manager'),
                 'cashier'  => redirect()->route('cashier'),
                 default    => redirect()->route('admin.dashboard'), // customer
             };

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('step')->nullable();
             $table->string('sex')->nullable();
             $table->string('sub_step')->nullable();
-            $table->enum('role', ['admin', 'deliver', 'customer', 'manager', 'cashier'])->default('customer');
+            $table->enum('role', ['admin', 'deliver', 'customer', 'manager', 'cashier', 'applicant'])->default('customer');
             $table->boolean('status')->default(true);
             $table->string('password')->nullable();
             $table->rememberToken();

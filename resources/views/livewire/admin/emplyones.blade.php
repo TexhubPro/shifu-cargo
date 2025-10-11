@@ -70,6 +70,7 @@
                 <flux:select.option value="deliver">Курьер</flux:select.option>
                 <flux:select.option value="manager">Менеджер</flux:select.option>
                 <flux:select.option value="cashier">Кассир</flux:select.option>
+                <flux:select.option value="applicant">Заявщик</flux:select.option>
             </flux:select>
 
             <div class="flex">
