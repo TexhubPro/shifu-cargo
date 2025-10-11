@@ -22,6 +22,7 @@ use App\Http\Middleware\Deliver as MidDeliver;
 use App\Livewire\Admin\Faqs as AdminFaqs;
 use App\Livewire\Admin\Orders;
 use App\Livewire\Admin\RegisterPack;
+use App\Livewire\Applicant;
 use App\Livewire\Login;
 use App\Livewire\Manager;
 use App\Livewire\MiniApp\AddOrder;
@@ -82,5 +83,8 @@ Route::middleware(['auth', MiddlewareManager::class])->group(function () {
 });
 Route::middleware(['auth', MidDeliver::class])->group(function () {
     Route::get('/deliver', Deliver::class)->name('deliver');
+});
+Route::middleware(['auth', MidDeliver::class])->group(function () {
+    Route::get('/applicant', Applicant::class)->name('applicant');
 });
 Route::get('/navbat', LivewireQueue::class)->name('navbat');

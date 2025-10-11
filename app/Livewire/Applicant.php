@@ -2,57 +2,65 @@
 
 namespace App\Livewire;
 
-use App\Models\Application;
-use Flux\Flux;
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Setting;
 use Livewire\Component;
-use App\Models\Expences;
-use App\Models\Order;
-use App\Models\Queue;
-use App\Models\Trackcode;
 use App\Texhub\Telegram;
-use Carbon\Carbon;
+use App\Models\Trackcode;
+use App\Models\Application;
 use Livewire\Attributes\Layout;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+
 
 #[Layout('components.layouts.empty')]
-class Chashdesk extends Component
+class Applicant extends Component
 {
-    public $user;
-    public $queues;
-    public $users;
-    public $order_no;
+    public $orders;
+    public $selected_order;
+    public $delivers;
+    public $deliver_boy;
     public $delivery_price = 0;
     public $weight = 0;
     public $volume = 0;
-    public $payment_type = 'Наличными';
-    public $total_amount;
+    public $payment_type;
     public $discount = 0;
-    public $discount_total = 0;
-    public $discountt = 'Фиксированная';
-    public $total;
-    public $total_final;
-    public $client;
-    public $amount;
-    public $delivers;
-    public $deliver_boy;
     public $tracks = []; // массив трек-кодов
-    public $newTrack;    // ввод нового трека
-    public $description;
-    public $selected_queue;
+    public $newTrack;
+    public $discountt;
+    public $total_amount = 0;
+    public $discount_total = 0;
+    public $total_final = 0;
+    public function addTrack()
+    {
+        $track = trim($this->newTrack);
+
+        if ($track && !in_array($track, $this->tracks)) {
+            $this->tracks[] = $track;
+        }
+        $this->newTrack = '';
+    }
+
+    public function removeTrack($index)
+    {
+        unset($this->tracks[$index]);
+        $this->tracks = array_values($this->tracks);
+    }
+    public function select_order($id)
+    {
+        $this->selected_order = Application::find($id);
+    }
     public function order_place()
     {
-        if ($this->order_no) {
-            $apl = Application::find($this->order_no);
+        if ($this->selected_order) {
+            $apl = $this->selected_order;
             $apl->status = "Доставляется";
             $apl->save();
         }
-        $user = User::where('phone', $this->client)->first();
+        $user = $this->selected_order->user;
         $deliver = User::where('name', $this->deliver_boy)->first();
         $order = Order::create([
-            'user_id' => $user->id ?? $this->client,
+            'user_id' => $user->id,
             'weight' => $this->weight,
             'cube' => $this->volume,
             'subtotal' => $this->total_amount,
@@ -66,10 +74,8 @@ class Chashdesk extends Component
             $sms->sms_order($user->id, $order->id);
         }
         $this->updateTrackStatuses($user->id, $order->id);
-        if ($this->selected_queue) {
-            Queue::find($this->selected_queue)->delete();
-        }
-        return redirect()->route('cashier');
+
+        return redirect()->route('applicant');
     }
     public function updateTrackStatuses($user_id, $order_id)
     {
@@ -99,19 +105,8 @@ class Chashdesk extends Component
     }
     public function mount()
     {
-        $this->queues = Queue::where('status', 'В очереди')->whereDate('created_at', Carbon::today())->get();
-        $this->users = User::where('role', 'customer')->get();
+        $this->orders = Application::orderBy('created_at', 'asc')->where('status', 'В ожидании')->get();
         $this->delivers = User::where('role', 'deliver')->get();
-        $this->total_amounts();
-    }
-    public function select_queues($id)
-    {
-        $queue = Queue::find($id);
-        $queue->status = "Касса";
-        $queue->save();
-        $this->client = $queue->user->phone;
-        $this->selected_queue = $queue->id;
-        Flux::modals()->close();
     }
     public function updatedDiscount()
     {
@@ -159,35 +154,6 @@ class Chashdesk extends Component
         }
         $this->total_final = max(0, $this->total_amount - $this->discount_total + $this->delivery_price);
     }
-
-    public function addTrack()
-    {
-        $track = trim($this->newTrack);
-
-        if ($track && !in_array($track, $this->tracks)) {
-            $this->tracks[] = $track;
-        }
-        $this->newTrack = '';
-    }
-
-    public function removeTrack($index)
-    {
-        unset($this->tracks[$index]);
-        $this->tracks = array_values($this->tracks);
-    }
-    public function addExpense()
-    {
-
-        Expences::create([
-            'sklad' => 'Склад Душанбе',
-            'total' => $this->amount,
-            'content' => $this->description,
-        ]);
-
-        $this->reset(['amount', 'description']);
-        Flux::modals()->close();
-        $this->dispatch('alert', 'Затраты успешно добавлены!');
-    }
     private function getKgPriceTJS()
     {
         $kg_price_usd = (float) str_replace('$', '', Setting::where('name', 'kg_price')->value('content'));
@@ -201,8 +167,15 @@ class Chashdesk extends Component
         $course = (float) Setting::where('name', 'course_dollar')->value('content');
         return $cube_price_usd * $course;
     }
+    public function cancel($id)
+    {
+        $apl = Application::find($id);
+        $apl->status = "Отменено";
+        $apl->save();
+        return redirect()->route('applicant');
+    }
     public function render()
     {
-        return view('livewire.chashdesk');
+        return view('livewire.applicant');
     }
 }

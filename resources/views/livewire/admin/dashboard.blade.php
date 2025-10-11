@@ -130,7 +130,7 @@
 
                         <div class="grow">
                             <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                Новые клиенты на меняц
+                                Новые клиенты на месяц
                             </p>
                             <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
                                 {{ $montnewUsersCount }}
@@ -155,7 +155,7 @@
 
                         <div class="grow">
                             <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                Заказы на меняц
+                                Заказы на месяц
                             </p>
                             <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
                                 {{ $monttrackcodesCount }}
@@ -178,7 +178,7 @@
 
                         <div class="grow">
                             <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                Заработок на меняц
+                                Заработок на месяц
                             </p>
                             <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
                                 {{ $montordersSum }}c
@@ -203,7 +203,7 @@
 
                         <div class="grow">
                             <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                Затраты на меняц
+                                Затраты на месяц
                             </p>
                             <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
                                 {{ $montexpensesSum }}c

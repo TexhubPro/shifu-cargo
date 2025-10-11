@@ -24,12 +24,12 @@
                 @foreach ($this->orders as $item)
 
                 <flux:table.row>
-                    <flux:table.cell>{{ $item->user->code }}c</flux:table.cell>
+                    <flux:table.cell>{{ $item->user->code ??$item->user_id }}</flux:table.cell>
                     <flux:table.cell>{{ $item->weight }}</flux:table.cell>
                     <flux:table.cell>{{ $item->cube }}</flux:table.cell>
-                    <flux:table.cell>{{ $item->subtotal }}</flux:table.cell>
-                    <flux:table.cell>{{ $item->discount }}</flux:table.cell>
-                    <flux:table.cell>{{ $item->total }}</flux:table.cell>
+                    <flux:table.cell>{{ $item->subtotal }}c</flux:table.cell>
+                    <flux:table.cell>{{ $item->discount }}c</flux:table.cell>
+                    <flux:table.cell>{{ $item->total }}c</flux:table.cell>
                     <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
                     </flux:table.cell>
                 </flux:table.row>

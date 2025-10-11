@@ -45,7 +45,7 @@
                 <!-- Клиент -->
                 <flux:autocomplete wire:model.live="client" label="Клиент" placeholder="Выберите клиента" required>
                     @foreach ($users as $user)
-                    <flux:autocomplete.item value="d">{{ $user->phone}}</flux:autocomplete.item>
+                    <flux:autocomplete.item>{{ $user->phone}}</flux:autocomplete.item>
                     @endforeach
                 </flux:autocomplete>
                 <div class="grid gap-2 grid-cols-3">
