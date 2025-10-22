@@ -20,20 +20,20 @@ class Emplyones extends Component
 
     public function saveEmployee()
     {
-        $this->validate([
-            'name' => 'required|string|min:3',
-            'phone' => 'required|string|unique:users,phone',
-            'password' => 'required|string|min:6',
-            'chat_id',
-            'role' => 'required|in:admin,deliver,customer,manager,cashier,applicant',
-        ], [
-            'name.required' => 'Введите имя сотрудника.',
-            'phone.required' => 'Введите номер телефона.',
-            'phone.unique' => 'Пользователь с таким номером уже существует.',
-            'password.required' => 'Введите пароль.',
-            'password.min' => 'Пароль должен содержать минимум 6 символов.',
-            'role.required' => 'Выберите должность.',
-        ]);
+        // $this->validate([
+        //     'name' => 'required|string|min:3',
+        //     'phone' => 'required|string|unique:users,phone',
+        //     'password' => 'required|string|min:6',
+        //     'chat_id',
+        //     'role' => 'required|in:admin,deliver,customer,manager,cashier,applicant',
+        // ], [
+        //     'name.required' => 'Введите имя сотрудника.',
+        //     'phone.required' => 'Введите номер телефона.',
+        //     'phone.unique' => 'Пользователь с таким номером уже существует.',
+        //     'password.required' => 'Введите пароль.',
+        //     'password.min' => 'Пароль должен содержать минимум 6 символов.',
+        //     'role.required' => 'Выберите должность.',
+        // ]);
         $user = User::where('phone', $this->phone)->first();
         if ($user) {
             $user->name = $this->name;
