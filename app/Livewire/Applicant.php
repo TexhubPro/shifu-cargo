@@ -19,7 +19,7 @@ class Applicant extends Component
     public $orders;
     public $selected_order;
     public $delivers;
-    public $deliver_boy;
+    public $deliver_boy = 'Shod';
     public $delivery_price = 0;
     public $weight = 0;
     public $volume = 0;
