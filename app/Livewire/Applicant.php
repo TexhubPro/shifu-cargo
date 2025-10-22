@@ -57,7 +57,7 @@ class Applicant extends Component
             $apl->status = "Доставляется";
             $apl->save();
         }
-        $user = $this->selected_order->user;
+        $user = User::find($this->selected_order->user_id);
         $deliver = User::where('name', str($this->deliver_boy))->first();
         $order = Order::create([
             'user_id' => $user->id,
