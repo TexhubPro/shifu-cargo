@@ -63,7 +63,7 @@
         </div>
         <form wire:submit="order_place" class="space-y-3">
 
-            <flux:select wire:model="deliver_boy" label="Доставщик" required placeholder="Выбкрите доставщика">
+            <flux:select wire:model="deliver_boy" label="Доставщик" required placeholder="Выберите доставщика">
                 @foreach ($delivers as $deliver)
                 <flux:select.option>{{ $deliver->name }}</flux:select.option>
                 @endforeach

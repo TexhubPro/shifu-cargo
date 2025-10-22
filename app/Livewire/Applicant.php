@@ -58,7 +58,7 @@ class Applicant extends Component
             $apl->save();
         }
         $user = $this->selected_order->user;
-        $deliver = User::where('name', $this->deliver_boy)->first();
+        $deliver = User::where('name', str($this->deliver_boy))->first();
         $order = Order::create([
             'user_id' => $user->id,
             'weight' => $this->weight,
