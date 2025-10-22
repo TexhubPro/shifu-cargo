@@ -22,7 +22,7 @@ class Emplyones extends Component
     {
         $this->validate([
             'name' => 'required|string|min:3',
-            'phone' => 'required|string|unique:users,phone,' . $this->user_id,
+            'phone' => 'required|string|unique:users,phone,',
             'password' => 'required|string|min:6',
             'chat_id' => 'nullable|string',
             'role' => 'required|in:admin,deliver,customer,manager,cashier,applicant',
