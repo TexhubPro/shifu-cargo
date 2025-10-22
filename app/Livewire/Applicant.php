@@ -74,7 +74,7 @@ class Applicant extends Component
             $sms = new Telegram();
             $sms->sms_order($user->id, $order->id);
         }
-        if ($deliver->chat_id) {
+        if ($deliver) {
             $sms_delivery = new Telegram();
             $sms_delivery->sms_deliver_boy($deliver->id, $order->id, $this->selected_order->id);
         }
