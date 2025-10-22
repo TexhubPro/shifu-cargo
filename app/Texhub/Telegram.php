@@ -622,12 +622,15 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             $order->save();
             $apl->status = 'Доставлено';
             $apl->save();
+            $this->chat->message("📦 Заказ №$apl->id доставлено!")->send();
         }
         if ($status == 'returned') {
             $order->status = 'Возврат';
             $order->save();
             $apl->status = 'Отменено';
             $apl->save();
+            $this->chat->message("🔁 Заказ №$apl->id возвращено!")->send();
         }
+        $this->chat->deleteMessage($this->messageId)->send();
     }
 }
