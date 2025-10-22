@@ -10,6 +10,9 @@ use Livewire\Attributes\Layout;
 class Settings extends Component
 {
     public $kg_price;
+    public $kg_price_10;
+    public $kg_price_20;
+    public $kg_price_30;
     public $cube_price;
     public $address_ivu;
     public $address_dushanbe;
@@ -23,6 +26,9 @@ class Settings extends Component
         $settings = Setting::all()->keyBy('name');
 
         $this->kg_price = $settings['kg_price']->content ?? '';
+        $this->kg_price_10 = $settings['kg_price_10']->content ?? '';
+        $this->kg_price_20 = $settings['kg_price_20']->content ?? '';
+        $this->kg_price_30 = $settings['kg_price_30']->content ?? '';
         $this->cube_price = $settings['cube_price']->content ?? '';
         $this->address_ivu = $settings['address_ivu']->content ?? '';
         $this->address_dushanbe = $settings['address_dushanbe']->content ?? '';

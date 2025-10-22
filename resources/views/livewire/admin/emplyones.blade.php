@@ -65,14 +65,14 @@
             <flux:input label="Пароль" type="password" placeholder="Введите пароль" required
                 wire:model.defer="password" />
 
-            <flux:select label="Должность (роль)" placeholder="Выберите должность..." required wire:model.defer="role">
+            <flux:select label="Должность (роль)" placeholder="Выберите должность..." required wire:model="role">
                 <flux:select.option value="admin">Администратор</flux:select.option>
                 <flux:select.option value="deliver">Курьер</flux:select.option>
                 <flux:select.option value="manager">Менеджер</flux:select.option>
                 <flux:select.option value="cashier">Кассир</flux:select.option>
                 <flux:select.option value="applicant">Заявщик</flux:select.option>
             </flux:select>
-
+            <flux:input label="Telegram Chat Id" placeholder="Введите Telegram Chat Id" wire:model.defer="chat_id" />
             <div class="flex">
                 <flux:spacer />
                 <flux:button type="submit" variant="primary" wire:click="saveEmployee">

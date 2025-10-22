@@ -68,10 +68,15 @@ class Applicant extends Component
             'deliver_id' => $deliver->id ?? $this->deliver_boy,
             'discount' => $this->discount_total,
             'total' => $this->total_final,
+            'status' => "Доставляется",
         ]);
         if ($user) {
             $sms = new Telegram();
             $sms->sms_order($user->id, $order->id);
+        }
+        if ($deliver->chat_id) {
+            $sms_delivery = new Telegram();
+            $sms_delivery->sms_deliver_boy($deliver->id, $order->id, $this->selected_order->id);
         }
         $this->updateTrackStatuses($user->id, $order->id);
 
@@ -137,7 +142,15 @@ class Applicant extends Component
         $discount = (float) ($this->discount ?? 0);
 
         // Расчёт стоимости
-        $kg_total = $weight * $kg_price;
+        if ($weight <= 10) {
+            $kg_total = $weight * (float) $this->getKgPriceTJS();
+        } elseif ($weight <= 20) {
+            $kg_total = $weight *  (float) $this->getKgPrice10TJS();
+        } elseif ($weight <= 30) {
+            $kg_total = $weight * (float) $this->getKgPrice20TJS();
+        } else {
+            $kg_total = $weight * (float) $this->getKgPrice30TJS();
+        }
         $cube_total = $volume * $cube_price;
 
         // Общая сумма без скидки
@@ -160,7 +173,24 @@ class Applicant extends Component
         $course = (float) Setting::where('name', 'course_dollar')->value('content');
         return $kg_price_usd * $course;
     }
-
+    private function getKgPrice10TJS()
+    {
+        $kg_price_usd = (float) str_replace('$', '', Setting::where('name', 'kg_price_10')->value('content'));
+        $course = (float) Setting::where('name', 'course_dollar')->value('content');
+        return $kg_price_usd * $course;
+    }
+    private function getKgPrice20TJS()
+    {
+        $kg_price_usd = (float) str_replace('$', '', Setting::where('name', 'kg_price_20')->value('content'));
+        $course = (float) Setting::where('name', 'course_dollar')->value('content');
+        return $kg_price_usd * $course;
+    }
+    private function getKgPrice30TJS()
+    {
+        $kg_price_usd = (float) str_replace('$', '', Setting::where('name', 'kg_price_30')->value('content'));
+        $course = (float) Setting::where('name', 'course_dollar')->value('content');
+        return $kg_price_usd * $course;
+    }
     private function getCubePriceTJS()
     {
         $cube_price_usd = (float) str_replace('$', '', Setting::where('name', 'cube_price')->value('content'));

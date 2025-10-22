@@ -24,6 +24,10 @@ use DefStudio\Telegraph\Facades\Telegraph as FacadesTelegraph;
 
 class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
 {
+    public function code(): void
+    {
+        $this->chat->message($this->message->from()->id())->send();
+    }
     public function start(): void
     {
         $this->chat->photo(public_path('assets/welcome.png'))->message("Салом " . $this->message->from()->firstName() . "! \nИн телеграм боти <b>Shifu Cargo</b> мебошад! \nБарои истифода бурдан аввал забонро интихоб кунед!\n\nЭто телеграм бот <b>Shifu Cargo!</b> \nЧтобы использовать, сначала выберите язык! ⤵️")
@@ -590,6 +594,40 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             } else {
                 $chat->message("📦 Салом, муштарии муҳтарам!\n\n🚚 Шумо бо муваффақият фармоиши худро қабул/дархост намудед.\n⚖️ Вазн: $order->weight кг\n📏 Ҳаҷм: $order->cube м³\n💰 Ҷамъбаст: $order->subtotal с\n💵 Тахфиф: $order->discount с\n🚛 Нархи бурда расонӣ: $order->delivery_total с\n✅ Ҳамагӣ: $order->total с\n\nТашаккур, ки бо мо ҳастед! 💚")->send();
             }
+        }
+    }
+    public function sms_deliver_boy($user_id, $order_id, $application_id = null)
+    {
+        $user = User::find($user_id);
+        $order = Order::find($order_id);
+        $apl = Application::find($application_id);
+        if ($user->chat_id) {
+            $chat = TelegraphChat::where('chat_id', $user->chat_id)->first();
+            $chat->message("📦 *Заказ №$apl->id*\n\n📞 Телефон: $apl->phone\n🏠 Адрес: $apl->address\n\n⚖️ Вес: $order->weight кг\n📏 Объём: $order->cube м³\n💰 Подытог: $order->subtotal с\n💵 Скидка: $order->discount с\n🚚 Доставка: $order->delivery_total с\n✅ *Итого: $order->total с*")
+                ->keyboard(
+                    Keyboard::make()
+                        ->row([
+                            Button::make('🔁 Возврат')->action('order_del_status')->param('order_id', $order_id)->param('apl_id', $application_id)->param('status', 'returned'),
+                            Button::make('📦 Доставлено')->action('order_del_status')->param('order_id', $order_id)->param('apl_id', $application_id)->param('status', 'delivered'),
+                        ])
+                )->send();
+        }
+    }
+    public function order_del_status($order_id, $apl_id, $status): void
+    {
+        $order = Order::find($order_id);
+        $apl = Application::find($apl_id);
+        if ($status == 'delivered') {
+            $order->status = 'Оплачено';
+            $order->save();
+            $apl->status = 'Доставлено';
+            $apl->save();
+        }
+        if ($status == 'returned') {
+            $order->status = 'Возврат';
+            $order->save();
+            $apl->status = 'Отменено';
+            $apl->save();
         }
     }
 }

@@ -9,8 +9,17 @@
         <form class="space-y-3" wire:submit.prevent="saveSettings">
             <flux:input placeholder="Введите курс доллара к сомони" label="Курс 1 доллар к сомони"
                 wire:model="course_dollar" required />
-            <flux:input placeholder="Введите цену за 1 кг груза" label="Цена за 1 кг груза" wire:model="kg_price"
-                required />
+            <flux:input placeholder="Введите цену за 1 кг груза (до 10 кг)" label="Цена за 1 кг (до 10 кг)"
+                wire:model="kg_price" required />
+
+            <flux:input placeholder="Введите цену за 1 кг груза (от 10 до 20 кг)" label="Цена за 1 кг (от 10 до 20 кг)"
+                wire:model="kg_price_10" required />
+
+            <flux:input placeholder="Введите цену за 1 кг груза (от 20 до 30 кг)" label="Цена за 1 кг (от 20 до 30 кг)"
+                wire:model="kg_price_20" required />
+
+            <flux:input placeholder="Введите цену за 1 кг груза (свыше 30 кг)" label="Цена за 1 кг (свыше 30 кг)"
+                wire:model="kg_price_30" required />
 
             <flux:input placeholder="Введите цену за 1 куб груза" label="Цена за 1 куб груза" wire:model="cube_price"
                 required />

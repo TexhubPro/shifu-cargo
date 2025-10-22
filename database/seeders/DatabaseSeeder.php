@@ -22,6 +22,9 @@ class DatabaseSeeder extends Seeder
     {
         $settings = [
             ['name' => 'kg_price', 'content' => '3$'],
+            ['name' => 'kg_price_10', 'content' => '2.5$'],
+            ['name' => 'kg_price_20', 'content' => '2$'],
+            ['name' => 'kg_price_30', 'content' => '1.5$'],
             ['name' => 'cube_price', 'content' => '260$'],
             ['name' => 'address_ivu', 'content' => 'test'],
             ['name' => 'address_dushanbe', 'content' => 'test'],

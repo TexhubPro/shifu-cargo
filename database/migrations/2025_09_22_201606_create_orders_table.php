@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('deliver_id')->nullable();
             $table->string('discount')->nullable();
             $table->string('total')->nullable();
+            $table->string('status')->default('В ожидании');
             $table->timestamps();
         });
     }

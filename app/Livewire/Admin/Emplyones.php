@@ -14,6 +14,7 @@ class Emplyones extends Component
 {
     public $name;
     public $phone;
+    public $chat_id;
     public $password;
     public $role = 'manager';
 
@@ -23,7 +24,8 @@ class Emplyones extends Component
             'name' => 'required|string|min:3',
             'phone' => 'required|string|unique:users,phone',
             'password' => 'required|string|min:6',
-            'role' => 'required|in:admin,deliver,customer,manager,cashier',
+            'chat_id',
+            'role' => 'required|in:admin,deliver,customer,manager,cashier,applicant',
         ], [
             'name.required' => 'Введите имя сотрудника.',
             'phone.required' => 'Введите номер телефона.',
@@ -32,13 +34,22 @@ class Emplyones extends Component
             'password.min' => 'Пароль должен содержать минимум 6 символов.',
             'role.required' => 'Выберите должность.',
         ]);
-
-        User::create([
-            'name' => $this->name,
-            'phone' => $this->phone,
-            'password' => Hash::make($this->password),
-            'role' => $this->role,
-        ]);
+        $user = User::where('phone', $this->phone)->first();
+        if ($user) {
+            $user->name = $this->name;
+            $user->chat_id = $this->chat_id;
+            $user->role = $this->role;
+            $user->password = Hash::make($this->password);
+            $user->save();
+        } else {
+            User::create([
+                'name' => $this->name,
+                'phone' => $this->phone,
+                'chat_id' => $this->chat_id ?? null,
+                'password' => Hash::make($this->password),
+                'role' => $this->role,
+            ]);
+        }
 
         $this->reset(['name', 'phone', 'password', 'role']);
 
