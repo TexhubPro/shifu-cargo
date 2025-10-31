@@ -40,6 +40,9 @@ class Settings extends Component
     {
         $data = [
             'kg_price' => $this->kg_price,
+            'kg_price_10' => $this->kg_price_10,
+            'kg_price_20' => $this->kg_price_20,
+            'kg_price_30' => $this->kg_price_30,
             'cube_price' => $this->cube_price,
             'address_ivu' => $this->address_ivu,
             'address_dushanbe' => $this->address_dushanbe,
