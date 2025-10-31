@@ -404,11 +404,16 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         if ($text == '💲 Нархнома' || $text == '💲 Прайс лист') {
             $price_kg = Setting::where('name', 'kg_price')->first();
             $price_cube = Setting::where('name', 'cube_price')->first();
+            $kg_price_20 = Setting::where('name', 'kg_price_20')->first();
+            $kg_price_30 = Setting::where('name', 'kg_price_30')->first();
             if ($this->chat->lang == 'ru') {
-                $this->chat->photo(public_path('assets/price_ru.png'))->message("💲 Цена за 1 килограмм груза: $price_kg->content \n📦 Цена за 1 кубический метр груза: $price_cube->content")->send();
+                $this->chat->photo(public_path('assets/price_ru.png'))->message("📋 <b>Прайс-лист (с 23.03.2025)</b>\n🚚 Иву ➜ Душанбе\n\n⏱ <b>Срок доставки:</b> 14–20 дней\n\n💲 <b>Цена за 1 килограмм груза:</b>\n• от 1 кг до 20 кг — $price_kg->content\n• от 20 кг до 30 кг — $kg_price_20->content\n• свыше 30 кг — $kg_price_30->content\n\n📦 <b>Цена за 1 кубический метр груза:</b> $price_cube->content\n\n📌 Цены действуют для грузов, прибывших на склад в один день и соответствующих указанному весу.\n📞 При заказе от 200 кг и выше — заранее свяжитесь с администрацией.")
+                    ->send();
             } else {
-                $this->chat->photo(public_path('assets/price_tj.png'))->message("💲 Нархнома барои як килограм: $price_kg->content \n📦 Нархнома барои як метри куби: $price_cube->content")->send();
+                $this->chat->photo(public_path('assets/price_tj.png'))->message("📋 <b>Нархнома (аз 23.03.2025)</b>\n🚚 Иву ➜ Душанбе\n\n⏱ <b>Мӯҳлати расонидан:</b> 14–20 рӯз\n\n💲 <b>Нарх барои як килограмм бор:</b>\n• аз 1 кг то 20 кг — $price_kg->content\n• аз 20 кг то 30 кг — $kg_price_20->content\n• зиёда аз 30 кг — $kg_price_30->content\n\n📦 <b>Нарх барои як метри мукааб бор:</b> $price_cube->content\n\n📌 Нарҳҳо барои борҳое амал мекунанд, ки дар як рӯз ба анбор оварда шудаанд ва ба вазни зикршуда мувофиқат мекунанд.\n📞 Ҳангоми фармоиши аз 200 кг боло — пешакӣ бо маъмурият тамос гиред.")
+                    ->send();
             }
+
             return;
         }
         if ($text == '❌ Молҳои манъшуда' || $text == '❌ Запрещенные товары') {
@@ -479,7 +484,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         if ($text == 'supershifu') {
             $this->chat->message(('Добро пожаловать в панел управление!'))
                 ->keyboard(Keyboard::make()->buttons([
-                    Button::make('Открыт панель управлению')->webApp('https://sifucargo.texhub.pro.tj/'),
+                    Button::make('Открыт панель управлению')->webApp('https://sifucargo.texhub.pro/admin/dashboard'),
                 ]))->send();
             return;
         }
