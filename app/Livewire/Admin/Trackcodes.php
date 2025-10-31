@@ -6,11 +6,13 @@ use Livewire\Component;
 use App\Models\Trackcode;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Computed;
+use Livewire\WithPagination;
 
 #[Layout('components.layouts.admin')]
 
 class Trackcodes extends Component
 {
+    use WithPagination;
     public $user_code;
     public $search = null;
     #[Computed]
