@@ -462,7 +462,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 }
                 return;
             }
-            $locations = "$location->content $user->code $user->sex $user->name $user->phone";
+            $locations = "$location->content-$user->code-$user->sex-$user->name-$user->phone";
 
             if ($this->chat->lang == 'ru') {
                 $this->chat->photo(public_path('assets/ivu_ru.png'))->message($locations)
