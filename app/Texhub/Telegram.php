@@ -132,9 +132,9 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         $user->step = 'name';
         $user->save();
         if ($this->chat->lang == 'ru') {
-            $this->chat->message("✍️ Напишите своё имя, например: <b>Абдулло</b>")->send();
+            $this->chat->message("👤 Напишите своё имя с английскими буквами, например: <b>Abdullo</b>")->send();
         } else {
-            $this->chat->message("✍️ Номи худро нависед, масалан: <b>Абдулло</b>")->send();
+            $this->chat->message("👤 Номи худро бо харфхои англиси нависед, масалан: <b>Abdullo</b>")->send();
         }
     }
     public function open_chat(): void
@@ -306,18 +306,12 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 return;
             }
             if ($user->step == 'name') {
-                if ($text == "🚚 Дархости доставка") {
-                    if ($this->chat->lang == 'ru') {
-                        $this->chat->message("👤 Напишите своё имя с английскими буквами, например: <b>Abdullo</b>")->send();
-                    } else {
-                        $this->chat->message("👤 Номи худро бо харфхои англиси нависед, масалан: <b>Abdullo</b>")->send();
-                    }
-                    return;
-                }
                 $code = User::orderBy('code', 'desc')->first();
 
                 $user->name = $text;
-                $user->code = str_pad($code ? $code->code + 1 : 1, 4, '0', STR_PAD_LEFT);
+                if (!$user->code) {
+                    $user->code = str_pad($code ? $code->code + 1 : 1, 4, '0', STR_PAD_LEFT);
+                }
                 $user->step = "phone";
                 $user->save();
 
