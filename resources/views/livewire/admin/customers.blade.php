@@ -28,6 +28,7 @@
                 <flux:table.column>Все заказы</flux:table.column>
                 <flux:table.column>Сумма заказов</flux:table.column>
                 <flux:table.column>Дата присоеденения</flux:table.column>
+                <flux:table.column></flux:table.column>
             </flux:table.columns>
 
             <flux:table.rows>
@@ -41,6 +42,11 @@
                     <flux:table.cell>{{ $item->trackcodes->count() }}</flux:table.cell>
                     <flux:table.cell>{{ $item->orders->sum('total') }}c</flux:table.cell>
                     <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
+                    </flux:table.cell>
+                    <flux:table.cell>
+                        <flux:button variant="primary" size="sm" color="red" wire:click="delete({{ $item->id }})"
+                            wire:confirm>
+                            Удалить</flux:button>
                     </flux:table.cell>
                 </flux:table.row>
                 @endforeach

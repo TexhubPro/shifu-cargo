@@ -31,6 +31,10 @@ class Customers extends Component
     }
 
     public function check_user() {}
+    public function delete($id)
+    {
+        User::find($id)->delete();
+    }
     public function render()
     {
         return view('livewire.admin.customers');
