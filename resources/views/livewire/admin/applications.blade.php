@@ -17,50 +17,52 @@
 
             <flux:table.rows>
                 @foreach ($this->orders as $item)
+                    <flux:table.row>
+                        <flux:table.cell>{{ $item->user->code }}</flux:table.cell>
+                        <flux:table.cell>{{ $item->phone }}</flux:table.cell>
+                        <flux:table.cell>{{ $item->address }}</flux:table.cell>
+                        <flux:table.cell>
+                            @switch($item->status)
+                                @case('В ожидании')
+                                    <flux:badge color="orange" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                                @break
 
-                <flux:table.row>
-                    <flux:table.cell>{{ $item->user->code }}</flux:table.cell>
-                    <flux:table.cell>{{ $item->phone}}</flux:table.cell>
-                    <flux:table.cell>{{ $item->address}}</flux:table.cell>
-                    <flux:table.cell>
-                        @switch($item->status)
-                        @case('В ожидании')
-                        <flux:badge color="orange" size="sm" inset="top bottom">
-                            {{ $item->status }}
-                        </flux:badge>
-                        @break
+                                @case('Собрано')
+                                    <flux:badge color="lime" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                                @break
 
-                        @case('Собрано')
-                        <flux:badge color="lime" size="sm" inset="top bottom">
-                            {{ $item->status }}
-                        </flux:badge>
-                        @break
+                                @case('У доставщика')
+                                    <flux:badge color="lime" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                                @break
 
-                        @case('У доставщика')
-                        <flux:badge color="lime" size="sm" inset="top bottom">
-                            {{ $item->status }}
-                        </flux:badge>
-                        @break
-                        @case('Доставлено')
-                        <flux:badge color="emerald" size="sm" inset="top bottom">
-                            {{ $item->status }}
-                        </flux:badge>
-                        @break
+                                @case('Доставлено')
+                                    <flux:badge color="emerald" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                                @break
 
-                        @default
-                        <flux:badge color="yellow" size="sm" inset="top bottom">
-                            {{ $item->status }}
-                        </flux:badge>
-                        @endswitch
-                    </flux:table.cell>
-                    <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
-                    </flux:table.cell>
-                    <flux:table.cell>
-                        <flux:button variant="primary" size="sm" color="red" wire:click="delete({{ $item->id }})"
-                            wire:confirm>
-                            Удалить</flux:button>
-                    </flux:table.cell>
-                </flux:table.row>
+                                @default
+                                    <flux:badge color="yellow" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                            @endswitch
+                        </flux:table.cell>
+                        <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
+                        </flux:table.cell>
+                        @if (Auth::user()->role == 'admin')
+                            <flux:table.cell>
+                                <flux:button variant="primary" size="sm" color="red"
+                                    wire:click="delete({{ $item->id }})" wire:confirm>
+                                    Удалить</flux:button>
+                            </flux:table.cell>
+                        @endif
+                    </flux:table.row>
                 @endforeach
             </flux:table.rows>
         </flux:table>

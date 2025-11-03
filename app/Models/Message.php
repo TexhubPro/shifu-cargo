@@ -13,4 +13,9 @@ class Message extends Model
         'status',
         'is_admin',
     ];
+
+    public function chat()
+    {
+        return $this->belongsTo(Chat::class);
+    }
 }
