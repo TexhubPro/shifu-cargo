@@ -31,8 +31,15 @@ class Chats extends Component
     public function open_chat($id)
     {
         $this->active_chat = Chat::find($id);
+
+        // Обновляем статус всех сообщений этого чата на true
+        Message::where('chat_id', $id)
+            ->where('status', false)
+            ->update(['status' => true]);
+
         $this->load_m();
     }
+
     public function load_m()
     {
         $this->messages = Message::where('chat_id', $this->active_chat->id)->orderBy('created_at', 'desc')->get();
