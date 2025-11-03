@@ -21,7 +21,8 @@ class Chats extends Component
         Message::create([
             'chat_id' => $this->active_chat->id,
             'message' => $this->message,
-            'is_admin' => true
+            'is_admin' => true,
+            'status' => false
         ]);
         $sms = new Telegram();
         $sms->sms_single($this->active_chat->user->id, $this->message);
