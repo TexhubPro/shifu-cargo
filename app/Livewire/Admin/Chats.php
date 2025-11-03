@@ -50,12 +50,9 @@ class Chats extends Component
     }
     public function mount()
     {
-        $this->chats = Chat::with('latestMessage')
-            ->withCount(['unreadMessages'])
-            ->leftJoin('messages', 'messages.chat_id', '=', 'chats.id')
-            ->select('chats.*')
+        $this->chats = Chat::with(['latestMessage', 'unreadMessages'])
+            ->withCount('unreadMessages')
             ->orderByRaw('(SELECT MAX(created_at) FROM messages WHERE messages.chat_id = chats.id) DESC')
-            ->groupBy('chats.id')
             ->get();
     }
     public function render()
