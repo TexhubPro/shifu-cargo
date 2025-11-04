@@ -1,9 +1,15 @@
 <div class="max-w-sm mx-auto p-4">
-    <div>
-        <flux:heading class="text-xl">Заявки на доставку</flux:heading>
-        <flux:text class="mt-2 max-w-60">
-            Здесь отображается заявки на доставку!
-        </flux:text>
+    <div class="grid grid-cols-2 gap-3 mb-4">
+        <flux:button variant="filled" size="xs" wire:click="restart">Обновить</flux:button>
+        <flux:button variant="danger" size="xs" wire:click="logout" wire:confirm>Выйти</flux:button>
+    </div>
+    <div class="flex gap-2">
+        <div>
+            <flux:heading class="text-xl">Заявки на доставку</flux:heading>
+            <flux:text class="mt-2 max-w-60">
+                Здесь отображается заявки на доставку!
+            </flux:text>
+        </div>
     </div>
     <div>
         <flux:table>

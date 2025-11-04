@@ -11,6 +11,7 @@ use App\Texhub\Telegram;
 use App\Models\Trackcode;
 use App\Models\Application;
 use Livewire\Attributes\Layout;
+use Illuminate\Support\Facades\Auth;
 
 
 #[Layout('components.layouts.empty')]
@@ -31,6 +32,16 @@ class Applicant extends Component
     public $total_amount = 0;
     public $discount_total = 0;
     public $total_final = 0;
+
+    public function restart()
+    {
+        return redirect()->route('applicant');
+    }
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('login');
+    }
     public function addTrack()
     {
         $track = trim($this->newTrack);
