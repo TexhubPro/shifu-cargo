@@ -23,6 +23,11 @@ class China extends Component
     {
         $this->date = Carbon::now();
     }
+
+    public function updatedDate()
+    {
+        dd($this->date);
+    }
     public function addSingleTrack()
     {
         $trackcode = Trackcode::where('code', $this->singleTrack)->first();
