@@ -41,6 +41,5 @@ class SendTrackNotification implements ShouldQueue
                 'status' => 'Получено в Иву'
             ]);
         }
-        sleep(1);
     }
 }
