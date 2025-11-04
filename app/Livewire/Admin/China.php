@@ -21,7 +21,7 @@ class China extends Component
 
     public function mount()
     {
-        // $this->date = Carbon::now();
+        $this->date = Carbon::now();
     }
     public function addSingleTrack()
     {
