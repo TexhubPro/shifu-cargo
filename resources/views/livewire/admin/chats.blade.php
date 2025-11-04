@@ -14,7 +14,7 @@
                         class="bg-white p-1 rounded-md flex gap-2 w-full text-start">
                         <flux:avatar name="Caleb Porzio" />
                         <div>
-                            <flux:heading class="flex items-center gap-2">{{ $chat->user->name }}
+                            <flux:heading class="flex items-center gap-2">{{ $chat->user->name ?? 'Не известьно' }}
 
                                 @if ($chat->unread_messages_count > 0)
                                     <span class="rounded-full p-1 text-xs bg-red-500 text-white">
@@ -56,7 +56,7 @@
                                     </div>
                                     <span
                                         class="text-neutral-500 text-xs text-end mt-1">{{ $message->created_at->format('H:i |
-                                                                                                                                                                                            d.m.Y') }}</span>
+                                                                                                                                                                                                                                    d.m.Y') }}</span>
                                 </div>
                             @endif
                         @endforeach
