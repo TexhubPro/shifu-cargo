@@ -17,6 +17,7 @@ class China extends Component
     use WithFileUploads;
     public $excelfile;
     public $singleTrack;
+    public $date;
     public function addSingleTrack()
     {
         $trackcode = Trackcode::where('code', $this->singleTrack)->first();
@@ -51,9 +52,9 @@ class China extends Component
             if ($key == 0) {
                 continue;
             }
-            SendTrackNotification::dispatch(trim($row[0]), Carbon::now());
+            SendTrackNotification::dispatch(trim($row[0]), $this->date);
         }
-        $this->reset(['singleTrack', 'excelfile']);
+        $this->reset(['singleTrack', 'excelfile', 'date']);
         $this->dispatch('alert', 'Данные успешно загружены!');
     }
     public function render()
