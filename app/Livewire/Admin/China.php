@@ -26,7 +26,7 @@ class China extends Component
 
     public function updatedDate()
     {
-        dd($this->date);
+        // dd($this->date);
     }
     public function addSingleTrack()
     {
