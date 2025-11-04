@@ -33,7 +33,7 @@ class Login extends Component
                 'admin'    => redirect()->route('admin.dashboard'),
                 'deliver'  => redirect()->route('deliver'),
                 'applicant'  => redirect()->route('applicant'),
-                'manager'  => redirect()->route('manager'),
+                'manager'  => redirect()->route('admin.dashboard'),
                 'cashier'  => redirect()->route('cashier'),
                 default    => redirect()->route('admin.dashboard'), // customer
             };
