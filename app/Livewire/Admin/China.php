@@ -21,7 +21,7 @@ class China extends Component
 
     public function mount()
     {
-        // $this->date = Carbon::now();
+        $this->date = Carbon::now();
     }
 
     public function updatedDate()
@@ -55,9 +55,7 @@ class China extends Component
             'excelfile' => 'required|file|mimes:xlsx,csv',
         ]);
 
-        // Читаем массив из Excel
         $data = Excel::toArray([], $this->excelfile);
-
         foreach ($data[0] as $key => $row) {
             if ($key == 0) {
                 continue;

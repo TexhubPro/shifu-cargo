@@ -59,19 +59,19 @@ class Dashboard extends Component
         $montend   = Carbon::now('Asia/Dushanbe')->endOfMonth()->setTimezone('UTC');
 
         // Количество новых клиентов
-        $this->montnewUsersCount = User::whereBetween('created_at', [$start, $end])->count();
+        $this->montnewUsersCount = User::whereBetween('created_at', [$montstart, $montend])->count();
 
         // Количество трек-кодов
-        $this->monttrackcodesCount = Trackcode::whereBetween('created_at', [$start, $end])->count();
+        $this->monttrackcodesCount = Trackcode::whereBetween('created_at', [$montstart, $montend])->count();
         // если у тебя поле не created_at, а например received_at, то замени:
         // $trackcodesCount = Trackcode::whereBetween('received_at', [$start, $end])->count();
 
         // Сумма заказов за месяц
-        $this->montordersSum = Order::whereBetween('created_at', [$start, $end])
+        $this->montordersSum = Order::whereBetween('created_at', [$montstart, $montend])
             ->sum('total'); // замени 'total' на своё поле
 
         // Сумма затрат за месяц
-        $this->montexpensesSum = Expences::whereBetween('created_at', [$start, $end])
+        $this->montexpensesSum = Expences::whereBetween('created_at', [$montstart, $montend])
             ->sum('total');
     }
     public function render()

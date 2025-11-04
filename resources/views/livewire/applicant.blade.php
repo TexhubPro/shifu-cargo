@@ -9,27 +9,29 @@
         <flux:table>
             <flux:table.columns>
                 <flux:table.column>#</flux:table.column>
-                <flux:table.column>Имя клиента</flux:table.column>
-                <flux:table.column>Тел клиента</flux:table.column>
+                <flux:table.column>Имя</flux:table.column>
+                <flux:table.column>Тел</flux:table.column>
+                <flux:table.column>Адрес</flux:table.column>
                 <flux:table.column>Действия</flux:table.column>
             </flux:table.columns>
 
             <flux:table.rows>
                 @foreach ($orders as $item)
-                <flux:table.row>
-                    <flux:table.cell>{{ $item->id }}</flux:table.cell>
-                    <flux:table.cell>{{ $item->user->name }}</flux:table.cell>
-                    <flux:table.cell variant="strong">{{ $item->user->phone }}</flux:table.cell>
-                    <flux:table.cell variant="strong" class="flex gap-2">
-                        <flux:button variant="primary" color="red" size="sm" wire:confirm
-                            wire:click="cancel({{ $item->id }})">
-                            Отменить</flux:button>
-                        <flux:modal.trigger name="order_place">
-                            <flux:button variant="primary" color="lime" size="sm"
-                                wire:click="select_order({{ $item->id }})">Оформить</flux:button>
-                        </flux:modal.trigger>
-                    </flux:table.cell>
-                </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell>{{ $item->id }}</flux:table.cell>
+                        <flux:table.cell>{{ $item->user->name }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ $item->phone }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ $item->address }}</flux:table.cell>
+                        <flux:table.cell variant="strong" class="flex gap-2">
+                            <flux:button variant="primary" color="red" size="sm" wire:confirm
+                                wire:click="cancel({{ $item->id }})">
+                                Отменить</flux:button>
+                            <flux:modal.trigger name="order_place">
+                                <flux:button variant="primary" color="lime" size="sm"
+                                    wire:click="select_order({{ $item->id }})">Оформить</flux:button>
+                            </flux:modal.trigger>
+                        </flux:table.cell>
+                    </flux:table.row>
                 @endforeach
             </flux:table.rows>
         </flux:table>
@@ -42,22 +44,23 @@
             </form>
             <div class=" rounded-lg bg-white  p-2 my-4">
                 @if ($tracks)
-                @foreach ($tracks as $index => $track)
-                <div class="text-lg flex justify-between items-center">
-                    <span>{{ $track }}</span>
-                    <button type="button" wire:click="removeTrack({{ $index }})" class="text-red-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="icon icon-tabler icons-tabler-outline icon-tabler-x">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M18 6l-12 12" />
-                            <path d="M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-                @endforeach
+                    @foreach ($tracks as $index => $track)
+                        <div class="text-lg flex justify-between items-center">
+                            <span>{{ $track }}</span>
+                            <button type="button" wire:click="removeTrack({{ $index }})" class="text-red-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-x">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M18 6l-12 12" />
+                                    <path d="M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    @endforeach
                 @else
-                <flux:text variant="subtle">Трек-коды ещё не добавлены.</flux:text>
+                    <flux:text variant="subtle">Трек-коды ещё не добавлены.</flux:text>
                 @endif
             </div>
         </div>
@@ -65,7 +68,7 @@
 
             <flux:select wire:model="deliver_boy" label="Доставщик" required placeholder="Выберите доставщика">
                 @foreach ($delivers as $deliver)
-                <flux:select.option>{{ $deliver->name }}</flux:select.option>
+                    <flux:select.option>{{ $deliver->name }}</flux:select.option>
                 @endforeach
             </flux:select>
             <flux:input label="Цена доставки (сомони)" placeholder="Введите стоимость доставки"
