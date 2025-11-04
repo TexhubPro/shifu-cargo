@@ -18,6 +18,11 @@ class China extends Component
     public $excelfile;
     public $singleTrack;
     public $date;
+
+    public function mount()
+    {
+        // $this->date = Carbon::now();
+    }
     public function addSingleTrack()
     {
         $trackcode = Trackcode::where('code', $this->singleTrack)->first();

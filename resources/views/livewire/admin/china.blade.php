@@ -19,7 +19,7 @@
 
             <flux:tab.panel name="excel">
                 <form class="space-y-3" wire:submit.prevent="importExcel">
-                    <flux:date-picker wire:model="date" required />
+                    <flux:date-picker wire:model="date" required label="Выберите дата" />
                     <flux:input type="file" wire:model="excelfile" label="Выберите Excel файл" required />
                     <flux:button variant="primary" color="lime" class="w-full" type="submit">
                         Загрузить файл
