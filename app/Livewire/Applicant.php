@@ -92,8 +92,8 @@ class Applicant extends Component
 
                 // Формируем публичную ссылку
                 $url = asset('storage/' . $path);
-                $file = $url ?? null;
             }
+            $file = $url ?? null;
             $sms = new Telegram();
             $sms->sms_order($user->id, $order->id, $file);
         }
