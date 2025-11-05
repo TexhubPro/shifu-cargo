@@ -92,7 +92,7 @@ class Applicant extends Component
                 $url = asset('storage/' . $path);
             }
             $file = $url;
-            dd($file);
+            // dd($file);
             $sms = new Telegram();
             $sms->sms_order($user->id, $order->id, $file);
         }
