@@ -10,6 +10,7 @@ use Livewire\Component;
 use App\Texhub\Telegram;
 use App\Models\Trackcode;
 use App\Models\Application;
+use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 #[Layout('components.layouts.empty')]
 class Applicant extends Component
 {
+    use WithFileUploads;
     public $orders;
     public $selected_order;
     public $delivers;
@@ -32,6 +34,8 @@ class Applicant extends Component
     public $total_amount = 0;
     public $discount_total = 0;
     public $total_final = 0;
+    public $file;
+
 
     public function restart()
     {
@@ -51,7 +55,6 @@ class Applicant extends Component
         }
         $this->newTrack = '';
     }
-
     public function removeTrack($index)
     {
         unset($this->tracks[$index]);
@@ -82,8 +85,20 @@ class Applicant extends Component
             'status' => "Доставляется",
         ]);
         if ($user) {
+            if ($this->file) {
+                $this->validate([
+                    'file' => 'required|mimes:pdf,doc,docx,jpg,png,jpeg|max:2048',
+                ]);
+
+                // Сохраняем документ в папку storage/app/public/fotootchet
+                $path = $this->file->store('fotootchet', 'public');
+
+                // Формируем публичную ссылку
+                $url = asset('storage/' . $path);
+                $file = $url ?? null;
+            }
             $sms = new Telegram();
-            $sms->sms_order($user->id, $order->id);
+            $sms->sms_order($user->id, $order->id, $file);
         }
         if ($deliver) {
             $sms_delivery = new Telegram();

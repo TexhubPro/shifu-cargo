@@ -2,18 +2,19 @@
 
 namespace App\Texhub;
 
-use App\Models\Application;
 use App\Models\Chat;
-use App\Models\Message;
-use App\Models\Notification;
-use App\Models\Order;
 use App\Models\User;
+use App\Models\Order;
+use App\Models\Message;
 use App\Models\Setting;
 use App\Models\Trackcode;
+use App\Models\Application;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use DefStudio\Telegraph\Telegraph;
 use Illuminate\Support\Stringable;
 use Illuminate\Notifications\Action;
+use Illuminate\Support\Facades\Storage;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Enums\ChatActions;
 use DefStudio\Telegraph\Keyboard\Keyboard;
@@ -628,12 +629,15 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             ]);
         }
     }
-    public function sms_order($user_id, $order_id)
+    public function sms_order($user_id, $order_id, $file = null)
     {
         $user = User::find($user_id);
         $order = Order::find($order_id);
         if ($user->chat_id) {
             $chat = TelegraphChat::where('chat_id', $user->chat_id)->first();
+            if ($file) {
+                $chat->ocument(public_path($file))->send();
+            }
             if ($chat->lang == 'ru') {
                 $chat->message("📦 Добрый день, уважаемый клиент!\n\n🚚 Вы успешно оформили доставку.\n⚖️ Вес: $order->weight кг\n📏 Объём: $order->cube м³\n💰 Подытог: $order->subtotal с\n💵 Скидка: $order->discount с\n🚛 Доставка: $order->delivery_total с\n✅ Итог: $order->total с\n\nСпасибо, что вы с нами! 💚")->send();
             } else {

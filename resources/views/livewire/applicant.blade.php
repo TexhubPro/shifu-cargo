@@ -43,7 +43,7 @@
         </flux:table>
     </div>
     <flux:modal name="order_place" class="md:w-96">
-        <div class="space-y-3">
+        {{-- <div class="space-y-3">
             <form wire:submit="addTrack">
                 <flux:input icon="qr-code" label="Сканируйте" wire:model="newTrack"
                     placeholder="Трек-код или штрих код груза" />
@@ -69,9 +69,9 @@
                     <flux:text variant="subtle">Трек-коды ещё не добавлены.</flux:text>
                 @endif
             </div>
-        </div>
+        </div> --}}
         <form wire:submit="order_place" class="space-y-3">
-
+            <flux:input type="file" wire:model="file" label="Фото отчеть" required />
             <flux:select wire:model="deliver_boy" label="Доставщик" required placeholder="Выберите доставщика">
                 @foreach ($delivers as $deliver)
                     <flux:select.option>{{ $deliver->name }}</flux:select.option>
