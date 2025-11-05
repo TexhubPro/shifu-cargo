@@ -87,13 +87,12 @@ class Applicant extends Component
         if ($user) {
             if ($this->file) {
 
-                // Сохраняем документ в папку storage/app/public/fotootchet
                 $path = $this->file->store('fotootchet', 'public');
 
-                // Формируем публичную ссылку
                 $url = asset('storage/' . $path);
             }
-            $file = $url ?? null;
+            $file = $url;
+            dd($file);
             $sms = new Telegram();
             $sms->sms_order($user->id, $order->id, $file);
         }
