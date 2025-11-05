@@ -72,6 +72,9 @@
         </div> --}}
         <form wire:submit="order_place" class="space-y-3">
             <flux:input type="file" wire:model="file" label="Фото отчеть" required />
+            <div wire:loading wire:target="file" class="text-blue-600 text-sm">
+                ⏳ Файл загружается... пожалуйста, подождите
+            </div>
             <flux:select wire:model="deliver_boy" label="Доставщик" required placeholder="Выберите доставщика">
                 @foreach ($delivers as $deliver)
                     <flux:select.option>{{ $deliver->name }}</flux:select.option>
@@ -107,7 +110,7 @@
             </div>
             <div class="flex">
                 <flux:spacer />
-                <flux:button type="submit" variant="primary">
+                <flux:button type="submit" variant="primary" @disabled(!$file)>
                     Оформить заказь
                 </flux:button>
             </div>
