@@ -110,7 +110,7 @@
             </div>
             <div class="flex">
                 <flux:spacer />
-                <flux:button type="submit" variant="primary">
+                <flux:button type="submit" variant="primary" wire:loading.attr="disabled">
                     Оформить заказь
                 </flux:button>
             </div>
