@@ -86,9 +86,6 @@ class Applicant extends Component
         ]);
         if ($user) {
             if ($this->file) {
-                $this->validate([
-                    'file' => 'required|mimes:pdf,doc,docx,jpg,png,jpeg|max:2048',
-                ]);
 
                 // Сохраняем документ в папку storage/app/public/fotootchet
                 $path = $this->file->store('fotootchet', 'public');
