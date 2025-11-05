@@ -110,7 +110,7 @@
             </div>
             <div class="flex">
                 <flux:spacer />
-                <flux:button type="submit" variant="primary" @disabled(!$file)>
+                <flux:button type="submit" variant="primary">
                     Оформить заказь
                 </flux:button>
             </div>
