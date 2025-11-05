@@ -64,6 +64,7 @@ class China extends Component
         }
         $this->reset(['singleTrack', 'excelfile', 'date']);
         $this->dispatch('alert', 'Данные успешно загружены!');
+        return redirect()->route('admin.china');
     }
     public function render()
     {
