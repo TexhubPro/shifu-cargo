@@ -88,6 +88,23 @@ bg-lime-500 border-e border-gray-200 dark:bg-lime-500 dark:border-neutral-700"
                                 Панель управления
                             </a>
                             <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
+                                href="{{ route('admin.analitic') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-report-analytics">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path
+                                        d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+                                    <path
+                                        d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+                                    <path d="M9 17v-5" />
+                                    <path d="M12 17v-1" />
+                                    <path d="M15 17v-3" />
+                                </svg>
+                                Отчеты
+                            </a>
+                            <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
                                 href="{{ route('admin.china') }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"

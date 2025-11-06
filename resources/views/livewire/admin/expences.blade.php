@@ -17,20 +17,19 @@
             <flux:table.columns>
                 <flux:table.column>Сумма</flux:table.column>
                 <flux:table.column>Описание</flux:table.column>
-                <flux:table.column>Склад</flux:table.column>
+                <flux:table.column>Склад/Кубатура</flux:table.column>
                 <flux:table.column>Дата</flux:table.column>
             </flux:table.columns>
 
             <flux:table.rows>
                 @foreach ($this->expences as $item)
-
-                <flux:table.row>
-                    <flux:table.cell>{{ $item->total }}c</flux:table.cell>
-                    <flux:table.cell>{{ $item->content }}</flux:table.cell>
-                    <flux:table.cell>{{ $item->sklad }}</flux:table.cell>
-                    <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
-                    </flux:table.cell>
-                </flux:table.row>
+                    <flux:table.row>
+                        <flux:table.cell>{{ $item->total }}c</flux:table.cell>
+                        <flux:table.cell>{{ $item->content }}</flux:table.cell>
+                        <flux:table.cell>{{ $item->sklad }}</flux:table.cell>
+                        <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
+                        </flux:table.cell>
+                    </flux:table.row>
                 @endforeach
             </flux:table.rows>
         </flux:table>
@@ -45,17 +44,19 @@
             </div>
 
             <!-- Выбор склада -->
-            <flux:select label="Склад" placeholder="Выберите склад" required wire:model="warehouse">
+            <flux:select label="Склад" placeholder="Выберите склад" required wire:model.live="warehouse">
                 <flux:select.option value="Склад Душанбе">Склад Душанбе</flux:select.option>
                 <flux:select.option value="Склад Иву">Склад Иву</flux:select.option>
+                <flux:select.option value="Кубатура">Кубатура</flux:select.option>
                 <!-- Можно динамически подгружать склады -->
             </flux:select>
 
             <!-- Сумма -->
             <flux:input type="number" label="Сумма" placeholder="Введите сумму" required wire:model="amount" />
-
-            <!-- Описание -->
-            <flux:textarea label="Описание" placeholder="Введите описание затрат" wire:model="description" />
+            @if ($hidden == false)
+                <!-- Описание -->
+                <flux:textarea label="Описание" placeholder="Введите описание затрат" wire:model="description" />
+            @endif
 
             <div class="flex">
                 <flux:spacer />
