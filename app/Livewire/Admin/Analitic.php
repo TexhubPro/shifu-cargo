@@ -21,13 +21,13 @@ class Analitic extends Component
     public $to;
     public function downloadReportOrders()
     {
-        $fileName = 'orders_' . ($from ?? 'all') . '_' . ($to ?? 'all') . '.xlsx';
+        $fileName = 'orders_' . ($this->from ?? 'all') . '_' . ($this->to ?? 'all') . '.xlsx';
 
         return Excel::download(new OrdersExport($this->from, $this->to), $fileName);
     }
     public function downloadReportExpensesAll()
     {
-        $fileName = 'expences_' . ($from ?? 'all') . '_' . ($to ?? 'all') . '.xlsx';
+        $fileName = 'expences_' . ($this->from ?? 'all') . '_' . ($this->to ?? 'all') . '.xlsx';
 
         return Excel::download(new ExpencesExport($this->from, $this->to), $fileName);
     }
