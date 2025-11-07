@@ -17,13 +17,19 @@ class RegisterPack extends Component
     public $ivuweight;
     public $ivutype;
     public $ivuboxes;
+    public $cube;
+    public $ivucube;
+    public $data;
+    public $ivudata;
     public function registerDushanbe()
     {
         ModelsRegisterpack::create([
             'sklad' => 'Душанбе',
-            'weight' => $this->weight,
-            'packages' => $this->boxes,
+            'weight' => $this->weight ?? 0,
+            'packages' => $this->boxes ?? 0,
             'type' => $this->type,
+            'cube' => $this->cube ?? 0,
+            'data' => $this->data,
         ]);
         $this->reset([
             'weight',
@@ -32,6 +38,10 @@ class RegisterPack extends Component
             'ivuweight',
             'ivutype',
             'ivuboxes',
+            'data',
+            'ivudata',
+            'cube',
+            'ivucube',
         ]);
         $this->dispatch('alert', 'Груз успешно добавлен на склад Душанбе!');
     }
@@ -42,6 +52,8 @@ class RegisterPack extends Component
             'weight' => $this->ivuweight,
             'packages' => $this->ivuboxes,
             'type' => $this->ivutype,
+            'cube' => $this->ivucube ?? 0,
+            'data' => $this->ivudata,
         ]);
         $this->reset([
             'weight',
@@ -50,6 +62,10 @@ class RegisterPack extends Component
             'ivuweight',
             'ivutype',
             'ivuboxes',
+            'data',
+            'ivudata',
+            'cube',
+            'ivucube',
         ]);
         $this->dispatch('alert', 'Груз успешно добавлен на склад Иву!');
     }

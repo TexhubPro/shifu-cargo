@@ -47,11 +47,11 @@ class GeneralExport implements FromCollection, WithHeadings, WithEvents, ShouldA
             $trackCodesCount = Trackcode::whereDate('created_at', $date)->count();
 
             $expensesDushanbe = Expences::where('sklad', 'Склад Душанбе')
-                ->whereDate('created_at', $date)->sum('total');
+                ->whereDate('data', $date)->sum('total');
             $expensesIvu = Expences::where('sklad', 'Склад Иву')
-                ->whereDate('created_at', $date)->sum('total');
-            $expensesCubature = Expences::where('sklad', 'Кубатура')
-                ->whereDate('created_at', $date)->sum('total');
+                ->whereDate('data', $date)->sum('total');
+            $expensesCubature = Expences::whereIn('sklad', ['Кубатура Иву', 'Кубатура Душанбе'])
+                ->whereDate('data', $date)->sum('total');
 
             $dates->push([
                 $date,

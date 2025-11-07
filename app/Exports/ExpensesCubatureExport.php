@@ -26,17 +26,17 @@ class ExpensesCubatureExport implements FromQuery, WithMapping, WithHeadings, Sh
     // Используем Query — экономно при больших данных
     public function query()
     {
-        $query = Expences::query()->where('sklad', 'Кубатура');
+        $query = Expences::query()->whereIn('sklad', ['Кубатура Иву', 'Кубатура Душанбе']);
 
         if ($this->from) {
-            $query->where('created_at', '>=', $this->from . ' 00:00:00');
+            $query->where('data', '>=', $this->from . ' 00:00:00');
         }
 
         if ($this->to) {
-            $query->where('created_at', '<=', $this->to . ' 23:59:59');
+            $query->where('data', '<=', $this->to . ' 23:59:59');
         }
 
-        return $query->select(['id', 'sklad', 'total', 'content', 'created_at']);
+        return $query->select(['id', 'sklad', 'total', 'content', 'data']);
     }
     public function map($order): array
     {
@@ -45,13 +45,13 @@ class ExpensesCubatureExport implements FromQuery, WithMapping, WithHeadings, Sh
             $order->sklad,
             $order->total,
             $order->content,
-            $order->created_at->timezone('Asia/Tashkent')->format('Y-m-d H:i'),
+            $order->data,
         ];
     }
 
     public function headings(): array
     {
-        return ['ID', 'Склад', 'Сумма', 'Описание', 'Дата создания'];
+        return ['ID', 'Склад', 'Сумма', 'Описание', 'Дата'];
     }
     public function registerEvents(): array
     {

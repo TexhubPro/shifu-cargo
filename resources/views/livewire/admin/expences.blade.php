@@ -27,8 +27,15 @@
                         <flux:table.cell>{{ $item->total }}c</flux:table.cell>
                         <flux:table.cell>{{ $item->content }}</flux:table.cell>
                         <flux:table.cell>{{ $item->sklad }}</flux:table.cell>
-                        <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
+                        <flux:table.cell variant="strong">{{ $item->data }}
                         </flux:table.cell>
+                        @if (Auth::user()->role == 'admin')
+                            <flux:table.cell>
+                                <flux:button variant="primary" size="sm" color="red"
+                                    wire:click="delete({{ $item->id }})" wire:confirm>
+                                    Удалить</flux:button>
+                            </flux:table.cell>
+                        @endif
                     </flux:table.row>
                 @endforeach
             </flux:table.rows>
@@ -42,13 +49,12 @@
                     Заполните поля, чтобы добавить новую запись о расходах, указав склад, сумму и описание затрат.
                 </flux:text>
             </div>
-
-            <!-- Выбор склада -->
+            <flux:date-picker label="Выберите дата" wire:model="data" required />
             <flux:select label="Склад" placeholder="Выберите склад" required wire:model.live="warehouse">
                 <flux:select.option value="Склад Душанбе">Склад Душанбе</flux:select.option>
                 <flux:select.option value="Склад Иву">Склад Иву</flux:select.option>
-                <flux:select.option value="Кубатура">Кубатура</flux:select.option>
-                <!-- Можно динамически подгружать склады -->
+                <flux:select.option value="Кубатура Иву">Кубатура Иву</flux:select.option>
+                <flux:select.option value="Кубатура Душанбе">Кубатура Душанбе</flux:select.option>
             </flux:select>
 
             <!-- Сумма -->

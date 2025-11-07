@@ -11,5 +11,7 @@ class Registerpack extends Model
         'weight',
         'type',
         'packages',
+        'cube',
+        'data',
     ];
 }

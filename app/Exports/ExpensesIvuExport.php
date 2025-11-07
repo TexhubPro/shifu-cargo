@@ -29,14 +29,14 @@ class ExpensesIvuExport implements FromQuery, WithMapping, WithHeadings, ShouldA
         $query = Expences::query()->where('sklad', 'Склад Иву');
 
         if ($this->from) {
-            $query->where('created_at', '>=', $this->from . ' 00:00:00');
+            $query->where('data', '>=', $this->from . ' 00:00:00');
         }
 
         if ($this->to) {
-            $query->where('created_at', '<=', $this->to . ' 23:59:59');
+            $query->where('data', '<=', $this->to . ' 23:59:59');
         }
 
-        return $query->select(['id', 'sklad', 'total', 'content', 'created_at']);
+        return $query->select(['id', 'sklad', 'total', 'content', 'data']);
     }
     public function map($order): array
     {
@@ -45,7 +45,7 @@ class ExpensesIvuExport implements FromQuery, WithMapping, WithHeadings, ShouldA
             $order->sklad,
             $order->total,
             $order->content,
-            $order->created_at->timezone('Asia/Tashkent')->format('Y-m-d H:i'),
+            $order->data,
         ];
     }
 

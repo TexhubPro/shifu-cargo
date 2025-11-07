@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('sklad')->default('Склад Душанбе');
             $table->string('total');
             $table->longText('content');
+            $table->datetimes('data');
             $table->timestamps();
         });
     }

@@ -18,14 +18,17 @@ class Expences extends Component
     public $amount;
     public $hidden = false;
     public $description;
-
+    public $data;
     // Правила валидации
     protected $rules = [
         'warehouse' => 'required|string',
         'amount' => 'required|numeric|min:0.01',
         'description' => 'nullable|string|max:255',
     ];
-
+    public function delete($id)
+    {
+        ModelsExpences::find($id)->delete();
+    }
     protected $messages = [
         'warehouse.required' => 'Выберите склад.',
         'amount.required' => 'Введите сумму.',
@@ -34,7 +37,7 @@ class Expences extends Component
     ];
     public function updatedWarehouse()
     {
-        if ($this->warehouse == 'Кубатура') {
+        if ($this->warehouse == 'Кубатура Иву' || $this->warehouse == 'Кубатура Душанбе') {
             $this->hidden = true;
         } else {
             $this->hidden = false;
@@ -45,10 +48,10 @@ class Expences extends Component
     public function addExpense()
     {
         $this->validate();
-        if ($this->warehouse == 'Кубатура') {
+        if ($this->warehouse == 'Кубатура Иву' || $this->warehouse == 'Кубатура Душанбе') {
             $course = Setting::where('name', 'course_dollar')->first();
             $total = $course->content * $this->amount;
-            $content = "Кубатура";
+            $content = $this->warehouse;
         } else {
             $content = $this->description;
             $total = $this->amount;
@@ -58,6 +61,7 @@ class Expences extends Component
             'sklad' => $this->warehouse,
             'total' => $total,
             'content' => $content,
+            'data' => $this->data
         ]);
 
         // Сброс полей после добавления

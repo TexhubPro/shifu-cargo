@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('weight');
             $table->string('type');
             $table->string('packages');
+            $table->string('cube');
+            $table->string('data');
             $table->timestamps();
         });
     }

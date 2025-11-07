@@ -20,11 +20,16 @@
 
             <flux:tab.panel name="excel">
                 <form class="space-y-3" wire:submit.prevent="registerDushanbe">
-                    <flux:input icon="scale" type="number" step="0.1" label="Вес (кг)" placeholder="Введите вес груза"
-                        wire:model="weight" required />
+                    <flux:date-picker label="Выберите дата" wire:model.live="data" required />
+
+                    <flux:input icon="scale" type="number" step="0.1" label="Куб (м3)"
+                        placeholder="Введите куб груза" wire:model="cube" required />
+
+                    <flux:input icon="scale" type="number" step="0.1" label="Вес (кг)"
+                        placeholder="Введите вес груза" wire:model="weight" required />
 
                     <flux:select label="Тип груза" wire:model="type" placeholder="Выберите тип" required>
-                        <option value="малкий">Малкий</option>
+                        <option value="мелкий">Мелкий</option>
                         <option value="крупный">Крупный</option>
                         <option value="штучно">Штучно</option>
                     </flux:select>
@@ -47,26 +52,30 @@
 
                     <flux:table.rows>
                         @foreach ($this->dushanbes as $item)
-
-                        <flux:table.row>
-                            <flux:table.cell>{{ $item->sklad }}</flux:table.cell>
-                            <flux:table.cell>{{ $item->weight }}кг</flux:table.cell>
-                            <flux:table.cell>{{ $item->type }}</flux:table.cell>
-                            <flux:table.cell>{{ $item->packages }}шт</flux:table.cell>
-                            <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
-                            </flux:table.cell>
-                        </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell>{{ $item->sklad }}</flux:table.cell>
+                                <flux:table.cell>{{ $item->weight }}кг</flux:table.cell>
+                                <flux:table.cell>{{ $item->type }}</flux:table.cell>
+                                <flux:table.cell>{{ $item->packages }}шт</flux:table.cell>
+                                <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
+                                </flux:table.cell>
+                            </flux:table.row>
                         @endforeach
                     </flux:table.rows>
                 </flux:table>
             </flux:tab.panel>
             <flux:tab.panel name="manual">
                 <form class="space-y-3" wire:submit.prevent="registerIvu">
-                    <flux:input icon="scale" type="number" step="0.1" label="Вес (кг)" placeholder="Введите вес груза"
-                        wire:model="ivuweight" required />
+                    <flux:date-picker label="Выберите дата" wire:model.live="ivudata" required />
+
+                    <flux:input icon="scale" type="number" step="0.1" label="Куб (м3)"
+                        placeholder="Введите куб груза" wire:model="ivucube" required />
+
+                    <flux:input icon="scale" type="number" step="0.1" label="Вес (кг)"
+                        placeholder="Введите вес груза" wire:model="ivuweight" required />
 
                     <flux:select label="Тип груза" wire:model="ivutype" placeholder="Выберите тип" required>
-                        <option value="малкий">Малкий</option>
+                        <option value="мелкий">Мелкий</option>
                         <option value="крупный">Крупный</option>
                         <option value="штучно">Штучно</option>
                     </flux:select>
@@ -89,15 +98,14 @@
 
                     <flux:table.rows>
                         @foreach ($this->ivus as $item)
-
-                        <flux:table.row>
-                            <flux:table.cell>{{ $item->sklad }}</flux:table.cell>
-                            <flux:table.cell>{{ $item->weight }}кг</flux:table.cell>
-                            <flux:table.cell>{{ $item->type }}</flux:table.cell>
-                            <flux:table.cell>{{ $item->packages }}шт</flux:table.cell>
-                            <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
-                            </flux:table.cell>
-                        </flux:table.row>
+                            <flux:table.row>
+                                <flux:table.cell>{{ $item->sklad }}</flux:table.cell>
+                                <flux:table.cell>{{ $item->weight }}кг</flux:table.cell>
+                                <flux:table.cell>{{ $item->type }}</flux:table.cell>
+                                <flux:table.cell>{{ $item->packages }}шт</flux:table.cell>
+                                <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
+                                </flux:table.cell>
+                            </flux:table.row>
                         @endforeach
                     </flux:table.rows>
                 </flux:table>

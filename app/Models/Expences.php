@@ -10,5 +10,6 @@ class Expences extends Model
         'sklad',
         'total',
         'content',
+        'data'
     ];
 }
