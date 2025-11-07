@@ -61,6 +61,13 @@
                                 <flux:table.cell>{{ $item->packages }}шт</flux:table.cell>
                                 <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
                                 </flux:table.cell>
+                                @if (Auth::user()->role == 'admin')
+                                    <flux:table.cell>
+                                        <flux:button variant="primary" size="sm" color="red"
+                                            wire:click="delete({{ $item->id }})" wire:confirm>
+                                            Удалить</flux:button>
+                                    </flux:table.cell>
+                                @endif
                             </flux:table.row>
                         @endforeach
                     </flux:table.rows>
@@ -110,6 +117,13 @@
                                 <flux:table.cell>{{ $item->packages }}шт</flux:table.cell>
                                 <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
                                 </flux:table.cell>
+                                @if (Auth::user()->role == 'admin')
+                                    <flux:table.cell>
+                                        <flux:button variant="primary" size="sm" color="red"
+                                            wire:click="delete({{ $item->id }})" wire:confirm>
+                                            Удалить</flux:button>
+                                    </flux:table.cell>
+                                @endif
                             </flux:table.row>
                         @endforeach
                     </flux:table.rows>

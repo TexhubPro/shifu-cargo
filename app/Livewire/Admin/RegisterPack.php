@@ -88,7 +88,10 @@ class RegisterPack extends Component
         return $query->orderByDesc('created_at')
             ->paginate(50);
     }
-
+    public function delete($id)
+    {
+        ModelsRegisterpack::find($id)->delete();
+    }
     public function render()
     {
         return view('livewire.admin.register-pack');
