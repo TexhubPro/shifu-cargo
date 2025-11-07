@@ -27,45 +27,51 @@
 
             <flux:table.rows>
                 @foreach ($this->trackcodes as $item)
+                    <flux:table.row>
+                        <flux:table.cell>{{ $item->code }}</flux:table.cell>
+                        <flux:table.cell>{{ $item->user->code ?? 'Не известно' }}</flux:table.cell>
+                        <flux:table.cell>
+                            @switch($item->status)
+                                @case('В ожидании')
+                                    <flux:badge color="orange" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                                @break
 
-                <flux:table.row>
-                    <flux:table.cell>{{ $item->code }}</flux:table.cell>
-                    <flux:table.cell>{{ $item->user->code ??"Не известно"}}</flux:table.cell>
-                    <flux:table.cell>
-                        @switch($item->status)
-                        @case('В ожидании')
-                        <flux:badge color="orange" size="sm" inset="top bottom">
-                            {{ $item->status }}
-                        </flux:badge>
-                        @break
+                                @case('Получено в Иву')
+                                    <flux:badge color="lime" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                                @break
 
-                        @case('Получено в Иву')
-                        <flux:badge color="lime" size="sm" inset="top bottom">
-                            {{ $item->status }}
-                        </flux:badge>
-                        @break
+                                @case('В пункте выдачи')
+                                    <flux:badge color="blue" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                                @break
 
-                        @case('В пункте выдачи')
-                        <flux:badge color="blue" size="sm" inset="top bottom">
-                            {{ $item->status }}
-                        </flux:badge>
-                        @break
+                                @case('Получено')
+                                    <flux:badge color="emerald" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                                @break
 
-                        @case('Получено')
-                        <flux:badge color="emerald" size="sm" inset="top bottom">
-                            {{ $item->status }}
-                        </flux:badge>
-                        @break
-
-                        @default
-                        <flux:badge color="yellow" size="sm" inset="top bottom">
-                            {{ $item->status }}
-                        </flux:badge>
-                        @endswitch
-                    </flux:table.cell>
-                    <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
-                    </flux:table.cell>
-                </flux:table.row>
+                                @default
+                                    <flux:badge color="yellow" size="sm" inset="top bottom">
+                                        {{ $item->status }}
+                                    </flux:badge>
+                            @endswitch
+                        </flux:table.cell>
+                        <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
+                        </flux:table.cell>
+                        @if (Auth::user()->role == 'admin')
+                            <flux:table.cell>
+                                <flux:button variant="primary" size="sm" color="red"
+                                    wire:click="delete({{ $item->id }})" wire:confirm>
+                                    Удалить</flux:button>
+                            </flux:table.cell>
+                        @endif
+                    </flux:table.row>
                 @endforeach
             </flux:table.rows>
         </flux:table>

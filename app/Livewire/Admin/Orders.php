@@ -21,6 +21,10 @@ class Orders extends Component
         return $query->orderByDesc('created_at')
             ->paginate(50);
     }
+    public function delete($id)
+    {
+        Order::find($id)->delete();
+    }
     public function render()
     {
         return view('livewire.admin.orders');

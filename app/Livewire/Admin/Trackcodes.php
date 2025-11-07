@@ -32,6 +32,10 @@ class Trackcodes extends Component
             ->paginate(50);
     }
     public function search_form() {}
+    public function delete($id)
+    {
+        Trackcode::find($id)->delete();
+    }
     public function render()
     {
         return view('livewire.admin.trackcodes');
