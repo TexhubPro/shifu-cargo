@@ -45,6 +45,7 @@
                     <flux:table.columns>
                         <flux:table.column>Склад</flux:table.column>
                         <flux:table.column>Весь груза</flux:table.column>
+                        <flux:table.column>Куб груза</flux:table.column>
                         <flux:table.column>Тип груза</flux:table.column>
                         <flux:table.column>Коробки</flux:table.column>
                         <flux:table.column>Дата</flux:table.column>
@@ -55,6 +56,7 @@
                             <flux:table.row>
                                 <flux:table.cell>{{ $item->sklad }}</flux:table.cell>
                                 <flux:table.cell>{{ $item->weight }}кг</flux:table.cell>
+                                <flux:table.cell>{{ $item->cube }}m3</flux:table.cell>
                                 <flux:table.cell>{{ $item->type }}</flux:table.cell>
                                 <flux:table.cell>{{ $item->packages }}шт</flux:table.cell>
                                 <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
@@ -91,6 +93,7 @@
                     <flux:table.columns>
                         <flux:table.column>Склад</flux:table.column>
                         <flux:table.column>Весь груза</flux:table.column>
+                        <flux:table.column>Куб груза</flux:table.column>
                         <flux:table.column>Тип груза</flux:table.column>
                         <flux:table.column>Коробки</flux:table.column>
                         <flux:table.column>Дата</flux:table.column>
@@ -101,6 +104,8 @@
                             <flux:table.row>
                                 <flux:table.cell>{{ $item->sklad }}</flux:table.cell>
                                 <flux:table.cell>{{ $item->weight }}кг</flux:table.cell>
+                                <flux:table.cell>{{ $item->cube }}m3</flux:table.cell>
+
                                 <flux:table.cell>{{ $item->type }}</flux:table.cell>
                                 <flux:table.cell>{{ $item->packages }}шт</flux:table.cell>
                                 <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}

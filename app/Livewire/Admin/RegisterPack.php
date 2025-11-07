@@ -12,7 +12,7 @@ use App\Models\Registerpack as ModelsRegisterpack;
 class RegisterPack extends Component
 {
     public $weight;
-    public $type;
+    public $type = "мелкий";
     public $boxes;
     public $ivuweight;
     public $ivutype;
