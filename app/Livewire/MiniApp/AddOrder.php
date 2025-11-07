@@ -13,7 +13,10 @@ class AddOrder extends Component
     {
         $code = Trackcode::where('code', $this->trackcode)->first();
         if ($code) {
-            $this->dispatch('alert', 'Трек-код уже сушествует!');
+            $code->user_id = Auth::id();
+            $code->save();
+            $this->dispatch('alert', 'Трек-код уже сушествует! Обновили информацию!');
+            $this->reset('trackcode');
             return;
         }
         Trackcode::create([

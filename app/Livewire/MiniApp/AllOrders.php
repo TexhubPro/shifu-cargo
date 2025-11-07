@@ -12,7 +12,10 @@ class AllOrders extends Component
     use WithPagination;
 
     protected $paginationTheme = 'bootstrap'; // или 'tailwind'
-
+    public function delete($id)
+    {
+        Trackcode::find($id)->delete();
+    }
     public function render()
     {
         $orders = Trackcode::where('user_id', Auth::id())
