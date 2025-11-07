@@ -23,7 +23,7 @@
                     <flux:date-picker label="Выберите дата" wire:model.live="data" required />
 
                     <flux:input icon="scale" type="number" step="0.1" label="Куб (м3)"
-                        placeholder="Введите куб груза" wire:model="cube" required />
+                        placeholder="Введите куб груза" wire:model="cube" />
 
                     <flux:input icon="scale" type="number" step="0.1" label="Вес (кг)"
                         placeholder="Введите вес груза" wire:model="weight" required />
@@ -71,7 +71,7 @@
                     <flux:date-picker label="Выберите дата" wire:model.live="ivudata" required />
 
                     <flux:input icon="scale" type="number" step="0.1" label="Куб (м3)"
-                        placeholder="Введите куб груза" wire:model="ivucube" required />
+                        placeholder="Введите куб груза" wire:model="ivucube" />
 
                     <flux:input icon="scale" type="number" step="0.1" label="Вес (кг)"
                         placeholder="Введите вес груза" wire:model="ivuweight" required />
