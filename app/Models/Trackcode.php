@@ -21,4 +21,10 @@ class Trackcode extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    public static function forPeriod($start, $end)
+    {
+        return self::where('data', '>=', $start . ' 00:00:00')
+            ->where('data', '<=', $end . ' 23:59:59')
+            ->get();
+    }
 }

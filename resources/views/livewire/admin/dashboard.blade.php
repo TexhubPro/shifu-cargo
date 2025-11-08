@@ -2,339 +2,292 @@
     <div class="mb-5">
         <flux:heading class="text-xl">Панель управления</flux:heading>
         <flux:text class="text-base" variant="subtle">Основной раздел для контроля и навигации по системе.</flux:text>
+
     </div>
     @if (Auth::user()->role == 'admin')
-        <div class="space-y-4">
-            <!-- Card Section -->
-            <div class="">
-                <!-- Grid -->
-                <div
-                    class="grid md:grid-cols-4 border border-gray-200 shadow-2xs rounded-xl overflow-hidden dark:border-neutral-800">
-                    <!-- Card -->
-                    <a class="block p-4 md:p-5 relative bg-white hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:w-px md:before:h-full before:bg-gray-200 first:before:bg-transparent dark:bg-neutral-900 dark:before:bg-neutral-800 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                        href="#">
-                        <div class="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-                            <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            </svg>
+        <div class="bg-white p-3 mb-5 rounded-xl space-y-3">
 
-                            <div class="grow">
-                                <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                    Новые клиенты на сегодня
-                                </p>
-                                <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
-                                    {{ $newUsersCount }}
-                                </h3>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- End Card -->
-
-                    <!-- Card -->
-                    <a class="block p-4 md:p-5 relative bg-white hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:w-px md:before:h-full before:bg-gray-200 first:before:bg-transparent dark:bg-neutral-900 dark:before:bg-neutral-800 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                        href="#">
-                        <div class="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-                            <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M5 22h14" />
-                                <path d="M5 2h14" />
-                                <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" />
-                                <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
-                            </svg>
-
-                            <div class="grow">
-                                <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                    Заказы на сегодня
-                                </p>
-                                <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
-                                    {{ $trackcodesCount }}
-                                </h3>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- End Card -->
-
-                    <!-- Card -->
-                    <a class="block p-4 md:p-5 relative bg-white hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:w-px md:before:h-full before:bg-gray-200 first:before:bg-transparent dark:bg-neutral-900 dark:before:bg-neutral-800 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                        href="#">
-                        <div class="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-                            <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6" />
-                                <path d="m12 12 4 10 1.7-4.3L22 16Z" />
-                            </svg>
-
-                            <div class="grow">
-                                <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                    Заработок на сегодня
-                                </p>
-                                <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
-                                    {{ $ordersSum }}c
-                                </h3>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- End Card -->
-
-                    <!-- Card -->
-                    <a class="block p-4 md:p-5 relative bg-white hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:w-px md:before:h-full before:bg-gray-200 first:before:bg-transparent dark:bg-neutral-900 dark:before:bg-neutral-800 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                        href="#">
-                        <div class="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-                            <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M5 12s2.545-5 7-5c4.454 0 7 5 7 5s-2.546 5-7 5c-4.455 0-7-5-7-5z" />
-                                <path d="M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
-                                <path d="M21 17v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2" />
-                                <path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2" />
-                            </svg>
-
-                            <div class="grow">
-                                <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                    Затраты на сегодня
-                                </p>
-                                <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
-                                    {{ $expensesSum }}c
-                                </h3>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- End Card -->
-                </div>
-                <!-- End Grid -->
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-3  items-end">
+                <flux:date-picker wire:model.live="start" label="Начальная дата" />
+                <flux:date-picker wire:model.live="end" label="Конечная дата" />
+                <flux:button variant="primary" color="lime" class="col-span-full lg:col-span-1">Применить
+                </flux:button>
             </div>
-            <!-- End Card Section -->
-            <!-- Card Section -->
-            <div class="">
-                <!-- Grid -->
-                <div
-                    class="grid md:grid-cols-4 border border-gray-200 shadow-2xs rounded-xl overflow-hidden dark:border-neutral-800">
-                    <!-- Card -->
-                    <a class="block p-4 md:p-5 relative bg-white hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:w-px md:before:h-full before:bg-gray-200 first:before:bg-transparent dark:bg-neutral-900 dark:before:bg-neutral-800 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                        href="#">
-                        <div class="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-                            <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            </svg>
+        </div>
 
-                            <div class="grow">
-                                <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                    Новые клиенты на месяц
-                                </p>
-                                <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
-                                    {{ $montnewUsersCount }}
-                                </h3>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- End Card -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
 
-                    <!-- Card -->
-                    <a class="block p-4 md:p-5 relative bg-white hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:w-px md:before:h-full before:bg-gray-200 first:before:bg-transparent dark:bg-neutral-900 dark:before:bg-neutral-800 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                        href="#">
-                        <div class="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-                            <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M5 22h14" />
-                                <path d="M5 2h14" />
-                                <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" />
-                                <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
-                            </svg>
-
-                            <div class="grow">
-                                <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                    Заказы на месяц
-                                </p>
-                                <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
-                                    {{ $monttrackcodesCount }}
-                                </h3>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- End Card -->
-
-                    <!-- Card -->
-                    <a class="block p-4 md:p-5 relative bg-white hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:w-px md:before:h-full before:bg-gray-200 first:before:bg-transparent dark:bg-neutral-900 dark:before:bg-neutral-800 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                        href="#">
-                        <div class="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-                            <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6" />
-                                <path d="m12 12 4 10 1.7-4.3L22 16Z" />
-                            </svg>
-
-                            <div class="grow">
-                                <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                    Заработок на месяц
-                                </p>
-                                <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
-                                    {{ $montordersSum }}c
-                                </h3>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- End Card -->
-
-                    <!-- Card -->
-                    <a class="block p-4 md:p-5 relative bg-white hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:w-px md:before:h-full before:bg-gray-200 first:before:bg-transparent dark:bg-neutral-900 dark:before:bg-neutral-800 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                        href="#">
-                        <div class="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-                            <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M5 12s2.545-5 7-5c4.454 0 7 5 7 5s-2.546 5-7 5c-4.455 0-7-5-7-5z" />
-                                <path d="M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
-                                <path d="M21 17v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2" />
-                                <path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2" />
-                            </svg>
-
-                            <div class="grow">
-                                <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                    Затраты на месяц
-                                </p>
-                                <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
-                                    {{ $montexpensesSum }}c
-                                </h3>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- End Card -->
+            <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-blue-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Новые клиенты за выбранный период</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">2 000 с</h3>
+                    </div>
+                    <div class="bg-blue-100 p-2 rounded-lg text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-users-group">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                            <path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1" />
+                            <path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                            <path d="M17 10h2a2 2 0 0 1 2 2v1" />
+                            <path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                            <path d="M3 13v-1a2 2 0 0 1 2 -2h2" />
+                        </svg>
+                    </div>
                 </div>
-                <!-- End Grid -->
             </div>
-            <!-- End Card Section -->
-            <!-- Card Section -->
-            <div class="">
-                <!-- Grid -->
-                <div
-                    class="grid md:grid-cols-4 border border-gray-200 shadow-2xs rounded-xl overflow-hidden dark:border-neutral-800">
-                    <!-- Card -->
-                    <a class="block p-4 md:p-5 relative bg-white hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:w-px md:before:h-full before:bg-gray-200 first:before:bg-transparent dark:bg-neutral-900 dark:before:bg-neutral-800 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                        href="#">
-                        <div class="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-                            <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            </svg>
 
-                            <div class="grow">
-                                <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                    Остаток товаров на складе
-                                </p>
-                                <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
-                                    {{ $ostatok->count() }}
-                                </h3>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- End Card -->
-
-                    <!-- Card -->
-                    <a class="block p-4 md:p-5 relative bg-white hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:w-px md:before:h-full before:bg-gray-200 first:before:bg-transparent dark:bg-neutral-900 dark:before:bg-neutral-800 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                        href="#">
-                        <div class="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-                            <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M5 22h14" />
-                                <path d="M5 2h14" />
-                                <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" />
-                                <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" />
-                            </svg>
-
-                            <div class="grow">
-                                <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                    Заработок из доставки
-                                </p>
-                                <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
-                                    {{ $total_delivery }}c
-                                </h3>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- End Card -->
-
-                    <!-- Card -->
-                    <a class="block p-4 md:p-5 relative bg-white hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:w-px md:before:h-full before:bg-gray-200 first:before:bg-transparent dark:bg-neutral-900 dark:before:bg-neutral-800 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                        href="#">
-                        <div class="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-                            <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6" />
-                                <path d="m12 12 4 10 1.7-4.3L22 16Z" />
-                            </svg>
-
-                            <div class="grow">
-                                <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                    Затраты склад душанбе
-                                </p>
-                                <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
-                                    {{ $expences_dusanbe }}c
-                                </h3>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- End Card -->
-
-                    <!-- Card -->
-                    <a class="block p-4 md:p-5 relative bg-white hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 before:absolute before:top-0 before:start-0 before:w-full before:h-px md:before:w-px md:before:h-full before:bg-gray-200 first:before:bg-transparent dark:bg-neutral-900 dark:before:bg-neutral-800 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                        href="#">
-                        <div class="flex md:flex flex-col lg:flex-row gap-y-3 gap-x-5">
-                            <svg class="shrink-0 size-5 text-gray-400 dark:text-neutral-600"
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M5 12s2.545-5 7-5c4.454 0 7 5 7 5s-2.546 5-7 5c-4.455 0-7-5-7-5z" />
-                                <path d="M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
-                                <path d="M21 17v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2" />
-                                <path d="M21 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2" />
-                            </svg>
-
-                            <div class="grow">
-                                <p class="text-xs uppercase font-medium text-gray-800 dark:text-neutral-200">
-                                    Затраты склад Иву
-                                </p>
-                                <h3 class="mt-1 text-xl sm:text-2xl font-semibold text-blue-600 dark:text-blue-500">
-                                    {{ $expences_ivu }}c
-                                </h3>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- End Card -->
+            <div
+                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-green-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Полученные трек-коды на складе Иву</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">12 000</h3>
+                    </div>
+                    <div class="bg-green-100 p-2 rounded-lg text-green-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-file-barcode">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                            <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                            <path d="M8 13h1v3h-1z" />
+                            <path d="M12 13v3" />
+                            <path d="M15 13h1v3h-1z" />
+                        </svg>
+                    </div>
                 </div>
-                <!-- End Grid -->
             </div>
-            <!-- End Card Section -->
+
+            <div
+                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-purple-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Заработок за выбранный период</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">2 000 с</h3>
+                    </div>
+                    <div class="bg-purple-100 p-2 rounded-lg text-purple-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-receipt-dollar">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2" />
+                            <path d="M14.8 8a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 1 0 4h-2a2 2 0 0 1 -1.8 -1" />
+                            <path d="M12 6v10" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-amber-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Все затраты за выбранный период</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">2 000 с</h3>
+                    </div>
+                    <div class="bg-amber-100 p-2 rounded-lg text-amber-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-dollar">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M13 21h-7a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v3" />
+                            <path d="M16 3v4" />
+                            <path d="M8 3v4" />
+                            <path d="M4 11h12.5" />
+                            <path d="M21 15h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
+                            <path d="M19 21v1m0 -8v1" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-red-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Заработок от доставки</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">2 000 с</h3>
+                    </div>
+                    <div class="bg-red-100 p-2 rounded-lg text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-truck-delivery">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                            <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                            <path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5" />
+                            <path d="M3 9l4 0" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-yellow-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Чистая прибыль за выбранный период</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">2 000 с</h3>
+                    </div>
+                    <div class="bg-yellow-100 p-2 rounded-lg text-yellow-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-file-analytics">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                            <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                            <path d="M9 17l0 -5" />
+                            <path d="M12 17l0 -1" />
+                            <path d="M15 17l0 -3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-pink-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Затраты на складе в Душанбе</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">2 000 с</h3>
+                    </div>
+                    <div class="bg-pink-100 p-2 rounded-lg text-pink-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-building-warehouse">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M3 21v-13l9 -4l9 4v13" />
+                            <path d="M13 13h4v8h-10v-6h6" />
+                            <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-sky-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Затраты на складе в Иву</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">2 000 с</h3>
+                    </div>
+                    <div class="bg-sky-100 p-2 rounded-lg text-sky-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-building-warehouse">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M3 21v-13l9 -4l9 4v13" />
+                            <path d="M13 13h4v8h-10v-6h6" />
+                            <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-blue-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Затраты на кубатуре в Китае</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">2 000 с</h3>
+                    </div>
+                    <div class="bg-blue-100 p-2 rounded-lg text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-packages">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M7 16.5l-5 -3l5 -3l5 3v5.5l-5 3z" />
+                            <path d="M2 13.5v5.5l5 3" />
+                            <path d="M7 16.545l5 -3.03" />
+                            <path d="M17 16.5l-5 -3l5 -3l5 3v5.5l-5 3z" />
+                            <path d="M12 19l5 3" />
+                            <path d="M17 16.5l5 -3" />
+                            <path d="M12 13.5v-5.5l-5 -3l5 -3l5 3v5.5" />
+                            <path d="M7 5.03v5.455" />
+                            <path d="M12 8l5 -3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-green-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Затраты на кубатуре в Таджикистане</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">12 000</h3>
+                    </div>
+                    <div class="bg-green-100 p-2 rounded-lg text-green-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-packages">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M7 16.5l-5 -3l5 -3l5 3v5.5l-5 3z" />
+                            <path d="M2 13.5v5.5l5 3" />
+                            <path d="M7 16.545l5 -3.03" />
+                            <path d="M17 16.5l-5 -3l5 -3l5 3v5.5l-5 3z" />
+                            <path d="M12 19l5 3" />
+                            <path d="M17 16.5l5 -3" />
+                            <path d="M12 13.5v-5.5l-5 -3l5 -3l5 3v5.5" />
+                            <path d="M7 5.03v5.455" />
+                            <path d="M12 8l5 -3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-purple-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Отправленный груз из Китая</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">2 000 с</h3>
+                    </div>
+                    <div class="bg-purple-100 p-2 rounded-lg text-purple-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-cube-send">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M16 12.5l-5 -3l5 -3l5 3v5.5l-5 3z" />
+                            <path d="M11 9.5v5.5l5 3" />
+                            <path d="M16 12.545l5 -3.03" />
+                            <path d="M7 9h-5" />
+                            <path d="M7 12h-3" />
+                            <path d="M7 15h-1" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-amber-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Полученный груз в Таджикистане</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">2 000 с</h3>
+                    </div>
+                    <div class="bg-amber-100 p-2 rounded-lg text-amber-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-checklist">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M9.615 20h-2.615a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8" />
+                            <path d="M14 19l2 2l4 -4" />
+                            <path d="M9 8h4" />
+                            <path d="M9 12h2" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
         </div>
     @endif
 
