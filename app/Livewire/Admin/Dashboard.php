@@ -33,7 +33,7 @@ class Dashboard extends Component
     public function mount()
     {
         $this->end = Carbon::now(); // сегодня
-        $this->start = Carbon::now()->subDays(7); // 7 дней назад
+        $this->start = Carbon::now()->subDays(3); // 7 дней назад
         $this->load();
     }
     public function load()
