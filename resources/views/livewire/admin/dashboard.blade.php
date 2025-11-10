@@ -303,7 +303,7 @@
                         {{ $item->phone ?? "-" }}
                     </flux:table.cell>
                     <flux:table.cell variant="strong">{{ $item->sex == "m" ? "Муж":"Жен" }}</flux:table.cell>
-                    <flux:table.cell>{{ $item->orders->count() ?? "-" }}</flux:table.cell>
+                    <flux:table.cell>{{ $item->trackcodes->count() ?? "-" }}</flux:table.cell>
                 </flux:table.row>
                 @endforeach
             </flux:table.rows>
