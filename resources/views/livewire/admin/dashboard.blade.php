@@ -18,29 +18,32 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
 
-        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-blue-500">
-            <div class="flex justify-between items-start">
-                <div>
-                    <p class="text-gray-500 text-sm font-medium">Новые клиенты за выбранный период</p>
-                    <h3 class="text-2xl font-bold mt-1 text-gray-800">{{ $newClients->count() }}</h3>
-                </div>
-                <div class="bg-blue-100 p-2 rounded-lg text-blue-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-users-group">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                        <path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1" />
-                        <path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                        <path d="M17 10h2a2 2 0 0 1 2 2v1" />
-                        <path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-                        <path d="M3 13v-1a2 2 0 0 1 2 -2h2" />
-                    </svg>
+
+        <flux:modal.trigger name="newclients">
+            <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-blue-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Новые клиенты за выбранный период</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">{{ $newClients->count() }}</h3>
+                    </div>
+                    <div class="bg-blue-100 p-2 rounded-lg text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-users-group">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                            <path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1" />
+                            <path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                            <path d="M17 10h2a2 2 0 0 1 2 2v1" />
+                            <path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                            <path d="M3 13v-1a2 2 0 0 1 2 -2h2" />
+                        </svg>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-green-500">
+        </flux:modal.trigger>
+        <a href="{{ route('admin.trackcodes') }}"
+            class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-green-500">
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-gray-500 text-sm font-medium">Полученные трек-коды на складе Иву</p>
@@ -59,9 +62,10 @@
                     </svg>
                 </div>
             </div>
-        </div>
+        </a>
 
-        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-purple-500">
+        <a href="{{ route('admin.orders') }}"
+            class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-purple-500">
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-gray-500 text-sm font-medium">Заработок за выбранный период</p>
@@ -78,29 +82,32 @@
                     </svg>
                 </div>
             </div>
-        </div>
-
-        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-amber-500">
-            <div class="flex justify-between items-start">
-                <div>
-                    <p class="text-gray-500 text-sm font-medium">Все затраты за выбранный период</p>
-                    <h3 class="text-2xl font-bold mt-1 text-gray-800">{{ $expenses->sum('total') }} с</h3>
-                </div>
-                <div class="bg-amber-100 p-2 rounded-lg text-amber-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-dollar">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M13 21h-7a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v3" />
-                        <path d="M16 3v4" />
-                        <path d="M8 3v4" />
-                        <path d="M4 11h12.5" />
-                        <path d="M21 15h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
-                        <path d="M19 21v1m0 -8v1" />
-                    </svg>
+        </a>
+        <flux:modal.trigger name="allexpanses">
+            <div
+                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-amber-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Все затраты за выбранный период</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">{{ $expenses->sum('total') }} с</h3>
+                    </div>
+                    <div class="bg-amber-100 p-2 rounded-lg text-amber-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-dollar">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M13 21h-7a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v3" />
+                            <path d="M16 3v4" />
+                            <path d="M8 3v4" />
+                            <path d="M4 11h12.5" />
+                            <path d="M21 15h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
+                            <path d="M19 21v1m0 -8v1" />
+                        </svg>
+                    </div>
                 </div>
             </div>
-        </div>
+        </flux:modal.trigger>
+
         <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-red-500">
             <div class="flex justify-between items-start">
                 <div>
@@ -140,43 +147,47 @@
                 </div>
             </div>
         </div>
+        <flux:modal.trigger name="dushanbe">
+            <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-pink-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Затраты на складе в Душанбе</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">{{ $expensesDushanbe->sum('total') }} с</h3>
+                    </div>
+                    <div class="bg-pink-100 p-2 rounded-lg text-pink-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-building-warehouse">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M3 21v-13l9 -4l9 4v13" />
+                            <path d="M13 13h4v8h-10v-6h6" />
+                            <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </flux:modal.trigger>
+        <flux:modal.trigger name="ivu">
+            <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-sky-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Затраты на складе в Иву</p>
+                        <h3 class="text-2xl font-bold mt-1 text-gray-800">{{ $expensesIvu->sum('total') }} с</h3>
+                    </div>
+                    <div class="bg-sky-100 p-2 rounded-lg text-sky-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-building-warehouse">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M3 21v-13l9 -4l9 4v13" />
+                            <path d="M13 13h4v8h-10v-6h6" />
+                            <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </flux:modal.trigger>
 
-        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-pink-500">
-            <div class="flex justify-between items-start">
-                <div>
-                    <p class="text-gray-500 text-sm font-medium">Затраты на складе в Душанбе</p>
-                    <h3 class="text-2xl font-bold mt-1 text-gray-800">{{ $expensesDushanbe->sum('total') }} с</h3>
-                </div>
-                <div class="bg-pink-100 p-2 rounded-lg text-pink-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-building-warehouse">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M3 21v-13l9 -4l9 4v13" />
-                        <path d="M13 13h4v8h-10v-6h6" />
-                        <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3" />
-                    </svg>
-                </div>
-            </div>
-        </div>
-        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-sky-500">
-            <div class="flex justify-between items-start">
-                <div>
-                    <p class="text-gray-500 text-sm font-medium">Затраты на складе в Иву</p>
-                    <h3 class="text-2xl font-bold mt-1 text-gray-800">{{ $expensesIvu->sum('total') }} с</h3>
-                </div>
-                <div class="bg-sky-100 p-2 rounded-lg text-sky-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-building-warehouse">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M3 21v-13l9 -4l9 4v13" />
-                        <path d="M13 13h4v8h-10v-6h6" />
-                        <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3" />
-                    </svg>
-                </div>
-            </div>
-        </div>
         <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow border-l-4 border-blue-500">
             <div class="flex justify-between items-start">
                 <div>
@@ -272,5 +283,90 @@
         </div>
     </div>
     @endif
+    <flux:modal name="newclients" class="md:w-full">
+        <flux:table>
+            <flux:table.columns>
+                <flux:table.column>Спец код</flux:table.column>
+                <flux:table.column>Имя</flux:table.column>
+                <flux:table.column>Телефон</flux:table.column>
+                <flux:table.column>Поль</flux:table.column>
+                <flux:table.column>Заказы</flux:table.column>
+            </flux:table.columns>
 
+            <flux:table.rows>
+                @foreach ($newClients as $item)
+
+                <flux:table.row>
+                    <flux:table.cell>{{ $item->code ?? "-"}}</flux:table.cell>
+                    <flux:table.cell>{{ $item->name?? "-" }}</flux:table.cell>
+                    <flux:table.cell>
+                        {{ $item->phone ?? "-" }}
+                    </flux:table.cell>
+                    <flux:table.cell variant="strong">{{ $item->sex == "m" ? "Муж":"Жен" }}</flux:table.cell>
+                    <flux:table.cell>{{ $item->orders->count() ?? "-" }}</flux:table.cell>
+                </flux:table.row>
+                @endforeach
+            </flux:table.rows>
+        </flux:table>
+    </flux:modal>
+    <flux:modal name="allexpanses" class="md:w-full">
+        <flux:table>
+            <flux:table.columns>
+                <flux:table.column>Сумма</flux:table.column>
+                <flux:table.column>Склад \ Кубатура</flux:table.column>
+                <flux:table.column>Описание</flux:table.column>
+            </flux:table.columns>
+
+            <flux:table.rows>
+                @foreach ($expenses as $item)
+
+                <flux:table.row>
+                    <flux:table.cell>{{ $item->total ?? "-"}}с</flux:table.cell>
+                    <flux:table.cell>{{ $item->sklad?? "-" }}</flux:table.cell>
+                    <flux:table.cell>{{ $item->content ?? "-" }}</flux:table.cell>
+                </flux:table.row>
+                @endforeach
+            </flux:table.rows>
+        </flux:table>
+    </flux:modal>
+    <flux:modal name="dushanbe" class="md:w-full">
+        <flux:table>
+            <flux:table.columns>
+                <flux:table.column>Сумма</flux:table.column>
+                <flux:table.column>Склад \ Кубатура</flux:table.column>
+                <flux:table.column>Описание</flux:table.column>
+            </flux:table.columns>
+
+            <flux:table.rows>
+                @foreach ($expensesDushanbe as $item)
+
+                <flux:table.row>
+                    <flux:table.cell>{{ $item->total ?? "-"}}с</flux:table.cell>
+                    <flux:table.cell>{{ $item->sklad?? "-" }}</flux:table.cell>
+                    <flux:table.cell>{{ $item->content ?? "-" }}</flux:table.cell>
+                </flux:table.row>
+                @endforeach
+            </flux:table.rows>
+        </flux:table>
+    </flux:modal>
+    <flux:modal name="ivu" class="md:w-full">
+        <flux:table>
+            <flux:table.columns>
+                <flux:table.column>Сумма</flux:table.column>
+                <flux:table.column>Склад \ Кубатура</flux:table.column>
+                <flux:table.column>Описание</flux:table.column>
+            </flux:table.columns>
+
+            <flux:table.rows>
+                @foreach ($expensesIvu as $item)
+
+                <flux:table.row>
+                    <flux:table.cell>{{ $item->total ?? "-"}}с</flux:table.cell>
+                    <flux:table.cell>{{ $item->sklad?? "-" }}</flux:table.cell>
+                    <flux:table.cell>{{ $item->content ?? "-" }}</flux:table.cell>
+                </flux:table.row>
+                @endforeach
+            </flux:table.rows>
+        </flux:table>
+    </flux:modal>
 </div>

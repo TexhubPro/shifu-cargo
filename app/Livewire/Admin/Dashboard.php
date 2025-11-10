@@ -32,8 +32,8 @@ class Dashboard extends Component
 
     public function mount()
     {
-        $this->start = Carbon::now()->startOfMonth()->toDateString();
-        $this->end = Carbon::now()->endOfMonth()->toDateString();
+        $this->end = Carbon::now(); // сегодня
+        $this->start = Carbon::now()->subDays(7); // 7 дней назад
         $this->load();
     }
     public function load()
