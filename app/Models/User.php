@@ -65,8 +65,8 @@ class User extends Authenticatable
     }
     public static function forPeriod($start, $end)
     {
-        return self::where('data', '>=', $start . ' 00:00:00')
-            ->where('data', '<=', $end . ' 23:59:59')
+        return self::where('created_at', '>=', $start . ' 00:00:00')
+            ->where('created_at', '<=', $end . ' 23:59:59')
             ->get();
     }
 }

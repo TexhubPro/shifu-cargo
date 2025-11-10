@@ -15,7 +15,7 @@ class RegisterPack extends Component
     public $type = "мелкий";
     public $boxes;
     public $ivuweight;
-    public $ivutype;
+    public $ivutype = "мелкий";
     public $ivuboxes;
     public $cube;
     public $ivucube;

@@ -23,8 +23,9 @@ class Trackcode extends Model
     }
     public static function forPeriod($start, $end)
     {
-        return self::where('data', '>=', $start . ' 00:00:00')
-            ->where('data', '<=', $end . ' 23:59:59')
-            ->get();
+        return self::where('china', '>=', $start . '00:00:00')
+            ->where('china', '<=', $end . '23:59:59')
+            ->where('status', 'Получено в Иву')
+            ->count();
     }
 }

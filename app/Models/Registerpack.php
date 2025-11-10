@@ -14,10 +14,18 @@ class Registerpack extends Model
         'cube',
         'data',
     ];
-    public static function forPeriod($start, $end)
+    public static function shipped($start, $end)
     {
         return self::where('data', '>=', $start . ' 00:00:00')
             ->where('data', '<=', $end . ' 23:59:59')
+            ->where('sklad', 'Иву')
+            ->get();
+    }
+    public static function received($start, $end)
+    {
+        return self::where('data', '>=', $start . ' 00:00:00')
+            ->where('data', '<=', $end . ' 23:59:59')
+            ->where('sklad', 'Душанбе')
             ->get();
     }
 }
