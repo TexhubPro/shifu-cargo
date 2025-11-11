@@ -290,7 +290,6 @@
                 <flux:table.column>Имя</flux:table.column>
                 <flux:table.column>Телефон</flux:table.column>
                 <flux:table.column>Поль</flux:table.column>
-                <flux:table.column>Заказы</flux:table.column>
             </flux:table.columns>
 
             <flux:table.rows>
@@ -303,7 +302,6 @@
                         {{ $item->phone ?? "-" }}
                     </flux:table.cell>
                     <flux:table.cell variant="strong">{{ $item->sex == "m" ? "Муж":"Жен" }}</flux:table.cell>
-                    <flux:table.cell>{{ $item->trackcodes->count() ?? "-" }}</flux:table.cell>
                 </flux:table.row>
                 @endforeach
             </flux:table.rows>
