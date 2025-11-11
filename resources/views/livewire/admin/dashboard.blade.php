@@ -283,7 +283,7 @@
         </div>
     </div>
     @endif
-    <flux:modal name="newclients" class="md:w-full">
+    <flux:modal name="newclients" class="md:w-full w-fit overflow-x-scroll">
         <flux:table>
             <flux:table.columns>
                 <flux:table.column>Спец код</flux:table.column>
@@ -307,7 +307,7 @@
             </flux:table.rows>
         </flux:table>
     </flux:modal>
-    <flux:modal name="allexpanses" class="md:w-full">
+    <flux:modal name="allexpanses" class="md:w-full w-fit overflow-x-scroll">
         <flux:table>
             <flux:table.columns>
                 <flux:table.column>Сумма</flux:table.column>
@@ -327,7 +327,7 @@
             </flux:table.rows>
         </flux:table>
     </flux:modal>
-    <flux:modal name="dushanbe" class="md:w-full">
+    <flux:modal name="dushanbe" class="md:w-full w-fit overflow-x-scroll">
         <flux:table>
             <flux:table.columns>
                 <flux:table.column>Сумма</flux:table.column>
@@ -347,7 +347,7 @@
             </flux:table.rows>
         </flux:table>
     </flux:modal>
-    <flux:modal name="ivu" class="md:w-full">
+    <flux:modal name="ivu" class="md:w-full w-fit overflow-x-scroll">
         <flux:table>
             <flux:table.columns>
                 <flux:table.column>Сумма</flux:table.column>
