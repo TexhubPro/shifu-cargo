@@ -27,9 +27,9 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
 {
     public function ai(): void
     {
-        $lang = $this->chat;
-        $lang->step = 'ai';
-        $lang->save();
+        $this->chat->step = 'ai';
+        $this->chat->save();
+        $this->chat->message('hello')->send();
         if ($this->chat->lang == 'ru') {
             $this->chat->message("Привет! 👋 Я ассистент компании Shifu Cargo. Чем могу помочь?")
                 ->replyKeyboard(ReplyKeyboard::make()
