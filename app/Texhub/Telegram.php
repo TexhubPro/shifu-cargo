@@ -25,6 +25,27 @@ use DefStudio\Telegraph\Facades\Telegraph as FacadesTelegraph;
 
 class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
 {
+    public function ai(): void
+    {
+        $lang = $this->chat;
+        $lang->step = 'ai';
+        $lang->save();
+        if ($this->chat->lang == 'ru') {
+            $this->chat->message("Привет! 👋 Я ассистент компании Shifu Cargo. Чем могу помочь?")
+                ->replyKeyboard(ReplyKeyboard::make()
+                    ->row([
+                        ReplyButton::make('❌ Закрыт чат'),
+                    ])
+                    ->resize())->send();
+        } else {
+            $this->chat->message("Салом! 👋 Ман мушовири ширкати Shifu Cargo ҳастам. Чӣ кӯмак карда метавонам?")
+                ->replyKeyboard(ReplyKeyboard::make()
+                    ->row([
+                        ReplyButton::make('❌ Пушидани чат'),
+                    ])
+                    ->resize())->send();
+        }
+    }
     public function code(): void
     {
         $this->chat->message($this->message->from()->id())->send();
@@ -304,6 +325,46 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                     'chat_id' => $chatik->id,
                     'message' => $text,
                 ]);
+                return;
+            }
+            if ($user->step == 'ai') {
+                $chatik = Chat::where('user_id', $user->id)->first();
+                if (!$chatik) {
+                    $chatik = Chat::create([
+                        'user_id' => $user->id,
+                        'status' => true,
+                    ]);
+                } else {
+                    $chatik->status = true;
+                    $chatik->save();
+                }
+                $assistant = new Assistant();
+                if (!$chatik->thread) {
+                    $thread_id = $assistant->createThread();
+                    $chatik->thread = $thread_id;
+                    $chatik->save();
+                }
+                $add_sms = $assistant->addMessage($chatik->thread, $text);
+                $runId = $assistant->runAssistant($chatik->thread_id, "asst_9O6POmPVglMEQnvNARYriTuu");
+                $status = $assistant->getRunStatus($chatik->thread_id, $runId);
+
+                while ($status['status'] !== 'completed') {
+                    sleep(3);
+                    $status = $assistant->getRunStatus($chatik->thread_id, $runId);
+                }
+
+                $ai_response = $assistant->getLastMessage($chatik->thread_id);
+                Message::create([
+                    'chat_id' => $chatik->id,
+                    'message' => $text,
+                    'is_admin' => false,
+                ]);
+                Message::create([
+                    'chat_id' => $chatik->id,
+                    'message' => $ai_response,
+                    'is_admin' => true,
+                ]);
+                $this->chat->message(str($ai_response))->send();
                 return;
             }
             if ($user->step == 'name') {

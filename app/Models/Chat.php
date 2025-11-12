@@ -9,6 +9,7 @@ class Chat extends Model
     protected $fillable = [
         'user_id',
         'status',
+        'thread',
     ];
     public function user()
     {
