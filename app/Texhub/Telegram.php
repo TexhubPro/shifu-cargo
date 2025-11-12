@@ -346,15 +346,15 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                     $chatik->save();
                 }
                 $add_sms = $assistant->addMessage($chatik->thread, $text);
-                $runId = $assistant->runAssistant($chatik->thread_id, "asst_9O6POmPVglMEQnvNARYriTuu");
-                $status = $assistant->getRunStatus($chatik->thread_id, $runId);
+                $runId = $assistant->runAssistant($chatik->thread, "asst_9O6POmPVglMEQnvNARYriTuu");
+                $status = $assistant->getRunStatus($chatik->thread, $runId);
 
                 while ($status['status'] !== 'completed') {
                     sleep(3);
-                    $status = $assistant->getRunStatus($chatik->thread_id, $runId);
+                    $status = $assistant->getRunStatus($chatik->thread, $runId);
                 }
 
-                $ai_response = $assistant->getLastMessage($chatik->thread_id);
+                $ai_response = $assistant->getLastMessage($chatik->thread);
                 Message::create([
                     'chat_id' => $chatik->id,
                     'message' => $text,
