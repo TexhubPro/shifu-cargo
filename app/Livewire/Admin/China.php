@@ -52,7 +52,7 @@ class China extends Component
     public function importExcel()
     {
         $this->validate([
-            'excelfile' => 'required|file|mimes:xlsx,csv',
+            'excelfile' => 'required|file|mimes:xlsx,csv,xls',
         ]);
 
         $data = Excel::toArray([], $this->excelfile);
