@@ -55,7 +55,7 @@ class China extends Component
             'excelfile' => 'required|file|mimes:xlsx,csv,xls',
         ]);
 
-        $data = Excel::toArray([], $this->excelfile);
+        $data = Excel::toArray([], $this->excelfile, null, Excel::XLSX);
         foreach ($data[0] as $key => $row) {
             if ($key == 0) {
                 continue;
