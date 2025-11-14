@@ -10,6 +10,7 @@ use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use App\Jobs\SendTrackNotification;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Excel as Hello;
 
 #[Layout('components.layouts.admin')]
 class China extends Component
@@ -55,7 +56,7 @@ class China extends Component
             'excelfile' => 'required|file|mimes:xlsx,csv,xls',
         ]);
 
-        $data = Excel::toArray([], $this->excelfile, null, Excel::XLSX);
+        $data = Excel::toArray([], $this->excelfile, null, Hello::XLSX);
         foreach ($data[0] as $key => $row) {
             if ($key == 0) {
                 continue;
