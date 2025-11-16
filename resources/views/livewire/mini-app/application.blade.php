@@ -63,9 +63,58 @@
                 </flux:text>
             </div>
             <form wire:submit="save" class="space-y-4">
-                <flux:input wire:model="phone" label="Номер телефон" placeholder="Введите свой номер телефон"
-                    required />
-                <flux:input wire:model="address" label="Адрес" placeholder="Введите свой адрес" required />
+                <div x-data="{
+                        phone: @entangle('phone').live,
+                        updatePhone(value) {
+                            // Разрешаем только цифры
+                            value = value.replace(/[^0-9]/g, '');
+
+                            // Ограничиваем до 9 символов
+                            if (value.length > 9) {
+                                value = value.slice(0, 9);
+                            }
+
+                            this.phone = value;
+                        }
+                    }">
+                    <flux:input label="Номер телефон пример : (931234567)" type="text"
+                        placeholder="Введите свой номер телефон" x-model="phone"
+                        x-on:input="updatePhone($event.target.value)" maxlength="9" inputmode="numeric" required />
+
+                    <!-- Ошибка Livewire -->
+                    @error('phone')
+                    <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div x-data="{
+        address: @entangle('address').live,
+        error: '',
+        updateAddress(value) {
+            // Разрешаем: буквы, цифры, пробел, запятая, точка, тире
+            value = value.replace(/[^A-Za-zА-Яа-я0-9.,\-\s]/g, '');
+
+            // Устанавливаем обратно
+            this.address = value;
+
+            // Минимум 5 символов
+            if (this.address.length < 5) {
+                this.error = 'Адрес должен содержать минимум 5 символов';
+            } else {
+                this.error = '';
+            }
+        }
+    }">
+                    <flux:input label="Адрес (пример: 103мкр, Тайга)" placeholder="Введите свой адрес" type="text"
+                        x-model="address" x-on:input="updateAddress($event.target.value)" required />
+
+                    <!-- Ошибка Alpine -->
+                    <div x-show="error" class="text-red-600 text-sm mt-1" x-text="error"></div>
+
+                    <!-- Ошибка Livewire -->
+                    @error('address')
+                    <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
                 <div class="flex">
                     <flux:spacer />
                     <flux:button type="submit" variant="primary" color="lime">Заказать</flux:button>
