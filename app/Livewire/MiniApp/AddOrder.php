@@ -12,29 +12,59 @@ class AddOrder extends Component
     public function add()
     {
         // Проверка на соответствие требованиям
-        if (!preg_match('/^[A-Za-z0-9]{1,20}$/', $this->trackcode)) {
-            $this->dispatch('alert', '❌ Трек-код должен содержать только латинские буквы и цифры (до 20 символов)');
-            return;
+        // Разделяем по пробелу, запятой, точке с запятой и переносам строк
+        $codes = preg_split('/[\s,;]+/', trim($this->trackcode));
+
+        // Убираем пустые элементы
+        $codes = array_filter($codes, fn($c) => trim($c) !== '');
+
+        $added = 0;
+        $updated = [];
+        $invalid = [];
+
+        foreach ($codes as $code) {
+            $code = trim($code);
+
+            // Проверка формата
+            if (!preg_match('/^[A-Za-z0-9]{1,20}$/', $code)) {
+                $invalid[] = $code;
+                continue;
+            }
+
+            // Проверка существования
+            $existing = Trackcode::where('code', $code)->first();
+
+            if ($existing) {
+                $existing->user_id = Auth::id();
+                $existing->save();
+
+                $updated[] = $code;
+                continue;
+            }
+
+            // Создание нового
+            Trackcode::create([
+                'code' => $code,
+                'user_id' => Auth::id(),
+            ]);
+
+            $added++;
         }
 
-        $code = Trackcode::where('code', $this->trackcode)->first();
+        // Сообщение
+        $message = "✅ Добавлено: {$added} трек-кодов.";
 
-        if ($code) {
-            $code->user_id = Auth::id();
-            $code->save();
-
-            $this->dispatch('alert', '⚠️ Трек-код уже существует, информация обновлена!');
-            $this->reset('trackcode');
-            return;
+        if (!empty($updated)) {
+            $message .= " ♻️ Обновлено: " . count($updated) . " ( " . implode(', ', $updated) . " ).";
         }
 
-        Trackcode::create([
-            'code' => $this->trackcode,
-            'user_id' => Auth::id(),
-        ]);
+        if (!empty($invalid)) {
+            $message .= " ❌ Неправильные: " . count($invalid) . " ( " . implode(', ', $invalid) . " ). Исправьте и добавьте снова.";
+        }
+
+        $this->dispatch('alert', $message);
 
         $this->reset('trackcode');
-        $this->dispatch('alert', '✅ Трек-код успешно добавлен!');
     }
 
 
