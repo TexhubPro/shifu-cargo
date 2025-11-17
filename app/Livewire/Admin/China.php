@@ -61,7 +61,7 @@ class China extends Component
             if ($key == 0) {
                 continue;
             }
-            SendTrackNotification::dispatch(trim($row[2]), trim($row[6]) ?? $this->date);
+            SendTrackNotification::dispatch(trim($row[0]), trim($row[1]) ?? $this->date);
         }
         $this->reset(['singleTrack', 'excelfile', 'date']);
         $this->dispatch('alert', 'Данные успешно загружены!');
