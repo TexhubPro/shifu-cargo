@@ -23,7 +23,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         RateLimiter::for('web-global', function (Request $request): Limit {
-            return Limit::perMinute(60)->by($request->ip() ?? 'global');
+            return Limit::perMinute(60)
+                ->by($request->ip() ?? 'global')
+                ->response(function () {
+                    return response()->view('errors.rate-limit', status: 429);
+                });
         });
     }
 }
