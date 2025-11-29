@@ -1597,6 +1597,7 @@
         },
         {
             "name": "laravel/framework",
+<<<<<<< HEAD
             "version": "v12.40.1",
             "source": {
                 "type": "git",
@@ -1607,6 +1608,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/laravel/framework/zipball/2e986acbf9acf62cba13400bc23c4d639bf188b9",
                 "reference": "2e986acbf9acf62cba13400bc23c4d639bf188b9",
+=======
+            "version": "v12.39.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/framework.git",
+                "reference": "1a6176129ef28eaf42b6b4a6250025120c3d8dac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/1a6176129ef28eaf42b6b4a6250025120c3d8dac",
+                "reference": "1a6176129ef28eaf42b6b4a6250025120c3d8dac",
+>>>>>>> 3bac4d41fc5e8e2ce78d23c0a12cba28ea1a64c4
                 "shasum": ""
             },
             "require": {
@@ -1812,7 +1825,11 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
+<<<<<<< HEAD
             "time": "2025-11-25T16:16:33+00:00"
+=======
+            "time": "2025-11-18T15:16:10+00:00"
+>>>>>>> 3bac4d41fc5e8e2ce78d23c0a12cba28ea1a64c4
         },
         {
             "name": "laravel/prompts",
@@ -2561,6 +2578,7 @@
         },
         {
             "name": "livewire/flux",
+<<<<<<< HEAD
             "version": "v2.9.0",
             "source": {
                 "type": "git",
@@ -2571,6 +2589,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/livewire/flux/zipball/d961ba5512ecfa38f8b759133ceec0fb295c4e16",
                 "reference": "d961ba5512ecfa38f8b759133ceec0fb295c4e16",
+=======
+            "version": "v2.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/livewire/flux.git",
+                "reference": "beff0f35bfe8c322198bec1968f0fcdddf4b4455"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/livewire/flux/zipball/beff0f35bfe8c322198bec1968f0fcdddf4b4455",
+                "reference": "beff0f35bfe8c322198bec1968f0fcdddf4b4455",
+>>>>>>> 3bac4d41fc5e8e2ce78d23c0a12cba28ea1a64c4
                 "shasum": ""
             },
             "require": {
@@ -2621,9 +2651,15 @@
             ],
             "support": {
                 "issues": "https://github.com/livewire/flux/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/livewire/flux/tree/v2.9.0"
             },
             "time": "2025-11-26T00:32:54+00:00"
+=======
+                "source": "https://github.com/livewire/flux/tree/v2.6.2"
+            },
+            "time": "2025-11-18T18:22:26+00:00"
+>>>>>>> 3bac4d41fc5e8e2ce78d23c0a12cba28ea1a64c4
         },
         {
             "name": "livewire/flux-pro",
@@ -8833,6 +8869,7 @@
         },
         {
             "name": "phpdocumentor/type-resolver",
+<<<<<<< HEAD
             "version": "1.12.0",
             "source": {
                 "type": "git",
@@ -8843,6 +8880,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/92a98ada2b93d9b201a613cb5a33584dde25f195",
                 "reference": "92a98ada2b93d9b201a613cb5a33584dde25f195",
+=======
+            "version": "1.11.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpDocumentor/TypeResolver.git",
+                "reference": "f626740b38009078de0dc8b2b9dc4e7f749c6eba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/f626740b38009078de0dc8b2b9dc4e7f749c6eba",
+                "reference": "f626740b38009078de0dc8b2b9dc4e7f749c6eba",
+>>>>>>> 3bac4d41fc5e8e2ce78d23c0a12cba28ea1a64c4
                 "shasum": ""
             },
             "require": {
@@ -8885,9 +8934,15 @@
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
             "support": {
                 "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.12.0"
             },
             "time": "2025-11-21T15:09:14+00:00"
+=======
+                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.11.1"
+            },
+            "time": "2025-11-21T11:31:57+00:00"
+>>>>>>> 3bac4d41fc5e8e2ce78d23c0a12cba28ea1a64c4
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -10671,5 +10726,5 @@
         "php": "^8.2"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
