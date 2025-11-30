@@ -102,7 +102,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             ->replyKeyboard(ReplyKeyboard::make()
                 ->row([
                     ReplyButton::make('🔢 Тафтиши трек-код'),
-                    ReplyButton::make('🕹 Ҳуҷраи шахсӣ')->webApp("https://shifucargo.texhub.pro/profile/$chat_id"),
+                    ReplyButton::make('🕹 Ҳуҷраи шахсӣ')->webApp("https://texhub.pro/profile/$chat_id"),
                 ])
                 ->row([
                     ReplyButton::make('➕ Обуна шудан'),
@@ -116,7 +116,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 ])
                 ->row([
                     ReplyButton::make('❌ Молҳои манъшуда'),
-                    ReplyButton::make('🧮 Ҳисобкунак')->webApp("https://shifucargo.texhub.pro/calculator"),
+                    ReplyButton::make('🧮 Ҳисобкунак')->webApp("https://texhub.pro/calculator"),
                     ReplyButton::make('🎞 Дарсҳои ройгон'),
                 ])
                 ->resize())->send();
@@ -130,7 +130,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             ->replyKeyboard(ReplyKeyboard::make()
                 ->row([
                     ReplyButton::make('🔢 Проверить трек-код'),
-                    ReplyButton::make('🕹 Личный кабинет')->webApp("https://shifucargo.texhub.pro/profile/$chat_id"),
+                    ReplyButton::make('🕹 Личный кабинет')->webApp("https://texhub.pro/profile/$chat_id"),
                 ])
                 ->row([
                     ReplyButton::make('➕ Подписаться'),
@@ -144,7 +144,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 ])
                 ->row([
                     ReplyButton::make('❌ Запрещенные товары'),
-                    ReplyButton::make('🧮 Калькулятор')->webApp("https://shifucargo.texhub.pro/calculator"),
+                    ReplyButton::make('🧮 Калькулятор')->webApp("https://texhub.pro/calculator"),
                     ReplyButton::make('🎞 Бесплатные уроки'),
                 ])
                 ->resize())->send();
@@ -460,7 +460,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             $user->step = "apl_phone";
             $user->save();
             if ($this->chat->lang == 'ru') {
-                $this->chat->photo(public_path('assets/delivery_ru.png'))->message("✍️ Напишите свой номер телефона, например: <b>005335051</b>")->send();
+                $this->chat->photo(public_path('assets/delivery_ru.png'))->message("✍️ Напишите свой номер телефона, например: <b>931234567</b>")->send();
             } else {
                 $this->chat->photo(public_path('assets/delivery_tj.png'))->message("✍️ Рақами телефони худро нависед, масалан: <b>005335051</b>")->send();
             }
@@ -698,7 +698,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         if ($user->chat_id) {
             $chat = TelegraphChat::where('chat_id', $user->chat_id)->first();
             if ($file) {
-                $chat->document("https://shifucargo.texhub.pro$file")->send();
+                $chat->document("https://texhub.pro$file")->send();
             }
             if ($chat->lang == 'ru') {
                 $chat->message("📦 Добрый день, уважаемый клиент!\n\n🚚 Вы успешно оформили доставку.\n⚖️ Вес: $order->weight кг\n📏 Объём: $order->cube м³\n💰 Подытог: $order->subtotal с\n💵 Скидка: $order->discount с\n🚛 Доставка: $order->delivery_total с\n✅ Итог: $order->total с\n\nСпасибо, что вы с нами! 💚")->send();
