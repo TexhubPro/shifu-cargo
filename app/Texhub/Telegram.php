@@ -462,7 +462,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             if ($this->chat->lang == 'ru') {
                 $this->chat->photo(public_path('assets/delivery_ru.png'))->message("✍️ Напишите свой номер телефона, например: <b>931234567</b>")->send();
             } else {
-                $this->chat->photo(public_path('assets/delivery_tj.png'))->message("✍️ Рақами телефони худро нависед, масалан: <b>005335051</b>")->send();
+                $this->chat->photo(public_path('assets/delivery_tj.png'))->message("✍️ Рақами телефони худро нависед, масалан: <b>931234567</b>")->send();
             }
             return;
         }
