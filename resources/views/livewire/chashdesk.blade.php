@@ -85,76 +85,73 @@
                     + E — расходы</span>
             </div>
         </div>
-        <div class="grid grid-cols-3 gap-4">
-            <div class="space-y-2">
-                <div class="bg-white border border-lime-200 rounded-xl p-2 space-y-2 shadow-sm">
-                    <div class="flex items-center justify-between">
-                        <flux:heading size="xs">Удержанные заказы</flux:heading>
-                        <flux:badge color="lime" size="sm">{{ $heldOrders->count() }}</flux:badge>
-                    </div>
-                    <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
-                        @forelse ($heldOrders as $held)
-                            <div class="border border-neutral-200 rounded-xl px-3 py-2 flex items-center justify-between text-xs"
-                                wire:key="held-{{ $held->id }}">
-                                <div class="space-y-1">
-                                    <p class="font-semibold text-neutral-800">{{ $held->client ?? 'Без клиента' }}</p>
-                                    <p class="text-neutral-500">
-                                        {{ number_format($held->total_final, 2, '.', ' ') }} c ·
-                                        {{ optional($held->created_at)->format('H:i') ?? '' }}
-                                    </p>
-                                </div>
-                                <div class="flex items-center gap-1">
-                                    <flux:button size="xs" wire:click="loadHeldOrder({{ $held->id }})">
-                                        ✓
-                                    </flux:button>
-                                    <flux:button size="xs" variant="danger"
-                                        wire:click="deleteHeldOrder({{ $held->id }})" wire:confirm>
-                                        ×
-                                    </flux:button>
-                                </div>
-                            </div>
-                        @empty
-                            <flux:text variant="subtle" class="text-xs text-center block">Удержанных заказов нет.
-                            </flux:text>
-                        @endforelse
-                    </div>
+        <div class="grid grid-cols-4 gap-4">
+            <div class="bg-white border border-lime-200 rounded-xl p-2 space-y-2 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <flux:heading size="xs">Удержанные заказы</flux:heading>
+                    <flux:badge color="lime" size="sm">{{ $heldOrders->count() }}</flux:badge>
                 </div>
-                <div class="bg-white border border-neutral-200 rounded-xl shadow-md p-2 space-y-2">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm uppercase text-neutral-500 tracking-wide">Трекинг панель</p>
-                            <p class="text-md font-semibold text-neutral-800">Добавление трек-кодов</p>
+                <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                    @forelse ($heldOrders as $held)
+                        <div class="border border-neutral-200 rounded-xl px-3 py-2 flex items-center justify-between text-xs"
+                            wire:key="held-{{ $held->id }}">
+                            <div class="space-y-1">
+                                <p class="font-semibold text-neutral-800">{{ $held->client ?? 'Без клиента' }}</p>
+                                <p class="text-neutral-500">
+                                    {{ number_format($held->total_final, 2, '.', ' ') }} c ·
+                                    {{ optional($held->created_at)->format('H:i') ?? '' }}
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <flux:button size="xs" wire:click="loadHeldOrder({{ $held->id }})">
+                                    ✓
+                                </flux:button>
+                                <flux:button size="xs" variant="danger"
+                                    wire:click="deleteHeldOrder({{ $held->id }})" wire:confirm>
+                                    ×
+                                </flux:button>
+                            </div>
                         </div>
-                        <flux:badge color="blue">{{ count($tracks) }}</flux:badge>
+                    @empty
+                        <flux:text variant="subtle" class="text-xs text-center block">Удержанных заказов нет.
+                        </flux:text>
+                    @endforelse
+                </div>
+            </div>
+            <div class="bg-white border border-neutral-200 rounded-xl shadow-md p-2 space-y-2">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm uppercase text-neutral-500 tracking-wide">Трекинг панель</p>
+                        <p class="text-md font-semibold text-neutral-800">Добавление трек-кодов</p>
                     </div>
-                    <form wire:submit="addTrack">
-                        <flux:input id="track-input" icon="qr-code" label="Сканируйте (Ctrl+Shift+T)"
-                            wire:model="newTrack" placeholder="Трек-код или штрих код груза" />
-                    </form>
-                    <div
-                        class="h-80 rounded-lg bg-neutral-50 border border-dashed border-neutral-300 overflow-y-auto p-2 space-y-2">
-                        @if ($tracks)
-                            @foreach ($tracks as $index => $track)
-                                <div
-                                    class="bg-white rounded-xl px-3 py-2 shadow flex justify-between items-center text-sm">
-                                    <span class="font-semibold text-neutral-800">{{ $track }}</span>
-                                    <button type="button" wire:click="removeTrack({{ $index }})"
-                                        class="text-red-500 hover:text-red-600 transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon icon-tabler icons-tabler-outline icon-tabler-x">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M18 6l-12 12" />
-                                            <path d="M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            @endforeach
-                        @else
-                            <div class="text-center text-neutral-500 text-sm py-8">Трек-коды ещё не добавлены.</div>
-                        @endif
-                    </div>
+                    <flux:badge color="blue">{{ count($tracks) }}</flux:badge>
+                </div>
+                <form wire:submit="addTrack">
+                    <flux:input id="track-input" icon="qr-code" label="Сканируйте (Ctrl+Shift+T)" wire:model="newTrack"
+                        placeholder="Трек-код или штрих код груза" />
+                </form>
+                <div
+                    class="h-80 rounded-lg bg-neutral-50 border border-dashed border-neutral-300 overflow-y-auto p-2 space-y-2">
+                    @if ($tracks)
+                        @foreach ($tracks as $index => $track)
+                            <div class="bg-white rounded-xl px-3 py-2 shadow flex justify-between items-center text-sm">
+                                <span class="font-semibold text-neutral-800">{{ $track }}</span>
+                                <button type="button" wire:click="removeTrack({{ $index }})"
+                                    class="text-red-500 hover:text-red-600 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round"
+                                        class="icon icon-tabler icons-tabler-outline icon-tabler-x">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M18 6l-12 12" />
+                                        <path d="M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="text-center text-neutral-500 text-sm py-8">Трек-коды ещё не добавлены.</div>
+                    @endif
                 </div>
             </div>
             <form wire:submit="order_place" class="col-span-2" x-data @keydown.enter="$event.preventDefault()">
