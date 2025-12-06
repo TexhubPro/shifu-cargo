@@ -65,7 +65,7 @@
                                 <flux:table.cell>
                                     <span class="block max-w-[160px] truncate text-neutral-100"
                                         title="{{ $item->user->name }}-{{ $item->user->code ?? '-' }}">
-                                        {{ $item->user->name }}
+                                        {{ $item->user->name }}-{{ $item->user->code ?? '-' }}
                                     </span>
                                 </flux:table.cell>
                                 <flux:table.cell variant="strong">
