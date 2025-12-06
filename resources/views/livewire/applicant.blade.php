@@ -180,15 +180,13 @@
 
     <flux:modal name="order_place" class="w-full max-w-2xl">
         <form wire:submit="order_place" class="space-y-2">
-            <div
-                class="rounded-lg bg-gradient-to-r from-emerald-500 via-lime-500 to-yellow-400 p-2 text-white shadow-lg shadow-emerald-900/40 space-y-2">
+            <div class="text-white shadow-lg shadow-emerald-900/40 space-y-2">
                 <div class="flex items-center justify-between gap-4">
                     <div>
                         <p class="text-xs uppercase tracking-wide text-white/70">Оформление заявки</p>
                         <flux:heading size="lg" class="text-white">Подтвердите выдачу заказа</flux:heading>
                     </div>
-                    <span
-                        class="inline-flex items-center rounded-2xl bg-white/20 px-4 py-2 text-lg font-semibold text-white shadow-inner shadow-black/30">
+                    <span class="text-lg font-semibold text-white">
                         {{ $total_final }} c
                     </span>
                 </div>
