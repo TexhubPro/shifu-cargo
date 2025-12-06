@@ -7,33 +7,33 @@
             </div>
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 w-full lg:w-auto">
                 <flux:modal.trigger name="add-expences">
-                    <flux:button id="btn-add-expense" aria-keyshortcuts="Control+Shift+E" color="white" variant="ghost"
+                    <flux:button id="btn-add-expense" aria-keyshortcuts="Shift+Alt+E" color="white" variant="ghost"
                         class="h-16 rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all">
                         <div class="flex items-center gap-3 text-left">
                             <span
                                 class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-2xl">+</span>
                             <div class="flex flex-col leading-tight">
                                 <span class="font-semibold text-white">Добавить расходы</span>
-                                <span class="text-xs text-white/70">Ctrl + Shift + E</span>
+                                <span class="text-xs text-white/70">Shift + Alt + E</span>
                             </div>
                         </div>
                     </flux:button>
                 </flux:modal.trigger>
                 <flux:modal.trigger name="select-queue">
-                    <flux:button id="btn-open-queue" aria-keyshortcuts="Control+Shift+Q" color="white" variant="ghost"
+                    <flux:button id="btn-open-queue" aria-keyshortcuts="Shift+Alt+Q" color="white" variant="ghost"
                         class="h-16 rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all">
                         <div class="flex items-center gap-3 text-left">
                             <span
                                 class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-xl">Q</span>
                             <div class="flex flex-col leading-tight">
                                 <span class="font-semibold text-white">Выбрать из очереди</span>
-                                <span class="text-xs text-white/70">Ctrl + Shift + Q</span>
+                                <span class="text-xs text-white/70">Shift + Alt + Q</span>
                             </div>
                         </div>
                     </flux:button>
                 </flux:modal.trigger>
                 <flux:modal.trigger name="currency-info">
-                    <flux:button id="btn-currency-modal" aria-keyshortcuts="Control+Shift+C" color="white"
+                    <flux:button id="btn-currency-modal" aria-keyshortcuts="Shift+Alt+C" color="white"
                         variant="ghost"
                         class="h-16 rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all">
                         <div class="flex items-center gap-3 text-left">
@@ -41,13 +41,13 @@
                                 class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-xl">$</span>
                             <div class="flex flex-col leading-tight">
                                 <span class="font-semibold text-white">Курс валюты</span>
-                                <span class="text-xs text-white/70">Ctrl + Shift + C</span>
+                                <span class="text-xs text-white/70">Shift + Alt + C</span>
                             </div>
                         </div>
                     </flux:button>
                 </flux:modal.trigger>
                 <flux:modal.trigger name="cashdesk-reports">
-                    <flux:button id="btn-reports-modal" aria-keyshortcuts="Control+Shift+R" color="white"
+                    <flux:button id="btn-reports-modal" aria-keyshortcuts="Shift+Alt+R" color="white"
                         variant="ghost"
                         class="h-16 rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all">
                         <div class="flex items-center gap-3 text-left">
@@ -55,7 +55,7 @@
                                 class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-xl">R</span>
                             <div class="flex flex-col leading-tight">
                                 <span class="font-semibold text-white">Отчёты кассы</span>
-                                <span class="text-xs text-white/70">Ctrl + Shift + R</span>
+                                <span class="text-xs text-white/70">Shift + Alt + R</span>
                             </div>
                         </div>
                     </flux:button>
@@ -73,15 +73,15 @@
                 </flux:text>
             </div>
             <div class="flex flex-wrap gap-2 text-[11px]">
-                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Ctrl + Enter
+                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Shift + Alt + Enter
                     — оформить</span>
-                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Ctrl + Shift
+                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Shift + Alt
                     + H — удержать</span>
-                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Ctrl + Shift
+                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Shift + Alt
                     + T — сканер</span>
-                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Ctrl + Shift
+                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Shift + Alt
                     + Q — очередь</span>
-                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Ctrl + Shift
+                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Shift + Alt
                     + E — расходы</span>
             </div>
         </div>
@@ -127,7 +127,7 @@
                     <flux:badge color="blue">{{ count($tracks) }}</flux:badge>
                 </div>
                 <form wire:submit="addTrack">
-                    <flux:input id="track-input" icon="qr-code" label="Сканируйте (Ctrl+Shift+T)" wire:model="newTrack"
+                    <flux:input id="track-input" icon="qr-code" label="Сканируйте (Shift+Alt+T)" wire:model="newTrack"
                         placeholder="Трек-код или штрих код груза" />
                 </form>
                 <div
@@ -164,7 +164,7 @@
                         <flux:badge color="neutral">Live</flux:badge>
                     </div>
                     <div class="space-y-3">
-                        <flux:autocomplete id="client-input" wire:model.live="client" label="Клиент (Ctrl+Shift+K)"
+                        <flux:autocomplete id="client-input" wire:model.live="client" label="Клиент (Shift+Alt+K)"
                             placeholder="Выберите клиента" required>
                             @foreach ($users as $user)
                                 <flux:autocomplete.item>{{ $user->phone }}</flux:autocomplete.item>
@@ -173,26 +173,28 @@
                         @if ($showDeliveryDetails)
                             <div
                                 class="grid gap-3 grid-cols-1 md:grid-cols-3 border border-neutral-200 rounded-xl p-2 bg-neutral-50">
-                                <flux:input label="Номер заявки" placeholder="Введите номер заявки"
+                                <flux:input id="order-no-input" label="Номер заявки (Shift+Alt+O)" placeholder="Введите номер заявки"
                                     wire:model.live="order_no" />
-                                <flux:select wire:model="deliver_boy" label="Доставщик"
+                                <flux:select id="deliver-select" wire:model="deliver_boy" label="Доставщик (Shift+Alt+B)"
                                     placeholder="Выберите доставщика">
                                     @foreach ($delivers as $deliver)
                                         <flux:select.option>{{ $deliver->name }}</flux:select.option>
                                     @endforeach
                                 </flux:select>
-                                <flux:input label="Цена доставки (сомони)" placeholder="Введите стоимость доставки"
-                                    wire:model.live="delivery_price" type="number" min="0" />
+                                <flux:input id="delivery-price-input" label="Цена доставки (Shift+Alt+D)"
+                                    placeholder="Введите стоимость доставки" wire:model.live="delivery_price"
+                                    type="text" inputmode="decimal" />
                             </div>
                         @endif
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <!-- Вес груза -->
-                        <flux:input label="Вес груза (кг)" placeholder="Введите общий вес груза"
+                        <flux:input id="weight-input" label="Вес груза (Shift+Alt+W)" placeholder="Введите общий вес груза"
                             wire:model.live="weight" required />
 
                         <!-- Объём груза -->
-                        <flux:input label="Объём груза (м³)" placeholder="Введите примерный объём"
+                        <flux:input id="volume-input" label="Объём груза (Shift+Alt+V)"
+                            placeholder="Введите примерный объём"
                             wire:model.live="volume" />
                     </div>
 
@@ -201,8 +203,8 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <!-- Тип оплаты -->
-                        <flux:select wire:model.live="payment_type" placeholder="Выберите тип оплаты"
-                            label="Тип оплаты" required>
+                        <flux:select id="payment-type-select" wire:model.live="payment_type"
+                            placeholder="Выберите тип оплаты" label="Тип оплаты (Shift+Alt+P)" required>
                             <flux:select.option>Алиф Моби</flux:select.option>
                             <flux:select.option>Душанбе Сити</flux:select.option>
                             <flux:select.option>Наличными</flux:select.option>
@@ -211,15 +213,17 @@
 
 
                         <!-- Итоговая сумма -->
-                        <flux:input label="Итоговая сумма (сомони)" placeholder="Введите общую сумму"
-                            wire:model.live="total_amount" type="text" inputmode="decimal" required />
+                        <flux:input id="total-amount-input" label="Итоговая сумма (Shift+Alt+I)"
+                            placeholder="Введите общую сумму" wire:model.live="total_amount" type="text"
+                            inputmode="decimal" required />
                     </div>
                     <div class="space-y-2">
-                        <flux:label>Скидка</flux:label>
+                        <flux:label>Скидка · Shift+Alt+S / Тип · Shift+Alt+L</flux:label>
                         <div class="flex flex-col md:flex-row gap-3">
-                            <flux:input placeholder="10" wire:model.live="discount" type="number" min="0" />
-                            <flux:select wire:model="industry" wire:model.live="discountt"
-                                placeholder="Choose discount type">
+                            <flux:input id="discount-input" placeholder="10" wire:model.live="discount" type="text"
+                                inputmode="decimal" min="0" />
+                            <flux:select id="discount-type-select" wire:model="industry" wire:model.live="discountt"
+                                placeholder="Тип скидки (Shift+Alt+L)">
                                 <flux:select.option>Фиксированная</flux:select.option>
                                 <flux:select.option>Процентная</flux:select.option>
                             </flux:select>
@@ -251,12 +255,12 @@
                             {{ $showDeliveryDetails ? 'Скрыть доставку' : 'Оформить доставку' }}
                         </flux:button>
                         <flux:button id="btn-hold-order" type="button" class="w-full md:w-1/3"
-                            wire:click="holdCurrentOrder" aria-keyshortcuts="Control+Shift+H">
-                            Удержать заказ · Ctrl+Shift+H
+                            wire:click="holdCurrentOrder" aria-keyshortcuts="Shift+Alt+H">
+                            Удержать заказ · Shift+Alt+H
                         </flux:button>
                         <flux:button id="btn-submit-order" type="submit" variant="primary" color="lime"
-                            class="flex-1" aria-keyshortcuts="Control+Enter">
-                            Оформить заявку · Ctrl+Enter
+                            class="flex-1" aria-keyshortcuts="Shift+Alt+Enter">
+                            Оформить заявку · Shift+Alt+Enter
                         </flux:button>
                     </div>
                 </div>
@@ -344,7 +348,7 @@
         <form wire:submit.prevent="saveCurrencySettings" class="space-y-4">
             <div>
                 <flux:heading size="lg">Курс и тарифы</flux:heading>
-                <flux:text class="mt-1">Обновите курс доллара (Ctrl+Shift+S). Тарифы приводятся справочно.
+                <flux:text class="mt-1">Обновите курс доллара (Shift+Alt+U). Тарифы приводятся справочно.
                 </flux:text>
             </div>
             <div class="bg-neutral-100 rounded-xl p-3">
@@ -378,10 +382,10 @@
                     <p class="text-lg font-semibold">{{ $this->currencyInfo['kg_price_30'] }}</p>
                 </div>
             </div>
-            <flux:button id="btn-save-currency" type="submit" variant="primary" class="w-full"
-                aria-keyshortcuts="Control+Shift+S">
-                Сохранить · Ctrl+Shift+S
-            </flux:button>
+                <flux:button id="btn-save-currency" type="submit" variant="primary" class="w-full"
+                    aria-keyshortcuts="Shift+Alt+U">
+                    Сохранить · Shift+Alt+U
+                </flux:button>
         </form>
     </flux:modal>
     <flux:modal name="cashdesk-reports" class="w-full max-w-6xl">
@@ -564,38 +568,24 @@
                 }
             };
 
-            const combos = [{
-                    keys: ['command+shift+e', 'ctrl+shift+e'],
-                    action: () => triggerClick('btn-add-expense')
-                },
-                {
-                    keys: ['command+shift+q', 'ctrl+shift+q'],
-                    action: () => triggerClick('btn-open-queue')
-                },
-                {
-                    keys: ['command+shift+c', 'ctrl+shift+c'],
-                    action: () => triggerClick('btn-currency-modal')
-                },
-                {
-                    keys: ['command+shift+r', 'ctrl+shift+r'],
-                    action: () => triggerClick('btn-reports-modal')
-                },
-                {
-                    keys: ['command+shift+h', 'ctrl+shift+h'],
-                    action: () => triggerClick('btn-hold-order')
-                },
-                {
-                    keys: ['command+shift+t', 'ctrl+shift+t'],
-                    action: () => focusInput('track-input')
-                },
-                {
-                    keys: ['command+shift+k', 'ctrl+shift+k'],
-                    action: () => focusInput('client-input')
-                },
-                {
-                    keys: ['command+shift+s', 'ctrl+shift+s'],
-                    action: () => triggerClick('btn-save-currency')
-                },
+            const combos = [
+                { keys: ['shift+alt+e'], action: () => triggerClick('btn-add-expense') },
+                { keys: ['shift+alt+q'], action: () => triggerClick('btn-open-queue') },
+                { keys: ['shift+alt+c'], action: () => triggerClick('btn-currency-modal') },
+                { keys: ['shift+alt+r'], action: () => triggerClick('btn-reports-modal') },
+                { keys: ['shift+alt+h'], action: () => triggerClick('btn-hold-order') },
+                { keys: ['shift+alt+t'], action: () => focusInput('track-input') },
+                { keys: ['shift+alt+k'], action: () => focusInput('client-input') },
+                { keys: ['shift+alt+w'], action: () => focusInput('weight-input') },
+                { keys: ['shift+alt+v'], action: () => focusInput('volume-input') },
+                { keys: ['shift+alt+d'], action: () => focusInput('delivery-price-input') },
+                { keys: ['shift+alt+o'], action: () => focusInput('order-no-input') },
+                { keys: ['shift+alt+b'], action: () => focusInput('deliver-select') },
+                { keys: ['shift+alt+p'], action: () => focusInput('payment-type-select') },
+                { keys: ['shift+alt+i'], action: () => focusInput('total-amount-input') },
+                { keys: ['shift+alt+s'], action: () => focusInput('discount-input') },
+                { keys: ['shift+alt+l'], action: () => focusInput('discount-type-select') },
+                { keys: ['shift+alt+u'], action: () => triggerClick('btn-save-currency') },
             ];
 
             combos.forEach(({
@@ -609,7 +599,7 @@
                 });
             });
 
-            binder.bind(['command+enter', 'ctrl+enter'], (event) => {
+            binder.bind(['shift+alt+enter'], (event) => {
                 event.preventDefault();
                 triggerClick('btn-submit-order');
                 return false;
