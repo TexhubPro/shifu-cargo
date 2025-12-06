@@ -1,61 +1,118 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+-----BEGIN CERTIFICATE-----
+MIIGIjCCBQqgAwIBAgISBkl7ktCsQlVuvsSJBxa/yUi/MA0GCSqGSIb3DQEBCwUA
+MDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQwwCgYDVQQD
+EwNSMTMwHhcNMjUxMTMwMDkzNjA0WhcNMjYwMjI4MDkzNjAzWjAgMR4wHAYDVQQD
+ExVzaGlmdWNhcmdvLnRleGh1Yi5wcm8wggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAw
+ggIKAoICAQDxnyWpjZJYMYX8R8Re7nUwxOw2BlvyFCRw4ApYmRJI1gYGLyTbJv/t
+6fl66B3qsQZpIoAFhIXWcl0hBNrvlknc3uwd5VYxTehXQrzfTp7iaoUyqrUp+59l
+DIVLpW74CMSHzm8dbw23X7pl5F6yjm9OhF/q0WnBnIHwrwBJojKNpjIh8QtgQSL4
+Acn96cY5An6bXZFIvWpo53NjNCLAmy8fTFq723Uy3vTWcWqFR8HabDJhOPOtr5bI
+DYlFliAv36ok2Mr+alRY97aulHVuXPdOpx81s5fKIUrIAEkBj8rhbciOQwqiejN5
+W2wG8/9uiIWFxAE54twJ+2g2pMASYFJt3qj/KL8O4odfMTmN/IJuZZBcSnZyg0uG
+gGpHewpCyzfvJLQ1gK5Au25VAf0iop7uaF4IoXUjoLVO2/cNraTN6UwZF8VORCBV
+2vixssiinGmD8krktYp8+qXnRrHtJWrCXMxVl66XqnFBNdmkjpMpYPjZeeO3+ngR
+YewUKVzE5gL6GfSlJoLbNuza9ce1gY8DoWKfe4dIJ+F8dul80qhSUxZMpLC1iN0F
+AQ6GZ4JulEEcEyjc/E6WNveBDBkMlWtOZlT9SF36IycvjprGPTM8HDH60WMCu3/X
+CCi/XjjMImKFH5B5wANsxqVDGqTT/AU46EtdtT3L43j2TexunhfuJwIDAQABo4IC
+QTCCAj0wDgYDVR0PAQH/BAQDAgWgMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEF
+BQcDAjAMBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBT3BUJZW0A/0Sh4Oj5dlRemZOPP
+FDAfBgNVHSMEGDAWgBTnq58PLDOgU9NeT3jIsoQOO9aSMzAzBggrBgEFBQcBAQQn
+MCUwIwYIKwYBBQUHMAKGF2h0dHA6Ly9yMTMuaS5sZW5jci5vcmcvMDsGA1UdEQQ0
+MDKCFXNoaWZ1Y2FyZ28udGV4aHViLnByb4IZd3d3LnNoaWZ1Y2FyZ28udGV4aHVi
+LnBybzATBgNVHSAEDDAKMAgGBmeBDAECATAuBgNVHR8EJzAlMCOgIaAfhh1odHRw
+Oi8vcjEzLmMubGVuY3Iub3JnLzY0LmNybDCCAQUGCisGAQQB1nkCBAIEgfYEgfMA
+8QB2ABmG1Mcoqm/+ugNveCpNAZGqzi1yMQ+uzl1wQS0lTMfUAAABmtRUIHMAAAQD
+AEcwRQIhAIrf8MA8TrdPopNSwXzcfs+VtmXZB/FYUKu4aItw66aQAiAQhJKh2trh
+oUKJjFS26VqGSMPJcwThCwD5k38pWASRNAB3AGQRxGykEuyniRyiAi4AvKtPKAfU
+HjUnq+r+1QPJfc3wAAABmtRUIHgAAAQDAEgwRgIhAKYTtkoLutKDf+/oz3WtGhjt
+JMcFhXjJ88tp7Y9oxtEtAiEAsJNZlxAq2zo04tPahgci/8e64V0zQh0m89Cu39jN
+d5MwDQYJKoZIhvcNAQELBQADggEBAJwRFPCSjObuDC0koWjzxArLFPjV85UJbrrS
+bZrPlI4pT3H6I+x/OskDbZc1NICcW+TVyTphgZHsQjkUmzTrOXSOnyqyblhTI+sU
+VtumbpTr/q+DAdbIYdl3E1CkSs3tDbDZAPQ/XygHOFkjZwieszfQZpEzKoBEkBR3
+qgGpe/Vp4NqRT7OLhZwr27yMp/Edl9+BPIDR8xGsJHOnXXGr7XK0uivG97vLFZD4
+j365fsJdTFweyn6hE3pc3Fa9fCbYKRNLlTrysiMjfUx72UjKNtV7lVrZGHJYkopy
+Vzxta8lOdr0faZknzEdHWpxji8LePiysslmE9kK+YSbRmukgfjM=
+-----END CERTIFICATE-----
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+-----BEGIN CERTIFICATE-----
+MIIFBTCCAu2gAwIBAgIQWgDyEtjUtIDzkkFX6imDBTANBgkqhkiG9w0BAQsFADBP
+MQswCQYDVQQGEwJVUzEpMCcGA1UEChMgSW50ZXJuZXQgU2VjdXJpdHkgUmVzZWFy
+Y2ggR3JvdXAxFTATBgNVBAMTDElTUkcgUm9vdCBYMTAeFw0yNDAzMTMwMDAwMDBa
+Fw0yNzAzMTIyMzU5NTlaMDMxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBF
+bmNyeXB0MQwwCgYDVQQDEwNSMTMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
+AoIBAQClZ3CN0FaBZBUXYc25BtStGZCMJlA3mBZjklTb2cyEBZPs0+wIG6BgUUNI
+fSvHSJaetC3ancgnO1ehn6vw1g7UDjDKb5ux0daknTI+WE41b0VYaHEX/D7YXYKg
+L7JRbLAaXbhZzjVlyIuhrxA3/+OcXcJJFzT/jCuLjfC8cSyTDB0FxLrHzarJXnzR
+yQH3nAP2/Apd9Np75tt2QnDr9E0i2gB3b9bJXxf92nUupVcM9upctuBzpWjPoXTi
+dYJ+EJ/B9aLrAek4sQpEzNPCifVJNYIKNLMc6YjCR06CDgo28EdPivEpBHXazeGa
+XP9enZiVuppD0EqiFwUBBDDTMrOPAgMBAAGjgfgwgfUwDgYDVR0PAQH/BAQDAgGG
+MB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDATASBgNVHRMBAf8ECDAGAQH/
+AgEAMB0GA1UdDgQWBBTnq58PLDOgU9NeT3jIsoQOO9aSMzAfBgNVHSMEGDAWgBR5
+tFnme7bl5AFzgAiIyBpY9umbbjAyBggrBgEFBQcBAQQmMCQwIgYIKwYBBQUHMAKG
+Fmh0dHA6Ly94MS5pLmxlbmNyLm9yZy8wEwYDVR0gBAwwCjAIBgZngQwBAgEwJwYD
+VR0fBCAwHjAcoBqgGIYWaHR0cDovL3gxLmMubGVuY3Iub3JnLzANBgkqhkiG9w0B
+AQsFAAOCAgEAUTdYUqEimzW7TbrOypLqCfL7VOwYf/Q79OH5cHLCZeggfQhDconl
+k7Kgh8b0vi+/XuWu7CN8n/UPeg1vo3G+taXirrytthQinAHGwc/UdbOygJa9zuBc
+VyqoH3CXTXDInT+8a+c3aEVMJ2St+pSn4ed+WkDp8ijsijvEyFwE47hulW0Ltzjg
+9fOV5Pmrg/zxWbRuL+k0DBDHEJennCsAen7c35Pmx7jpmJ/HtgRhcnz0yjSBvyIw
+6L1QIupkCv2SBODT/xDD3gfQQyKv6roV4G2EhfEyAsWpmojxjCUCGiyg97FvDtm/
+NK2LSc9lybKxB73I2+P2G3CaWpvvpAiHCVu30jW8GCxKdfhsXtnIy2imskQqVZ2m
+0Pmxobb28Tucr7xBK7CtwvPrb79os7u2XP3O5f9b/H66GNyRrglRXlrYjI1oGYL/
+f4I1n/Sgusda6WvA6C190kxjU15Y12mHU4+BxyR9cx2hhGS9fAjMZKJss28qxvz6
+Axu4CaDmRNZpK/pQrXF17yXCXkmEWgvSOEZy6Z9pcbLIVEGckV/iVeq0AOo2pkg9
+p4QRIy0tK2diRENLSF2KysFwbY6B26BFeFs3v1sYVRhFW9nLkOrQVporCS0KyZmf
+wVD89qSTlnctLcZnIavjKsKUu1nA1iU0yYMdYepKR7lWbnwhdx3ewok=
+-----END CERTIFICATE-----
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+-----BEGIN RSA PRIVATE KEY-----
+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
+-----END RSA PRIVATE KEY-----

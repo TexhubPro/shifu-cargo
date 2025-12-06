@@ -35,6 +35,10 @@ class Applicant extends Component
     public $discount_total = 0;
     public $total_final = 0;
     public $file;
+    public $trackLookupCode;
+    public $trackLookupResult;
+    public $trackLookupMessage = null;
+    public $trackLookupState = 'info';
 
 
     public function restart()
@@ -59,6 +63,35 @@ class Applicant extends Component
     {
         unset($this->tracks[$index]);
         $this->tracks = array_values($this->tracks);
+    }
+    public function lookupTrack(): void
+    {
+        $code = trim($this->trackLookupCode ?? '');
+        $this->trackLookupResult = null;
+        $this->trackLookupMessage = null;
+        $this->trackLookupState = 'info';
+
+        if ($code === '') {
+            $this->trackLookupMessage = 'Введите трек-код для проверки.';
+            $this->trackLookupState = 'warning';
+            return;
+        }
+
+        $track = Trackcode::where('code', $code)->first();
+        if ($track) {
+            $this->trackLookupResult = [
+                'code' => $track->code,
+                'status' => $track->status,
+                'china' => optional($track->china)->format('d.m.Y H:i'),
+                'dushanbe' => optional($track->dushanbe)->format('d.m.Y H:i'),
+                'customer' => optional($track->customer)->format('d.m.Y H:i'),
+            ];
+            $this->trackLookupMessage = 'Статус успешно найден.';
+            $this->trackLookupState = 'success';
+        } else {
+            $this->trackLookupMessage = 'Трек-код не найден.';
+            $this->trackLookupState = 'danger';
+        }
     }
     public function select_order($id)
     {
@@ -132,8 +165,20 @@ class Applicant extends Component
     }
     public function mount()
     {
+        $this->cleanupIncompleteApplications();
         $this->orders = Application::orderBy('created_at', 'asc')->where('status', 'В ожидании')->get();
         $this->delivers = User::where('role', 'deliver')->get();
+    }
+    protected function cleanupIncompleteApplications(): void
+    {
+        Application::where('status', 'В ожидании')
+            ->where(function ($query) {
+                $query->whereNull('phone')
+                    ->orWhere('phone', '')
+                    ->orWhereNull('address')
+                    ->orWhere('address', '');
+            })
+            ->update(['status' => 'Отменен']);
     }
     public function updatedDiscount()
     {

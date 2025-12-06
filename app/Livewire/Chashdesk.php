@@ -11,6 +11,7 @@ use App\Models\Expences;
 use App\Models\Order;
 use App\Models\Queue;
 use App\Models\Trackcode;
+use App\Models\HeldOrder;
 use App\Texhub\Telegram;
 use Carbon\Carbon;
 use Livewire\Attributes\Layout;
@@ -42,6 +43,30 @@ class Chashdesk extends Component
     public $newTrack;    // ввод нового трека
     public $description;
     public $selected_queue;
+    public $heldOrders = [];
+    public $activeHeldOrderId;
+    public $currencyForm = [];
+    public $showDeliveryDetails = false;
+
+    public function mount()
+    {
+        $this->queues = Queue::where('status', 'В очереди')->whereDate('created_at', Carbon::today())->get();
+        $this->users = User::where('role', 'customer')->get();
+        $this->delivers = User::where('role', 'deliver')->get();
+        $this->refreshHeldOrders();
+        $this->loadCurrencyForm();
+        $this->total_amounts();
+    }
+    public function toggleDeliveryDetails()
+    {
+        $this->showDeliveryDetails = !$this->showDeliveryDetails;
+
+        if (!$this->showDeliveryDetails) {
+            $this->order_no = null;
+            $this->deliver_boy = null;
+            $this->delivery_price = 0;
+        }
+    }
     public function order_place()
     {
         if ($this->order_no) {
@@ -67,9 +92,14 @@ class Chashdesk extends Component
             $sms = new Telegram();
             $sms->sms_order($user->id, $order->id);
         }
-        $this->updateTrackStatuses($user->id, $order->id);
+        $this->updateTrackStatuses($user?->id, $order->id);
         if ($this->selected_queue) {
             Queue::find($this->selected_queue)->delete();
+        }
+        if ($this->activeHeldOrderId) {
+            HeldOrder::find($this->activeHeldOrderId)?->delete();
+            $this->activeHeldOrderId = null;
+            $this->refreshHeldOrders();
         }
         return redirect()->route('cashier');
     }
@@ -99,12 +129,244 @@ class Chashdesk extends Component
             }
         }
     }
-    public function mount()
+    public function holdCurrentOrder()
     {
-        $this->queues = Queue::where('status', 'В очереди')->whereDate('created_at', Carbon::today())->get();
-        $this->users = User::where('role', 'customer')->get();
-        $this->delivers = User::where('role', 'deliver')->get();
+        $this->validate([
+            'client' => 'required|string',
+        ], [
+            'client.required' => 'Укажите клиента, чтобы сохранить заказ в удержанные.',
+        ]);
+
+        $user = User::where('phone', $this->client)->first();
+
+        HeldOrder::create([
+            'user_id' => $user->id ?? null,
+            'client' => $this->client,
+            'order_no' => $this->order_no,
+            'deliver_boy' => $this->deliver_boy,
+            'queue_id' => $this->selected_queue,
+            'delivery_price' => $this->delivery_price ?? 0,
+            'weight' => $this->weight ?? 0,
+            'volume' => $this->volume ?? 0,
+            'payment_type' => $this->payment_type,
+            'total_amount' => $this->total_amount ?? 0,
+            'discount' => $this->discount ?? 0,
+            'discount_total' => $this->discount_total ?? 0,
+            'discountt' => $this->discountt ?? 'Фиксированная',
+            'total_final' => $this->total_final ?? 0,
+            'tracks' => $this->tracks,
+            'meta' => [
+                'delivery_price' => $this->delivery_price,
+                'payment_type' => $this->payment_type,
+                'discount_type' => $this->discountt,
+            ],
+        ]);
+
+        if ($this->selected_queue) {
+            $queue = Queue::find($this->selected_queue);
+            if ($queue) {
+                $queue->status = 'Удержан';
+                $queue->save();
+            }
+        }
+
+        $this->resetOrderForm();
+        $this->refreshHeldOrders();
+        $this->dispatch('alert', 'Заказ отправлен в удержанные.');
+    }
+
+    public function loadHeldOrder(int $heldOrderId)
+    {
+        $held = HeldOrder::findOrFail($heldOrderId);
+
+        $this->client = $held->client;
+        $this->order_no = $held->order_no;
+        $this->deliver_boy = $held->deliver_boy;
+        $this->delivery_price = $held->delivery_price;
+        $this->weight = $held->weight;
+        $this->volume = $held->volume;
+        $this->payment_type = $held->payment_type ?? 'Наличными';
+        $this->total_amount = $held->total_amount;
+        $this->discount = $held->discount;
+        $this->discount_total = $held->discount_total;
+        $this->discountt = $held->discountt ?? 'Фиксированная';
+        $this->total_final = $held->total_final;
+        $this->tracks = $held->tracks ?? [];
+        $this->selected_queue = $held->queue_id;
+        $this->activeHeldOrderId = $held->id;
+
+        if ($held->queue_id) {
+            $queue = Queue::find($held->queue_id);
+            if ($queue) {
+                $queue->status = "Касса";
+                $queue->save();
+            }
+        }
+
         $this->total_amounts();
+        $this->dispatch('alert', 'Данные удержанного заказа загружены.');
+    }
+
+    public function deleteHeldOrder(int $heldOrderId)
+    {
+        $held = HeldOrder::find($heldOrderId);
+
+        if (!$held) {
+            return;
+        }
+
+        if ($held->queue_id) {
+            $queue = Queue::find($held->queue_id);
+            if ($queue && $queue->status === 'Удержан') {
+                $queue->status = 'В очереди';
+                $queue->save();
+            }
+        }
+
+        $held->delete();
+
+        if ($this->activeHeldOrderId === $heldOrderId) {
+            $this->resetOrderForm();
+            $this->activeHeldOrderId = null;
+        }
+
+        $this->refreshHeldOrders();
+    }
+
+    public function refreshHeldOrders()
+    {
+        $this->heldOrders = HeldOrder::latest()->get();
+    }
+    public function getTodayOrdersProperty()
+    {
+        return Order::with(['user', 'deliver'])
+            ->whereDate('created_at', Carbon::today())
+            ->orderByDesc('delivery_total')
+            ->orderByDesc('created_at')
+            ->get();
+    }
+
+    public function getTodayOrdersSummaryProperty(): array
+    {
+        $orders = $this->todayOrders;
+        return [
+            'count' => $orders->count(),
+            'weight' => $orders->sum('weight'),
+            'cube' => $orders->sum('cube'),
+            'discount' => $orders->sum('discount'),
+            'delivery' => $orders->sum('delivery_total'),
+            'total' => $orders->sum('total'),
+            'subtotal' => $orders->sum('subtotal'),
+        ];
+    }
+
+    public function getTodayExpensesProperty()
+    {
+        return Expences::whereDate('created_at', Carbon::today())
+            ->latest()
+            ->get();
+    }
+
+    public function downloadTodayReport()
+    {
+        $orders = $this->todayOrders;
+        $expenses = $this->todayExpenses;
+        if ($orders->isEmpty()) {
+            $this->dispatch('alert', 'Сегодня ещё нет заказов для отчёта.');
+            return;
+        }
+
+        $headers = [
+            'ID',
+            'Клиент',
+            'Телефон',
+            'Вес',
+            'Объём',
+            'Скидка',
+            'Подытог',
+            'Итог',
+            'Доставка',
+            'Доставщик',
+            'Создан',
+        ];
+
+        $lines = [implode(';', $headers)];
+        foreach ($orders as $order) {
+            $lines[] = implode(';', [
+                $order->id,
+                optional($order->user)->name ?? '—',
+                optional($order->user)->phone ?? '—',
+                number_format($order->weight, 2, '.', ''),
+                number_format($order->cube, 2, '.', ''),
+                number_format($order->discount, 2, '.', ''),
+                number_format($order->subtotal, 2, '.', ''),
+                number_format($order->total, 2, '.', ''),
+                number_format($order->delivery_total, 2, '.', ''),
+                optional($order->deliver)->name ?? '—',
+                optional($order->created_at)?->format('Y-m-d H:i'),
+            ]);
+        }
+
+        $summary = $this->todayOrdersSummary;
+        $lines[] = '';
+        $lines[] = 'ИТОГО;';
+        $lines[] = 'Количество;' . $summary['count'];
+        $lines[] = 'Вес суммарно;' . number_format($summary['weight'], 2, '.', '');
+        $lines[] = 'Объём суммарно;' . number_format($summary['cube'], 2, '.', '');
+        $lines[] = 'Скидка суммарно;' . number_format($summary['discount'], 2, '.', '');
+        $lines[] = 'Доставка суммарно;' . number_format($summary['delivery'], 2, '.', '');
+        $lines[] = 'Подытог суммарно;' . number_format($summary['subtotal'], 2, '.', '');
+        $lines[] = 'Итог суммарно;' . number_format($summary['total'], 2, '.', '');
+
+        if ($expenses->isNotEmpty()) {
+            $lines[] = '';
+            $lines[] = 'РАСХОДЫ;';
+            $lines[] = implode(';', ['ID', 'Склад', 'Сумма', 'Описание', 'Добавлено']);
+            foreach ($expenses as $expense) {
+                $lines[] = implode(';', [
+                    $expense->id,
+                    $expense->sklad ?? '—',
+                    number_format($expense->total ?? $expense->amount ?? 0, 2, '.', ''),
+                    str_replace(["\n", "\r", ';'], ' ', $expense->content ?? ''),
+                    optional($expense->data ?? $expense->created_at)->format('Y-m-d H:i'),
+                ]);
+            }
+            $lines[] = 'ИТОГО РАСХОДОВ;' . number_format($expenses->sum('total'), 2, '.', '');
+        }
+
+        $csv = implode("\n", $lines);
+        $filename = 'orders-' . Carbon::today()->format('Y-m-d') . '.csv';
+
+        return response()->streamDownload(function () use ($csv) {
+            echo $csv;
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
+    }
+    public function loadCurrencyForm(): void
+    {
+        $settings = Setting::whereIn('name', $this->currencySettingKeys())->get()->keyBy('name');
+        $this->currencyForm['course_dollar'] = $settings['course_dollar']->content ?? null;
+    }
+
+    public function saveCurrencySettings(): void
+    {
+        $this->validate([
+            'currencyForm.course_dollar' => 'required|numeric|min:0',
+        ], [
+            'currencyForm.course_dollar.required' => 'Введите курс доллара.',
+            'currencyForm.course_dollar.numeric' => 'Курс должен быть числом.',
+            'currencyForm.course_dollar.min' => 'Курс не может быть отрицательным.',
+        ]);
+
+        Setting::updateOrCreate(
+            ['name' => 'course_dollar'],
+            ['content' => $this->currencyForm['course_dollar']]
+        );
+
+        $this->loadCurrencyForm();
+        $this->total_amounts();
+        $this->dispatch('alert', 'Курс доллара обновлён.');
     }
     public function select_queues($id)
     {
@@ -191,6 +453,7 @@ class Chashdesk extends Component
             'sklad' => 'Склад Душанбе',
             'total' => $this->amount,
             'content' => $this->description,
+            'data' => Carbon::now(),
         ]);
 
         $this->reset(['amount', 'description']);
@@ -231,5 +494,67 @@ class Chashdesk extends Component
     public function render()
     {
         return view('livewire.chashdesk');
+    }
+
+    public function getCurrencyInfoProperty(): array
+    {
+        $settings = Setting::whereIn('name', $this->currencySettingKeys())->get()->keyBy('name');
+
+        $course = $settings['course_dollar']->content ?? '0';
+
+        return [
+            'course_dollar' => $course,
+            'cube_price' => $settings['cube_price']->content ?? null,
+            'kg_price' => $settings['kg_price']->content ?? null,
+            'kg_price_10' => $settings['kg_price_10']->content ?? null,
+            'kg_price_20' => $settings['kg_price_20']->content ?? null,
+            'kg_price_30' => $settings['kg_price_30']->content ?? null,
+            'updated_at' => optional($settings['course_dollar'] ?? null)->updated_at,
+        ];
+    }
+
+    private function currencySettingKeys(): array
+    {
+        return [
+            'course_dollar',
+            'kg_price',
+            'kg_price_10',
+            'kg_price_20',
+            'kg_price_30',
+            'cube_price',
+        ];
+    }
+
+    public function getReportStatsProperty(): array
+    {
+        $today = Carbon::today();
+
+        return [
+            'orders_today' => Order::whereDate('created_at', $today)->count(),
+            'revenue_today' => Order::whereDate('created_at', $today)->sum('total'),
+            'queues_waiting' => Queue::whereDate('created_at', $today)->where('status', 'В очереди')->count(),
+            'held_orders' => HeldOrder::count(),
+        ];
+    }
+
+    private function resetOrderForm(): void
+    {
+        $this->client = null;
+        $this->order_no = null;
+        $this->deliver_boy = null;
+        $this->delivery_price = 0;
+        $this->weight = 0;
+        $this->volume = 0;
+        $this->payment_type = 'Наличными';
+        $this->total_amount = 0;
+        $this->discount = 0;
+        $this->discount_total = 0;
+        $this->discountt = 'Фиксированная';
+        $this->total_final = 0;
+        $this->tracks = [];
+        $this->newTrack = null;
+        $this->selected_queue = null;
+        $this->activeHeldOrderId = null;
+        $this->total_amounts();
     }
 }
