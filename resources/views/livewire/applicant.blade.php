@@ -208,7 +208,8 @@
 
             <div class="">
                 <div class="space-y-2 grid md:grid-cols-2 gap-2">
-                    <flux:input type="file" wire:model="file" label="Фото-отчёт" required />
+                    <flux:input type="file" wire:model="file" class="col-span-full" label="Фото-отчёт"
+                        required />
                     <div wire:loading wire:target="file" class="text-amber-300 text-sm">
                         ⏳ Файл загружается... пожалуйста, подождите
                     </div>
@@ -267,7 +268,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-3">
+            <div class="flex flex-col sm:flex-row gap-3 mt-5">
                 <flux:button type="button" variant="ghost" color="neutral"
                     wire:click="$dispatch('close-modal', { name: 'order_place' })" class="sm:flex-1">
                     Отмена
