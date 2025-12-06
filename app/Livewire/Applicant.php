@@ -292,10 +292,25 @@ class Applicant extends Component
     }
     public function cancel($id)
     {
-        $apl = Application::find($id);
-        $apl->status = "Отменено";
-        $apl->save();
-        return redirect()->route('applicant');
+        $application = Application::find($id);
+
+        if (!$application) {
+            $this->dispatch('alert', 'Заявка не найдена или уже была удалена.');
+            return;
+        }
+
+        $application->status = "Отменено";
+        $application->save();
+
+        $remaining = Application::where('status', 'В ожидании')->count();
+        $currentPage = $this->page ?? 1;
+        $maxPage = max(1, (int) ceil($remaining / $this->perPage));
+
+        if ($currentPage > $maxPage) {
+            $this->gotoPage($maxPage);
+        }
+
+        $this->dispatch('alert', 'Заявка отменена.');
     }
     public function render()
     {
