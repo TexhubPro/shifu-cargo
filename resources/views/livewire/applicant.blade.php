@@ -180,15 +180,12 @@
 
     <flux:modal name="order_place" class="w-full max-w-2xl">
         <form wire:submit="order_place" class="space-y-2">
-            <div class="text-white shadow-lg shadow-emerald-900/40 space-y-2">
+            <div class="text-white space-y-2">
                 <div class="flex items-center justify-between gap-4">
                     <div>
                         <p class="text-xs uppercase tracking-wide text-white/70">Оформление заявки</p>
                         <flux:heading size="lg" class="text-white">Подтвердите выдачу заказа</flux:heading>
                     </div>
-                    <span class="text-lg font-semibold text-white">
-                        {{ $total_final }} c
-                    </span>
                 </div>
                 @if ($selected_order)
                     <div class="grid gap-2 md:grid-cols-3 text-sm text-white/90">
