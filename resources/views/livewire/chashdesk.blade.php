@@ -320,7 +320,7 @@
                 </div>
                 <flux:badge color="lime" size="lg">{{ $queues->count() }}</flux:badge>
             </div>
-            <div class="space-y-3 max-h-96 overflow-y-auto pr-1">
+            <div class="space-y-3 max-h-96 overflow-y-auto pr-1" wire:poll.15s="refreshQueues">
                 @forelse ($queues as $item)
                     <div
                         class="bg-white border border-neutral-200 rounded-xl p-3 flex items-center justify-between shadow-sm">

@@ -57,6 +57,13 @@ class Chashdesk extends Component
         $this->loadCurrencyForm();
         $this->total_amounts();
     }
+    public function refreshQueues(): void
+    {
+        $this->queues = Queue::where('status', 'В очереди')
+            ->whereDate('created_at', Carbon::today())
+            ->orderBy('created_at')
+            ->get();
+    }
     public function toggleDeliveryDetails()
     {
         $this->showDeliveryDetails = !$this->showDeliveryDetails;
