@@ -212,7 +212,7 @@
 
                         <!-- Итоговая сумма -->
                         <flux:input label="Итоговая сумма (сомони)" placeholder="Введите общую сумму"
-                            wire:model.live="total_amount" type="number" min="0" required />
+                            wire:model.live="total_amount" type="text" inputmode="decimal" required />
                     </div>
                     <div class="space-y-2">
                         <flux:label>Скидка</flux:label>

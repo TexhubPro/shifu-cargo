@@ -76,6 +76,13 @@ class Chashdesk extends Component
     }
     public function order_place()
     {
+        $weight = $this->parseNumber($this->weight);
+        $volume = $this->parseNumber($this->volume);
+        $subtotal = $this->parseNumber($this->total_amount);
+        $deliveryTotal = $this->parseNumber($this->delivery_price);
+        $discountTotal = $this->parseNumber($this->discount_total);
+        $totalFinal = $this->parseNumber($this->total_final);
+
         if ($this->order_no) {
             $apl = Application::find($this->order_no);
             $apl->status = "Доставляется";
@@ -85,13 +92,13 @@ class Chashdesk extends Component
         $deliver = User::where('name', $this->deliver_boy)->first();
         $order = Order::create([
             'user_id' => $user->id ?? $this->client,
-            'weight' => $this->weight,
-            'cube' => $this->volume,
-            'subtotal' => $this->total_amount,
-            'delivery_total' => $this->delivery_price,
+            'weight' => $weight,
+            'cube' => $volume,
+            'subtotal' => $subtotal,
+            'delivery_total' => $deliveryTotal,
             'deliver_id' => $deliver->id ?? $this->deliver_boy,
-            'discount' => $this->discount_total,
-            'total' => $this->total_final,
+            'discount' => $discountTotal,
+            'total' => $totalFinal,
             'status' => "Оплачено",
 
         ]);
@@ -152,18 +159,18 @@ class Chashdesk extends Component
             'order_no' => $this->order_no,
             'deliver_boy' => $this->deliver_boy,
             'queue_id' => $this->selected_queue,
-            'delivery_price' => $this->delivery_price ?? 0,
-            'weight' => $this->weight ?? 0,
-            'volume' => $this->volume ?? 0,
+            'delivery_price' => $this->parseNumber($this->delivery_price),
+            'weight' => $this->parseNumber($this->weight),
+            'volume' => $this->parseNumber($this->volume),
             'payment_type' => $this->payment_type,
-            'total_amount' => $this->total_amount ?? 0,
-            'discount' => $this->discount ?? 0,
-            'discount_total' => $this->discount_total ?? 0,
+            'total_amount' => $this->parseNumber($this->total_amount),
+            'discount' => $this->parseNumber($this->discount),
+            'discount_total' => $this->parseNumber($this->discount_total),
             'discountt' => $this->discountt ?? 'Фиксированная',
-            'total_final' => $this->total_final ?? 0,
+            'total_final' => $this->parseNumber($this->total_final),
             'tracks' => $this->tracks,
             'meta' => [
-                'delivery_price' => $this->delivery_price,
+                'delivery_price' => $this->parseNumber($this->delivery_price),
                 'payment_type' => $this->payment_type,
                 'discount_type' => $this->discountt,
             ],
@@ -384,48 +391,38 @@ class Chashdesk extends Component
         $this->selected_queue = $queue->id;
         Flux::modals()->close();
     }
-    public function updatedDiscount($value)
+    public function updatedDiscount()
     {
-        $this->sanitizeNumericProperty('discount', $value);
-        $this->total_amounts();
-    }
-    public function updatedWeight($value)
-    {
-        $this->sanitizeNumericProperty('weight', $value);
-        $this->total_amounts();
-    }
-    public function updatedVolume($value)
-    {
-        $this->sanitizeNumericProperty('volume', $value);
         $this->total_amounts();
     }
     public function updatedDiscountt()
     {
         $this->total_amounts();
     }
-    public function updatedDelivery_price($value)
+    public function updatedWeight()
     {
-        $this->sanitizeNumericProperty('delivery_price', $value);
         $this->total_amounts();
     }
-    public function updatedTotalAmount($value)
+    public function updatedVolume()
     {
-        $this->sanitizeNumericProperty('total_amount', $value);
         $this->total_amounts();
     }
-    protected function sanitizeNumericProperty(string $property, $value): void
+    public function updatedDelivery_price()
     {
-        $this->{$property} = $this->normalizeNumber($value);
+        $this->total_amounts();
     }
 
-    protected function normalizeNumber($value): float
+    protected function parseNumber($value): float
     {
         if ($value === null || $value === '') {
             return 0.0;
         }
 
         if (is_string($value)) {
-            $value = str_replace([' ', ','], ['', '.'], $value);
+            $normalized = str_replace([' ', ','], ['', '.'], $value);
+            if (is_numeric($normalized)) {
+                return (float) $normalized;
+            }
         }
 
         return (float) $value;
@@ -433,10 +430,11 @@ class Chashdesk extends Component
 
     public function total_amounts()
     {
-        $weight = (float) ($this->weight ?? 0);
-        $volume = (float) ($this->volume ?? 0);
+        $weight = $this->parseNumber($this->weight);
+        $volume = $this->parseNumber($this->volume);
         $cube_price = (float) $this->getCubePriceTJS();
-        $discount = (float) ($this->discount ?? 0);
+        $discount = $this->parseNumber($this->discount);
+        $deliveryPrice = $this->parseNumber($this->delivery_price);
 
         if ($weight <= 10) {
             $kg_total = $weight * (float) $this->getKgPriceTJS();
@@ -462,7 +460,6 @@ class Chashdesk extends Component
                 $this->discount_total = $discount;
             }
         }
-        $deliveryPrice = $this->normalizeNumber($this->delivery_price);
         $this->total_final = max(0, $this->total_amount - $this->discount_total + $deliveryPrice);
     }
 
