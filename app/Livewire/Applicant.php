@@ -174,13 +174,37 @@ class Applicant extends Component
     protected function cleanupIncompleteApplications(): void
     {
         Application::where('status', 'В ожидании')
-            ->where(function ($query) {
-                $query->whereNull('phone')
-                    ->orWhere('phone', '')
-                    ->orWhereNull('address')
-                    ->orWhere('address', '');
-            })
-            ->update(['status' => 'Отменен']);
+            ->get()
+            ->each(function ($application) {
+                $phone = trim((string) $application->phone);
+                $address = trim((string) $application->address);
+
+                if (!$this->isValidPhone($phone) || !$this->isValidAddress($address)) {
+                    $application->status = 'Отменен';
+                    $application->save();
+                }
+            });
+    }
+
+    protected function isValidPhone(?string $phone): bool
+    {
+        if (empty($phone)) {
+            return false;
+        }
+
+        return (bool) preg_match('/^\+?[0-9]{7,15}$/', $phone);
+    }
+
+    protected function isValidAddress(?string $address): bool
+    {
+        if (empty($address)) {
+            return false;
+        }
+
+        $hasEnoughLength = mb_strlen($address) >= 8;
+        $notOnlyDigits = !preg_match('/^[0-9]+$/', $address);
+
+        return $hasEnoughLength && $notOnlyDigits;
     }
     public function updatedDiscount()
     {
