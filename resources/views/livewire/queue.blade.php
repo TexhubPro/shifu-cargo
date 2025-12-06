@@ -69,7 +69,6 @@
             background: rgba(4, 7, 19, 0.85);
             border-radius: 32px;
             border: 1px solid var(--border);
-            box-shadow: 0 40px 120px rgba(4, 7, 19, 0.85);
             backdrop-filter: blur(18px);
             padding: 40px 40px 50px;
         }
@@ -97,45 +96,103 @@
         }
 
         .code-pill {
-            padding: 22px 36px;
+            padding: 18px 32px;
             border-radius: 24px;
             background: linear-gradient(120deg, #96ff6f, #33ffa9);
             color: #04121d;
-            font-size: 3rem;
+            font-size: 2.4rem;
             font-weight: 800;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.18em;
             text-align: center;
-            min-width: 320px;
-            box-shadow: 0 20px 60px rgba(150, 255, 111, 0.45);
+            min-width: 280px;
         }
 
         .stats {
             margin: 50px 0;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
         }
 
         .stat-card {
-            padding: 24px;
-            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 26px 28px;
+            border-radius: 28px;
             background: var(--glass);
             border: 1px solid var(--border);
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        .stat-card.stat-total::after {
+            background: linear-gradient(120deg, rgba(150, 255, 111, 0.4), rgba(51, 255, 169, 0.1));
+        }
+
+        .stat-card.stat-men::after {
+            background: linear-gradient(120deg, rgba(0, 114, 255, 0.35), rgba(0, 198, 255, 0.12));
+        }
+
+        .stat-card.stat-women::after {
+            background: linear-gradient(120deg, rgba(255, 77, 121, 0.35), rgba(255, 144, 104, 0.12));
+        }
+
+        .stat-card.stat-active::after {
+            background: linear-gradient(120deg, rgba(255, 214, 102, 0.35), rgba(252, 219, 70, 0.15));
+        }
+
+        .stat-card>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: #f4f4f4;
+        }
+
+        .stat-copy {
+            flex: 1;
         }
 
         .stat-label {
-            font-size: 0.95rem;
-            letter-spacing: 0.08em;
+            font-size: 0.85rem;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.55);
         }
 
         .stat-value {
-            margin-top: 10px;
-            font-size: 2.6rem;
+            margin-top: 4px;
+            font-size: 2.4rem;
             font-weight: 800;
             color: #fdfdfd;
+        }
+
+        .stat-hint {
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.55);
         }
 
         .columns {
@@ -194,8 +251,8 @@
             z-index: 1;
             display: flex;
             flex-direction: column;
-            gap: 18px;
-            max-height: 55vh;
+            gap: 10px;
+            max-height: 70vh;
             overflow-y: auto;
             padding-right: 8px;
         }
@@ -204,34 +261,32 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 18px;
-            padding: 18px 22px;
-            border-radius: 18px;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 14px;
             background: rgba(3, 7, 18, 0.35);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 20px rgba(4, 7, 19, 0.6);
         }
 
         .queue-card.is-active {
             border-color: rgba(163, 255, 120, 0.7);
-            box-shadow: 0 12px 35px rgba(163, 255, 120, 0.25);
             background: rgba(12, 23, 15, 0.65);
         }
 
         .queue-number {
-            font-size: 1.9rem;
+            font-size: 1.4rem;
             font-weight: 800;
             letter-spacing: 0.08em;
             color: var(--accent);
         }
 
         .queue-name {
-            font-size: 1.4rem;
+            font-size: 1.1rem;
             font-weight: 600;
         }
 
         .queue-note {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.5);
             margin-top: 4px;
         }
@@ -277,21 +332,57 @@
         </div>
 
         <div class="stats">
-            <div class="stat-card">
-                <div class="stat-label">Всего в очереди</div>
-                <div class="stat-value">{{ $navbats?->count() ?? 0 }}</div>
+            <div class="stat-card stat-total">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M7 12a5 5 0 1 1 5.001-5A5 5 0 0 1 7 12zm10 0a5 5 0 1 0-5.001-5A5 5 0 0 0 17 12zm0 2a6.994 6.994 0 0 0-5 2.101 6.994 6.994 0 0 0-5-2.101A7 7 0 0 0 0 21v1h24v-1a7 7 0 0 0-7-7z" />
+                    </svg>
+                </div>
+                <div class="stat-copy">
+                    <div class="stat-label">Всего в очереди</div>
+                    <div class="stat-value">{{ $navbats?->count() ?? 0 }}</div>
+                    <div class="stat-hint">Записано сегодня</div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">Мужчины</div>
-                <div class="stat-value">{{ $men->count() }}</div>
+            <div class="stat-card stat-men">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M16 2v5h-2.586l-1.707 1.707A5.001 5.001 0 0 0 7 16a5 5 0 1 0 4.293-7.707L13 7.586V5h5V2z" />
+                    </svg>
+                </div>
+                <div class="stat-copy">
+                    <div class="stat-label">Мужчины</div>
+                    <div class="stat-value">{{ $men->count() }}</div>
+                    <div class="stat-hint">Ожидают вызова</div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">Женщины</div>
-                <div class="stat-value">{{ $women->count() }}</div>
+            <div class="stat-card stat-women">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2a6 6 0 0 0-2 11.674V16H7v2h3v4h2v-4h3v-2h-3v-2.326A6 6 0 0 0 12 2zm0 2a4 4 0 1 1-4 4 4 4 0 0 1 4-4z" />
+                    </svg>
+                </div>
+                <div class="stat-copy">
+                    <div class="stat-label">Женщины</div>
+                    <div class="stat-value">{{ $women->count() }}</div>
+                    <div class="stat-hint">Ожидают вызова</div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-label">На кассе сейчас</div>
-                <div class="stat-value">{{ $activeCount }}</div>
+            <div class="stat-card stat-active">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7V3zm1 0v10l5.5 3.3 1-1.732L14 12.268V3z" />
+                    </svg>
+                </div>
+                <div class="stat-copy">
+                    <div class="stat-label">На кассе сейчас</div>
+                    <div class="stat-value">{{ $activeCount }}</div>
+                    <div class="stat-hint">Помечены статусом «Касса»</div>
+                </div>
             </div>
         </div>
 
