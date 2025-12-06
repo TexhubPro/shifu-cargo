@@ -58,14 +58,13 @@
                         @forelse ($orders as $item)
                             <flux:table.row>
                                 <flux:table.cell class="pl-3">
-                                    <span
-                                        class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-neutral-700 bg-neutral-800 text-xs font-semibold text-neutral-200">
+                                    <span class="text-xs font-semibold text-neutral-200">
                                         {{ str_pad($item->id, 2, '0', STR_PAD_LEFT) }}
                                     </span>
                                 </flux:table.cell>
                                 <flux:table.cell>
                                     <span class="block max-w-[160px] truncate text-neutral-100"
-                                        title="{{ $item->user->name }}">
+                                        title="{{ $item->user->name }}-{{ $item->user->code ?? '-' }}">
                                         {{ $item->user->name }}
                                     </span>
                                 </flux:table.cell>
