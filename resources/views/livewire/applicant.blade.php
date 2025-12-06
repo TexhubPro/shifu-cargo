@@ -206,8 +206,8 @@
                 @endif
             </div>
 
-            <div class="grid gap-2 md:grid-cols-2">
-                <div class="space-y-2 bg-neutral-900 rounded-lg border border-neutral-800 p-2">
+            <div class="">
+                <div class="space-y-2 grid md:grid-cols-2 gap-2">
                     <flux:input type="file" wire:model="file" label="Фото-отчёт" required />
                     <div wire:loading wire:target="file" class="text-amber-300 text-sm">
                         ⏳ Файл загружается... пожалуйста, подождите
@@ -224,8 +224,6 @@
                         <flux:select.option>Душанбе Сити</flux:select.option>
                         <flux:select.option>Наличными</flux:select.option>
                     </flux:select>
-                </div>
-                <div class="space-y-3 bg-neutral-900 rounded-lg border border-neutral-800 p-2">
                     <flux:input label="Цена доставки (сомони)" placeholder="Введите стоимость доставки"
                         wire:model.live="delivery_price" type="number" min="0" />
                     <flux:input label="Вес груза (кг)" placeholder="Введите общий вес груза" wire:model.live="weight"
@@ -237,7 +235,7 @@
                 </div>
             </div>
 
-            <div class="bg-neutral-900 rounded-lg border border-neutral-800 p-2 space-y-3">
+            <div class="space-y-3">
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <flux:label>Скидка</flux:label>
                     <span class="text-xs text-neutral-400">Укажите значение и тип скидки</span>
