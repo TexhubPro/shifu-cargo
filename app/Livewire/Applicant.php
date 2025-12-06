@@ -13,13 +13,16 @@ use App\Models\Application;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
+use Livewire\WithPagination;
 
 
 #[Layout('components.layouts.empty')]
 class Applicant extends Component
 {
     use WithFileUploads;
-    public $orders;
+    use WithPagination;
+    public $perPage = 50;
+    protected $paginationTheme = 'tailwind';
     public $selected_order;
     public $delivers;
     public $deliver_boy = 'Shod';
@@ -166,7 +169,6 @@ class Applicant extends Component
     public function mount()
     {
         $this->cleanupIncompleteApplications();
-        $this->orders = Application::orderBy('created_at', 'asc')->where('status', 'В ожидании')->get();
         $this->delivers = User::where('role', 'deliver')->get();
     }
     protected function cleanupIncompleteApplications(): void
@@ -273,6 +275,20 @@ class Applicant extends Component
     }
     public function render()
     {
-        return view('livewire.applicant');
+        $pendingCount = Application::where('status', 'В ожидании')->count();
+        $readyCount = Application::where('status', 'В ожидании')
+            ->whereNotNull('phone')->where('phone', '!=', '')
+            ->whereNotNull('address')->where('address', '!=', '')
+            ->count();
+
+        $orders = Application::where('status', 'В ожидании')
+            ->orderBy('created_at', 'asc')
+            ->paginate($this->perPage);
+
+        return view('livewire.applicant', [
+            'orders' => $orders,
+            'pendingCount' => $pendingCount,
+            'readyCount' => $readyCount,
+        ]);
     }
 }
