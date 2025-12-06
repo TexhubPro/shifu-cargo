@@ -40,5 +40,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('005335051'),
             'role' => 'admin'
         ]);
+
+        $this->call(FakeClientsTracksSeeder::class);
     }
 }

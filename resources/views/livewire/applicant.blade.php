@@ -39,7 +39,8 @@
         </div>
 
         <div class="bg-neutral-900 rounded-2xl border border-neutral-800 shadow-lg shadow-black/40 overflow-hidden">
-            <div class="flex items-center justify-between px-4 py-3 border-b border-neutral-800 text-sm text-neutral-400">
+            <div
+                class="flex items-center justify-between px-4 py-3 border-b border-neutral-800 text-sm text-neutral-400">
                 <span>На странице по 50 заявок</span>
                 <span class="text-neutral-500">Всего ожидает: {{ $pendingCount }}</span>
             </div>
@@ -63,7 +64,8 @@
                                     </span>
                                 </flux:table.cell>
                                 <flux:table.cell>
-                                    <span class="block max-w-[160px] truncate text-neutral-100" title="{{ $item->user->name }}">
+                                    <span class="block max-w-[160px] truncate text-neutral-100"
+                                        title="{{ $item->user->name }}">
                                         {{ $item->user->name }}
                                     </span>
                                 </flux:table.cell>
@@ -108,8 +110,7 @@
 
     <flux:modal name="track_lookup" class="w-full max-w-lg">
         <div class="space-y-4">
-            <div
-                class="bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 rounded-2xl p-4 text-white shadow-lg shadow-indigo-900/50">
+            <div class=" text-white">
                 <flux:heading size="lg" class="text-white">Проверка трек-кода</flux:heading>
                 <flux:text class="text-white/80 text-sm">
                     Отсканируйте или введите трек. Результат сохранится до следующей проверки.
@@ -179,9 +180,9 @@
     </flux:modal>
 
     <flux:modal name="order_place" class="w-full max-w-2xl">
-        <form wire:submit="order_place" class="space-y-5">
+        <form wire:submit="order_place" class="space-y-2">
             <div
-                class="rounded-2xl bg-gradient-to-r from-emerald-500 via-lime-500 to-yellow-400 p-4 text-white shadow-lg shadow-emerald-900/40 space-y-2">
+                class="rounded-lg bg-gradient-to-r from-emerald-500 via-lime-500 to-yellow-400 p-2 text-white shadow-lg shadow-emerald-900/40 space-y-2">
                 <div class="flex items-center justify-between gap-4">
                     <div>
                         <p class="text-xs uppercase tracking-wide text-white/70">Оформление заявки</p>
@@ -193,7 +194,7 @@
                     </span>
                 </div>
                 @if ($selected_order)
-                    <div class="grid gap-3 md:grid-cols-3 text-sm text-white/90">
+                    <div class="grid gap-2 md:grid-cols-3 text-sm text-white/90">
                         <div>
                             <p class="text-white/70">Клиент</p>
                             <p class="font-semibold">{{ $selected_order->user->name ?? '—' }}</p>
@@ -202,21 +203,23 @@
                             <p class="text-white/70">Телефон</p>
                             <p class="font-semibold">{{ $selected_order->phone ?? '—' }}</p>
                         </div>
-                        <div>
+                        <div class="">
                             <p class="text-white/70">Адрес</p>
-                            <p class="font-semibold truncate">{{ $selected_order->address ?? '—' }}</p>
+                            <p class="font-semibold truncate whitespace-normal">{{ $selected_order->address ?? '—' }}
+                            </p>
                         </div>
                     </div>
                 @endif
             </div>
 
-            <div class="grid gap-4 md:grid-cols-2">
-                <div class="space-y-3 bg-neutral-900 rounded-2xl border border-neutral-800 p-4">
+            <div class="grid gap-2 md:grid-cols-2">
+                <div class="space-y-2 bg-neutral-900 rounded-lg border border-neutral-800 p-2">
                     <flux:input type="file" wire:model="file" label="Фото-отчёт" required />
                     <div wire:loading wire:target="file" class="text-amber-300 text-sm">
                         ⏳ Файл загружается... пожалуйста, подождите
                     </div>
-                    <flux:select wire:model="deliver_boy" label="Доставщик" required placeholder="Выберите доставщика">
+                    <flux:select wire:model="deliver_boy" label="Доставщик" required
+                        placeholder="Выберите доставщика">
                         @foreach ($delivers as $deliver)
                             <flux:select.option>{{ $deliver->name }}</flux:select.option>
                         @endforeach
@@ -228,7 +231,7 @@
                         <flux:select.option>Наличными</flux:select.option>
                     </flux:select>
                 </div>
-                <div class="space-y-3 bg-neutral-900 rounded-2xl border border-neutral-800 p-4">
+                <div class="space-y-3 bg-neutral-900 rounded-lg border border-neutral-800 p-2">
                     <flux:input label="Цена доставки (сомони)" placeholder="Введите стоимость доставки"
                         wire:model.live="delivery_price" type="number" min="0" />
                     <flux:input label="Вес груза (кг)" placeholder="Введите общий вес груза" wire:model.live="weight"
@@ -240,7 +243,7 @@
                 </div>
             </div>
 
-            <div class="bg-neutral-900 rounded-2xl border border-neutral-800 p-4 space-y-3">
+            <div class="bg-neutral-900 rounded-lg border border-neutral-800 p-2 space-y-3">
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <flux:label>Скидка</flux:label>
                     <span class="text-xs text-neutral-400">Укажите значение и тип скидки</span>
@@ -273,10 +276,12 @@
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3">
-                <flux:button type="button" variant="ghost" color="neutral" wire:click="$dispatch('close-modal', { name: 'order_place' })" class="sm:flex-1">
+                <flux:button type="button" variant="ghost" color="neutral"
+                    wire:click="$dispatch('close-modal', { name: 'order_place' })" class="sm:flex-1">
                     Отмена
                 </flux:button>
-                <flux:button type="submit" variant="primary" color="lime" class="sm:flex-1" wire:loading.attr="disabled">
+                <flux:button type="submit" variant="primary" color="lime" class="sm:flex-1"
+                    wire:loading.attr="disabled">
                     Оформить заказ
                 </flux:button>
             </div>
