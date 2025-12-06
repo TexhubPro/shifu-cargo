@@ -384,26 +384,53 @@ class Chashdesk extends Component
         $this->selected_queue = $queue->id;
         Flux::modals()->close();
     }
-    public function updatedDiscount()
+    public function updatedDiscount($value)
     {
+        $this->sanitizeNumericProperty('discount', $value);
+        $this->total_amounts();
+    }
+    public function updatedWeight($value)
+    {
+        $this->sanitizeNumericProperty('weight', $value);
+        $this->total_amounts();
+    }
+    public function updatedVolume($value)
+    {
+        $this->sanitizeNumericProperty('volume', $value);
         $this->total_amounts();
     }
     public function updatedDiscountt()
     {
         $this->total_amounts();
     }
-    public function updatedWeight()
+    public function updatedDelivery_price($value)
     {
+        $this->sanitizeNumericProperty('delivery_price', $value);
         $this->total_amounts();
     }
-    public function updatedVolume()
+    public function updatedTotalAmount($value)
     {
+        $this->sanitizeNumericProperty('total_amount', $value);
         $this->total_amounts();
     }
-    public function updatedDelivery_price()
+    protected function sanitizeNumericProperty(string $property, $value): void
     {
-        $this->total_amounts();
+        $this->{$property} = $this->normalizeNumber($value);
     }
+
+    protected function normalizeNumber($value): float
+    {
+        if ($value === null || $value === '') {
+            return 0.0;
+        }
+
+        if (is_string($value)) {
+            $value = str_replace([' ', ','], ['', '.'], $value);
+        }
+
+        return (float) $value;
+    }
+
     public function total_amounts()
     {
         $weight = (float) ($this->weight ?? 0);
@@ -435,7 +462,8 @@ class Chashdesk extends Component
                 $this->discount_total = $discount;
             }
         }
-        $this->total_final = max(0, $this->total_amount - $this->discount_total + $this->delivery_price);
+        $deliveryPrice = $this->normalizeNumber($this->delivery_price);
+        $this->total_final = max(0, $this->total_amount - $this->discount_total + $deliveryPrice);
     }
 
     public function addTrack()
