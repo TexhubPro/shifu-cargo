@@ -44,7 +44,7 @@
                 <span>На странице по 50 заявок</span>
                 <span class="text-neutral-500">Всего ожидает: {{ $pendingCount }}</span>
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto p-2">
                 <flux:table>
                     <flux:table.columns>
                         <flux:table.column class="w-20">#</flux:table.column>
