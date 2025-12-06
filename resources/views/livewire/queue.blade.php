@@ -31,9 +31,10 @@
         .queue-screen {
             position: relative;
             min-height: 100vh;
-            padding: 40px 5vw 60px;
+            width: 100%;
+            padding: 0;
             display: flex;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
             overflow: hidden;
         }
@@ -65,12 +66,12 @@
             position: relative;
             z-index: 1;
             width: 100%;
-            max-width: 1400px;
-            background: rgba(4, 7, 19, 0.85);
-            border-radius: 32px;
-            border: 1px solid var(--border);
+            min-height: 100vh;
+            background: rgba(4, 7, 19, 0.9);
+            border-radius: 0;
+            border: none;
             backdrop-filter: blur(18px);
-            padding: 40px 40px 50px;
+            padding: 60px 6vw 80px;
         }
 
         .hero {
@@ -108,7 +109,7 @@
         }
 
         .stats {
-            margin: 50px 0;
+            margin: 60px 0 40px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 24px;
@@ -197,8 +198,8 @@
 
         .columns {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 40px;
         }
 
         .lane {
@@ -249,12 +250,12 @@
         .queue-list {
             position: relative;
             z-index: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-height: 70vh;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            max-height: calc(100vh - 320px);
             overflow-y: auto;
-            padding-right: 8px;
+            padding-right: 4px;
         }
 
         .queue-card {
@@ -262,7 +263,8 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            padding: 12px 16px;
+            padding: 10px 14px;
+            min-height: 82px;
             border-radius: 14px;
             background: rgba(3, 7, 18, 0.35);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -301,7 +303,7 @@
 
         @media (max-width: 768px) {
             .queue-shell {
-                padding: 30px 20px 40px;
+                padding: 40px 20px 60px;
             }
 
             .hero {
