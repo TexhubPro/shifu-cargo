@@ -425,9 +425,20 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 return;
             }
             if ($user->step == 'apl_phone') {
+                $phone = trim($text);
+                if (!preg_match('/^\+?[0-9]{7,15}$/', $phone)) {
+                    if ($this->chat->lang == 'ru') {
+                        $this->chat->message("❗️ Пожалуйста, отправьте корректный номер телефона. Допустимы только цифры и, при необходимости, знак «+» (пример: +992900000000).")->send();
+                    } else {
+                        $this->chat->message("❗️ Лутфан рақами дурусти телефонро фиристед. Танҳо рақамҳо ва аломати «+» иҷозат дода мешавад (мисол: +992900000000).")->send();
+                    }
+                    return;
+                }
                 $application = Application::where('user_id', $user->id)->orderBy('created_at', 'desc')->first();
-                $application->phone = $text;
-                $application->save();
+                if ($application) {
+                    $application->phone = $phone;
+                    $application->save();
+                }
                 $user->step = "apl_address";
                 $user->save();
                 if ($this->chat->lang == 'ru') {
@@ -438,9 +449,20 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 return;
             }
             if ($user->step == 'apl_address') {
+                $address = trim($text);
+                if (mb_strlen($address) < 8) {
+                    if ($this->chat->lang == 'ru') {
+                        $this->chat->message("❗️ Уточните адрес — минимум 8 символов с указанием улицы, дома и ориентира.")->send();
+                    } else {
+                        $this->chat->message("❗️ Суроға бояд ақаллан аз 8 аломат иборат бошад ва кӯча, хона ва нишонаҳоро дар бар гирад.")->send();
+                    }
+                    return;
+                }
                 $application = Application::where('user_id', $user->id)->orderBy('created_at', 'desc')->first();
-                $application->address = $text;
-                $application->save();
+                if ($application) {
+                    $application->address = $address;
+                    $application->save();
+                }
                 $user->step = null;
                 $user->save();
                 if ($this->chat->lang == 'ru') {
