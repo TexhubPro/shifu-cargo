@@ -50,7 +50,10 @@ class Chats extends Component
 
         if ($refreshList) {
             $this->refreshChatsList();
+            return;
         }
+
+        $this->updateChatUnreadCount($chatId, 0);
     }
 
     public function load_m()
@@ -83,5 +86,19 @@ class Chats extends Component
             ->withCount('unreadMessages')
             ->orderByRaw('(SELECT MAX(created_at) FROM messages WHERE messages.chat_id = chats.id) DESC')
             ->get();
+    }
+
+    protected function updateChatUnreadCount(int $chatId, int $count): void
+    {
+        if (!$this->chats) {
+            return;
+        }
+
+        $this->chats = $this->chats->map(function ($chat) use ($chatId, $count) {
+            if ($chat->id === $chatId) {
+                $chat->unread_messages_count = $count;
+            }
+            return $chat;
+        });
     }
 }
