@@ -39,6 +39,7 @@ use App\Livewire\MiniApp\Register;
 use App\Livewire\MiniApp\Settings;
 use App\Livewire\MiniApp\Support;
 use App\Livewire\Queue as LivewireQueue;
+use App\Livewire\QueueKiosk;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -90,3 +91,4 @@ Route::middleware(['auth', MidDeliver::class])->group(function () {
     Route::get('/applicant', Applicant::class)->name('applicant');
 });
 Route::get('/navbat', LivewireQueue::class)->name('navbat');
+Route::get('/queue-kiosk', QueueKiosk::class)->name('queue-kiosk');
