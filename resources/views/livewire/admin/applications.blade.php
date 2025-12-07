@@ -1,8 +1,15 @@
 <div>
     <div class="mb-5">
-        <flux:heading class="text-xl">Заявки на доставку</flux:heading>
-        <flux:text class="text-base" variant="subtle">Обработка и подтверждение заявок на доставку грузов клиентам.
-        </flux:text>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+                <flux:heading class="text-xl">Заявки на доставку</flux:heading>
+                <flux:text class="text-base" variant="subtle">Обработка и подтверждение заявок на доставку грузов клиентам.
+                </flux:text>
+            </div>
+            <flux:button color="red" variant="outline" wire:click="cleanInvalid" wire:confirm>
+                Очистить недопустимые заявки
+            </flux:button>
+        </div>
     </div>
     <div class="bg-white p-2 rounded-xl border border-gray-200 space-y-3">
         <flux:table :paginate="$this->orders" class="">
