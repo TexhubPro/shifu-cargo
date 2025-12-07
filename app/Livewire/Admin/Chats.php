@@ -33,11 +33,11 @@ class Chats extends Component
     public function open_chat($id)
     {
         $this->active_chat = Chat::with('user')->find($id);
+        $this->markChatAsRead($id, false);
         $this->load_m();
-        $this->refreshChatsList();
     }
 
-    public function markChatAsRead($chatId = null): void
+    public function markChatAsRead($chatId = null, bool $refreshList = true): void
     {
         $chatId = $chatId ?? optional($this->active_chat)->id;
         if (!$chatId) {
@@ -48,7 +48,9 @@ class Chats extends Component
             ->where('status', false)
             ->update(['status' => true]);
 
-        $this->refreshChatsList();
+        if ($refreshList) {
+            $this->refreshChatsList();
+        }
     }
 
     public function load_m()
