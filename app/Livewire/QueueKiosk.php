@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Queue;
 use Carbon\Carbon;
 use App\Http\Controllers\SmsController;
-use Illuminate\Support\Facades\File;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
@@ -210,15 +209,12 @@ class QueueKiosk extends Component
         $targetPhone = $this->resolvePhone($rawPhone, $digitsFallback);
 
         if (!$targetPhone) {
-            $this->logSmsResult('—', $queueNumber, 'Не удалось определить номер', '');
             return;
         }
 
         $message = "Ваш номер очереди {$queueNumber}. Пожалуйста, ожидайте вызова. Мы уведомим вас о статусе.";
         $sms = new SmsController();
-        $result = $sms->sendSms($targetPhone, $message);
-
-        $this->logSmsResult($targetPhone, $queueNumber, $result, $message);
+        $sms->sendSms($targetPhone, $message);
     }
 
     protected function resolvePhone(?string $phone, ?string $digitsFallback = null): ?string
@@ -232,21 +228,4 @@ class QueueKiosk extends Component
         return $digits !== '' ? $digits : null;
     }
 
-    protected function logSmsResult(string $phone, string $queueNumber, string $result, string $message): void
-    {
-        $dir = public_path('sms-log');
-        if (!File::exists($dir)) {
-            File::makeDirectory($dir, 0755, true);
-        }
-
-        $timestamp = now()->format('Y-m-d_H-i-s_u');
-        $filePath = $dir . '/sms-' . $timestamp . '.txt';
-        $content = "Дата: " . now()->toDateTimeString() . PHP_EOL
-            . "Телефон: {$phone}" . PHP_EOL
-            . "Номер очереди: {$queueNumber}" . PHP_EOL
-            . "Сообщение: {$message}" . PHP_EOL
-            . "Результат: {$result}" . PHP_EOL;
-
-        File::put($filePath, $content);
-    }
 }
