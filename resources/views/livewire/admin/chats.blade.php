@@ -7,8 +7,7 @@
     <div class="bg-white p-2 rounded-xl border border-gray-200 space-y-3 mt-5">
         <div class="grid lg:grid-cols-3 gap-2 h-[calc(100vh-200px)]">
             <div
-                class="h-full bg-neutral-100 rounded-lg p-2 space-y-2 {{ $active_chat ? ' hidden' : '' }} lg:block
-                overflow-y-scroll">
+                class="h-full bg-neutral-100 rounded-lg p-2 space-y-2 overflow-y-scroll">
                 @foreach ($chats as $chat)
                     <button type="button" wire:click="open_chat({{ $chat->id }})"
                         class="bg-white p-1 rounded-md flex gap-2 w-full text-start">
