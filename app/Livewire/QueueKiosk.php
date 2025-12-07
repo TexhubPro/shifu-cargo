@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Queue;
 use Carbon\Carbon;
 use App\Http\Controllers\SmsController;
+use Illuminate\Support\Facades\File;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
@@ -151,7 +152,7 @@ class QueueKiosk extends Component
         }
 
         $queue = $this->createQueueForUser($user);
-        $contactPhone = '+992' . $digits;
+        $contactPhone = $digits;
         $this->sendQueueNotification($contactPhone, $queue->no);
 
         $this->assignedNumber = $queue->no;
@@ -206,41 +207,46 @@ class QueueKiosk extends Component
 
     protected function sendQueueNotification(?string $rawPhone, string $queueNumber, ?string $digitsFallback = null): void
     {
-        $formatted = $this->normalizePhone($rawPhone, $digitsFallback);
+        $targetPhone = $this->resolvePhone($rawPhone, $digitsFallback);
 
-        if (!$formatted) {
+        if (!$targetPhone) {
+            $this->logSmsResult('—', $queueNumber, 'Не удалось определить номер', '');
             return;
         }
 
-        $message = "Ваш номер очереди $queueNumber. Пожалуйста, ожидайте вызова. Мы уведомим вас о статусе.";
+        $message = "Ваш номер очереди {$queueNumber}. Пожалуйста, ожидайте вызова. Мы уведомим вас о статусе.";
         $sms = new SmsController();
-        $sms->sendSms($formatted, $message);
+        $result = $sms->sendSms($targetPhone, $message);
+
+        $this->logSmsResult($targetPhone, $queueNumber, $result, $message);
     }
 
-    protected function normalizePhone(?string $phone, ?string $digitsFallback = null): ?string
+    protected function resolvePhone(?string $phone, ?string $digitsFallback = null): ?string
     {
-        $digits = preg_replace('/\D/', '', (string) $phone);
-
-        if (!$digits && $digitsFallback) {
-            $digits = $digitsFallback;
+        $raw = trim((string) $phone);
+        if ($raw !== '') {
+            return preg_replace('/\s+/', '', $raw);
         }
 
-        if (!$digits) {
-            return null;
+        $digits = preg_replace('/\D/', '', (string) $digitsFallback);
+        return $digits !== '' ? $digits : null;
+    }
+
+    protected function logSmsResult(string $phone, string $queueNumber, string $result, string $message): void
+    {
+        $dir = public_path('sms-log');
+        if (!File::exists($dir)) {
+            File::makeDirectory($dir, 0755, true);
         }
 
-        if (strlen($digits) === 9) {
-            $digits = '992' . $digits;
-        }
+        $timestamp = now()->format('Y-m-d_H-i-s_u');
+        $filePath = $dir . '/sms-' . $timestamp . '.txt';
+        $content = "Дата: " . now()->toDateTimeString() . PHP_EOL
+            . "Телефон: {$phone}" . PHP_EOL
+            . "Номер очереди: {$queueNumber}" . PHP_EOL
+            . "Сообщение: {$message}" . PHP_EOL
+            . "Результат: {$result}" . PHP_EOL;
 
-        if (str_starts_with($digits, '992') && strlen($digits) === 12) {
-            return '+' . $digits;
-        }
-
-        if ($digits[0] !== '+') {
-            return '+' . $digits;
-        }
-
-        return $digits;
+        File::put($filePath, $content);
     }
 }
