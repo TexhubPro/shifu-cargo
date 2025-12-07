@@ -14,10 +14,17 @@ class Customers extends Component
     use WithPagination;
 
     public $search = null;
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
     #[Computed]
     public function customers()
     {
-        $query = User::query()->where('role', 'customer');
+        $query = User::query()
+            ->where('role', 'customer')
+            ->withCount('trackcodes')
+            ->withSum('orders as orders_sum_total', 'total');
 
         if (!empty($this->search)) {
             $query->where(function ($q) {
