@@ -36,6 +36,11 @@
                         <flux:button type="button" wire:click="back" size="sm" icon="arrow-left"></flux:button>
                         <flux:heading>{{ $active_chat->user->name }} - {{ $active_chat->user->code }} -
                             {{ $active_chat->user->phone }}</flux:heading>
+                        <flux:spacer />
+                        <flux:button size="sm" variant="ghost" color="white"
+                            wire:click="markChatAsRead({{ $active_chat->id }})">
+                            Пометить прочитанным
+                        </flux:button>
                     </div>
                     <div class="h-full space-y-2 flex flex-col-reverse pb-28 overflow-hidden overflow-y-scroll">
                         @foreach ($messages as $message)

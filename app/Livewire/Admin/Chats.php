@@ -28,22 +28,39 @@ class Chats extends Component
         $sms->sms_single($this->active_chat->user->id, $this->message);
         $this->message = null;
         $this->load_m();
+        $this->refreshChatsList();
     }
     public function open_chat($id)
     {
-        $this->active_chat = Chat::find($id);
+        $this->active_chat = Chat::with('user')->find($id);
+        $this->load_m();
+        $this->refreshChatsList();
+    }
 
-        // Обновляем статус всех сообщений этого чата на true
-        Message::where('chat_id', $id)
+    public function markChatAsRead($chatId = null): void
+    {
+        $chatId = $chatId ?? optional($this->active_chat)->id;
+        if (!$chatId) {
+            return;
+        }
+
+        Message::where('chat_id', $chatId)
             ->where('status', false)
             ->update(['status' => true]);
 
-        $this->load_m();
+        $this->refreshChatsList();
     }
 
     public function load_m()
     {
-        $this->messages = Message::where('chat_id', $this->active_chat->id)->orderBy('created_at', 'desc')->get();
+        if (!$this->active_chat) {
+            $this->messages = collect();
+            return;
+        }
+
+        $this->messages = Message::where('chat_id', $this->active_chat->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
     public function back()
     {
@@ -51,13 +68,18 @@ class Chats extends Component
     }
     public function mount()
     {
-        $this->chats = Chat::with(['latestMessage', 'unreadMessages'])
-            ->withCount('unreadMessages')
-            ->orderByRaw('(SELECT MAX(created_at) FROM messages WHERE messages.chat_id = chats.id) DESC')
-            ->get();
+        $this->refreshChatsList();
     }
     public function render()
     {
         return view('livewire.admin.chats');
+    }
+
+    protected function refreshChatsList(): void
+    {
+        $this->chats = Chat::with(['user', 'latestMessage', 'unreadMessages'])
+            ->withCount('unreadMessages')
+            ->orderByRaw('(SELECT MAX(created_at) FROM messages WHERE messages.chat_id = chats.id) DESC')
+            ->get();
     }
 }
