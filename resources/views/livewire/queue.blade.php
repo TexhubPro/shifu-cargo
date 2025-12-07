@@ -2,7 +2,7 @@
     @php
         $men = $navbats?->where('sex', 'm') ?? collect();
         $women = $navbats?->where('sex', 'z') ?? collect();
-        $activeCount = $navbats?->where('status', 'Касса')->count() ?? 0;
+        $activeCount = $navbats?->where('status', 'Подтверждено')->count() ?? 0;
     @endphp
     <style>
         :root {
@@ -376,14 +376,13 @@
             <div class="stat-card stat-active">
                 <div class="stat-icon">
                     <svg viewBox="0 0 24 24">
-                        <path
-                            d="M12 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7V3zm1 0v10l5.5 3.3 1-1.732L14 12.268V3z" />
+                        <path d="M12 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7V3zm1 0v10l5.5 3.3 1-1.732L14 12.268V3z" />
                     </svg>
                 </div>
                 <div class="stat-copy">
-                    <div class="stat-label">На кассе сейчас</div>
+                    <div class="stat-label">Подтверждено</div>
                     <div class="stat-value">{{ $activeCount }}</div>
-                    <div class="stat-hint">Помечены статусом «Касса»</div>
+                    <div class="stat-hint">Помечены статусом «Подтверждено»</div>
                 </div>
             </div>
         </div>
@@ -396,12 +395,12 @@
                 </div>
                 <div class="queue-list">
                     @forelse ($men as $item)
-                        <div class="queue-card {{ $item->status === 'Касса' ? 'is-active' : '' }}">
+                        <div class="queue-card {{ $item->status === 'Подтверждено' ? 'is-active' : '' }}">
                             <div>
                                 <div class="queue-number">№{{ str_pad($item->no, 2, '0', STR_PAD_LEFT) }}</div>
                                 <div class="queue-name">{{ $item->user->name ?? 'Без имени' }}</div>
                                 <div class="queue-note">
-                                    {{ $item->status === 'Касса' ? 'Подходит к кассе' : 'Ожидание подключения' }}
+                                    {{ $item->status === 'Подтверждено' ? 'Подтверждено' : 'Ожидание подключения' }}
                                 </div>
                             </div>
                         </div>
@@ -418,12 +417,12 @@
                 </div>
                 <div class="queue-list">
                     @forelse ($women as $item)
-                        <div class="queue-card {{ $item->status === 'Касса' ? 'is-active' : '' }}">
+                        <div class="queue-card {{ $item->status === 'Подтверждено' ? 'is-active' : '' }}">
                             <div>
                                 <div class="queue-number">№{{ str_pad($item->no, 2, '0', STR_PAD_LEFT) }}</div>
                                 <div class="queue-name">{{ $item->user->name ?? 'Без имени' }}</div>
                                 <div class="queue-note">
-                                    {{ $item->status === 'Касса' ? 'Подходит к кассе' : 'Ожидание подключения' }}
+                                    {{ $item->status === 'Подтверждено' ? 'Подтверждено' : 'Ожидание подключения' }}
                                 </div>
                             </div>
                         </div>

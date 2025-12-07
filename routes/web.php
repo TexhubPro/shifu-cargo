@@ -39,6 +39,7 @@ use App\Livewire\MiniApp\Register;
 use App\Livewire\MiniApp\Settings;
 use App\Livewire\MiniApp\Support;
 use App\Livewire\Queue as LivewireQueue;
+use App\Livewire\QueueControl;
 use App\Livewire\QueueKiosk;
 use Illuminate\Support\Facades\Route;
 
@@ -80,6 +81,7 @@ Route::middleware(['auth', Admin::class])->prefix('admin')->name('admin.')->grou
 });
 Route::middleware(['auth', Cashier::class])->group(function () {
     Route::get('/cashier', Chashdesk::class)->name('cashier');
+    Route::get('/queue-control', QueueControl::class)->name('queue-control');
 });
 Route::middleware(['auth', MiddlewareManager::class])->group(function () {
     Route::get('/manager', Manager::class)->name('manager');
