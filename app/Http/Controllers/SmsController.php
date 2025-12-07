@@ -9,9 +9,9 @@ class SmsController extends Controller
     public function sendSms($phone, $message)
     {
         $config = [
-            'login' => 'Shifu Cargo',
+            'login' => 'shifucargo',
             'hash' => '20a29830bddb42f370829357b6680e5e',
-            'sender' => 'shifucargo',
+            'sender' => 'Shifu Cargo',
             'server' => 'https://api.osonsms.com/sendsms_v1.php',
         ];
 
