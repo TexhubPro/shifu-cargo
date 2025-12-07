@@ -212,8 +212,9 @@ class QueueKiosk extends Component
             return;
         }
 
-        $message = "Ваш номер очереди {$queueNumber}. Пожалуйста, ожидайте вызова. Мы уведомим вас о статусе.";
-        app(SmsController::class)->sendSms($formatted, $message);
+        $message = "Ваш номер очереди $queueNumber. Пожалуйста, ожидайте вызова. Мы уведомим вас о статусе.";
+        $sms = new SmsController();
+        $sms->sendSms($formatted, $message);
     }
 
     protected function normalizePhone(?string $phone, ?string $digitsFallback = null): ?string
