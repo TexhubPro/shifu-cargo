@@ -48,6 +48,7 @@ class Chashdesk extends Component
     public $activeHeldOrderId;
     public $currencyForm = [];
     public $showDeliveryDetails = false;
+    private array $priceCache = [];
 
     public function mount()
     {
@@ -56,6 +57,7 @@ class Chashdesk extends Component
         $this->delivers = User::where('role', 'deliver')->get();
         $this->refreshHeldOrders();
         $this->loadCurrencyForm();
+        $this->loadPriceCache();
         $this->total_amounts();
     }
     public function refreshQueues(): void
@@ -384,6 +386,7 @@ class Chashdesk extends Component
         );
 
         $this->loadCurrencyForm();
+        $this->loadPriceCache();
         $this->total_amounts();
         $this->dispatch('alert', 'Курс доллара обновлён.');
     }
@@ -408,13 +411,11 @@ class Chashdesk extends Component
     {
         $this->total_amounts();
         $this->received_amount = $this->total_amount;
-        $this->total_amounts();
     }
     public function updatedVolume()
     {
         $this->total_amounts();
         $this->received_amount = $this->total_amount;
-        $this->total_amounts();
     }
     public function updatedDelivery_price()
     {
@@ -439,6 +440,37 @@ class Chashdesk extends Component
         }
 
         return (float) $value;
+    }
+    private function loadPriceCache(): void
+    {
+        $settings = Setting::whereIn('name', $this->currencySettingKeys())->get()->keyBy('name');
+        $course = (float) ($settings['course_dollar']->content ?? 0);
+        $this->priceCache = [
+            'course' => $course,
+            'kg' => (float) str_replace('$', '', $settings['kg_price']->content ?? 0),
+            'kg_10' => (float) str_replace('$', '', $settings['kg_price_10']->content ?? 0),
+            'kg_20' => (float) str_replace('$', '', $settings['kg_price_20']->content ?? 0),
+            'kg_30' => (float) str_replace('$', '', $settings['kg_price_30']->content ?? 0),
+            'cube' => (float) str_replace('$', '', $settings['cube_price']->content ?? 0),
+        ];
+    }
+    private function priceValue(string $key, string $settingName): float
+    {
+        if (empty($this->priceCache)) {
+            $this->loadPriceCache();
+        }
+
+        $price = $this->priceCache[$key] ?? null;
+        $course = $this->priceCache['course'] ?? null;
+
+        if ($price === null || $course === null || $course === 0.0) {
+            $price = (float) str_replace('$', '', Setting::where('name', $settingName)->value('content'));
+            $course = (float) Setting::where('name', 'course_dollar')->value('content');
+            $this->priceCache[$key] = $price;
+            $this->priceCache['course'] = $course;
+        }
+
+        return $price * $course;
     }
     protected function roundPrice(float $value): float
     {
@@ -521,34 +553,24 @@ class Chashdesk extends Component
     }
     private function getKgPriceTJS()
     {
-        $kg_price_usd = (float) str_replace('$', '', Setting::where('name', 'kg_price')->value('content'));
-        $course = (float) Setting::where('name', 'course_dollar')->value('content');
-        return $kg_price_usd * $course;
+        return $this->priceValue('kg', 'kg_price');
     }
     private function getKgPrice10TJS()
     {
-        $kg_price_usd = (float) str_replace('$', '', Setting::where('name', 'kg_price_10')->value('content'));
-        $course = (float) Setting::where('name', 'course_dollar')->value('content');
-        return $kg_price_usd * $course;
+        return $this->priceValue('kg_10', 'kg_price_10');
     }
     private function getKgPrice20TJS()
     {
-        $kg_price_usd = (float) str_replace('$', '', Setting::where('name', 'kg_price_20')->value('content'));
-        $course = (float) Setting::where('name', 'course_dollar')->value('content');
-        return $kg_price_usd * $course;
+        return $this->priceValue('kg_20', 'kg_price_20');
     }
     private function getKgPrice30TJS()
     {
-        $kg_price_usd = (float) str_replace('$', '', Setting::where('name', 'kg_price_30')->value('content'));
-        $course = (float) Setting::where('name', 'course_dollar')->value('content');
-        return $kg_price_usd * $course;
+        return $this->priceValue('kg_30', 'kg_price_30');
     }
 
     private function getCubePriceTJS()
     {
-        $cube_price_usd = (float) str_replace('$', '', Setting::where('name', 'cube_price')->value('content'));
-        $course = (float) Setting::where('name', 'course_dollar')->value('content');
-        return $cube_price_usd * $course;
+        return $this->priceValue('cube', 'cube_price');
     }
     public function render()
     {

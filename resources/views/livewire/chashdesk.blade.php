@@ -97,46 +97,6 @@
                     @endforelse
                 </div>
             </div>
-            @if (false)
-                {{-- Трекинг-панель временно скрыта --}}
-                <div class="bg-white border border-neutral-200 rounded-xl shadow-md p-2 space-y-2">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm uppercase text-neutral-500 tracking-wide">Трекинг панель</p>
-                            <p class="text-md font-semibold text-neutral-800">Добавление трек-кодов</p>
-                        </div>
-                        <flux:badge color="blue">{{ count($tracks) }}</flux:badge>
-                    </div>
-                    <form wire:submit="addTrack">
-                        <flux:input id="track-input" icon="qr-code" label="Сканируйте (Shift+Alt+T)"
-                            wire:model="newTrack" placeholder="Трек-код или штрих код груза" />
-                    </form>
-                    <div
-                        class="h-80 rounded-lg bg-neutral-50 border border-dashed border-neutral-300 overflow-y-auto p-2 space-y-2">
-                        @if ($tracks)
-                            @foreach ($tracks as $index => $track)
-                                <div
-                                    class="bg-white rounded-xl px-3 py-2 shadow flex justify-between items-center text-sm">
-                                    <span class="font-semibold text-neutral-800">{{ $track }}</span>
-                                    <button type="button" wire:click="removeTrack({{ $index }})"
-                                        class="text-red-500 hover:text-red-600 transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon icon-tabler icons-tabler-outline icon-tabler-x">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M18 6l-12 12" />
-                                            <path d="M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            @endforeach
-                        @else
-                            <div class="text-center text-neutral-500 text-sm py-8">Трек-коды ещё не добавлены.</div>
-                        @endif
-                    </div>
-                </div>
-            @endif
             <form wire:submit="order_place" class="col-span-2" x-data @keydown.enter="$event.preventDefault()">
                 <div class="bg-white border border-neutral-200 rounded-xl shadow-md p-6 space-y-4">
                     <div class="flex items-center justify-between">
@@ -182,23 +142,6 @@
                     <!-- Скидка -->
 
 
-                    @if (false)
-                        {{-- Тип оплаты и ручной ввод итога временно скрыты --}}
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <!-- Тип оплаты -->
-                            <flux:select id="payment-type-select" wire:model.live="payment_type"
-                                placeholder="Выберите тип оплаты" label="Тип оплаты (Shift+Alt+P)" required>
-                                <flux:select.option>Алиф Моби</flux:select.option>
-                                <flux:select.option>Душанбе Сити</flux:select.option>
-                                <flux:select.option>Наличными</flux:select.option>
-                            </flux:select>
-
-                            <!-- Итоговая сумма -->
-                            <flux:input id="total-amount-input" label="Итоговая сумма (Shift+Alt+I)"
-                                placeholder="Введите общую сумму" wire:model.live="total_amount" type="text"
-                                inputmode="decimal" required />
-                        </div>
-                    @endif
                     <div class="space-y-2">
                         <flux:label>Полученная сумма</flux:label>
                         <flux:input id="received-amount-input" placeholder="Сколько оплатил клиент"
