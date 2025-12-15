@@ -30,12 +30,12 @@ class Login extends Component
                 'Вы успешно вошли в систему!'
             );
             return match ($user->role) {
-                'admin'    => redirect()->route('admin.dashboard'),
-                'deliver'  => redirect()->route('deliver'),
-                'applicant'  => redirect()->route('applicant'),
-                'manager'  => redirect()->route('admin.dashboard'),
-                'cashier'  => redirect()->route('cashier'),
-                default    => redirect()->route('admin.dashboard'), // customer
+                'admin' => redirect()->route('admin.dashboard'),
+                'deliver' => redirect()->route('deliver'),
+                'applicant' => redirect()->route('applicant'),
+                'manager' => redirect()->route('admin.dashboard'),
+                'cashier' => redirect()->route('cashier'),
+                default => redirect()->route('admin.dashboard'), // customer
             };
         }
 

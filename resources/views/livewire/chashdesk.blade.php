@@ -7,6 +7,7 @@
             </div>
             <div class="grid grid-cols- lg:grid-cols-5 gap-3 w-full lg:w-auto max-w-6xl">
 
+
                 <flux:modal.trigger name="add-expences">
                     <flux:button id="btn-add-expense" aria-keyshortcuts="Shift+Alt+E" color="white" variant="ghost"
                         class="h-16 rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all">
@@ -60,21 +61,17 @@
                         </div>
                     </flux:button>
                 </flux:modal.trigger>
+                <button type="button"
+                    class="h-16 rounded-xl bg-red-500 border border-white/30 w-full shadow-md hover:bg-red-400 transition-all flex items-center gap-3 text-left px-3 text-white"
+                    wire:click="logout">
+                    <span
+                        class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-xl">⏻</span>
+                    <div class="flex flex-col leading-tight">
+                        <span class="font-semibold text-white">Выйти</span>
+                        <span class="text-xs text-white/70">Logout</span>
+                    </div>
+                </button>
 
-                <div>
-                    <form method="POST" action="{{ url('/logout') }}" class="w-full">
-                        @csrf
-                        <button type="submit"
-                            class="h-16 rounded-xl bg-red-500 border border-white/30 w-full shadow-md hover:bg-red-400 transition-all flex items-center gap-3 text-left px-3 text-white">
-                            <span
-                                class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-xl">⏻</span>
-                            <div class="flex flex-col leading-tight">
-                                <span class="font-semibold text-white">Выйти</span>
-                                <span class="text-xs text-white/70">Logout</span>
-                            </div>
-                        </button>
-                    </form>
-                </div>
             </div>
         </div>
     </div>
@@ -92,7 +89,12 @@
                         <div class="border border-neutral-200 rounded-xl px-3 py-2 flex items-center justify-between text-xs"
                             wire:key="held-{{ $held->id }}">
                             <div class="space-y-1">
-                                <p class="font-semibold text-neutral-800">{{ $held->client ?? 'Без клиента' }}</p>
+                                @php
+                                    $heldUser = $held->user ?? null;
+                                @endphp
+                                <p class="font-semibold text-neutral-800">
+                                    {{ $heldUser?->name ?? ($held->client ?? 'Без клиента') }}
+                                </p>
                                 <p class="text-neutral-500">
                                     {{ number_format($held->total_final, 2, '.', ' ') }} c ·
                                     {{ optional($held->created_at)->format('H:i') ?? '' }}
@@ -150,7 +152,7 @@
                         <p class="text-xs text-neutral-500">Недостающая сумма автоматически попадёт в скидку.</p>
                     </div>
                     <div
-                        class="bg-gradient-to-r from-neutral-50 to-white rounded-xl p-2 grid grid-cols-2 md:grid-cols-4 gap-2 text-sm shadow-inner border border-neutral-100">
+                        class="bg-gradient-to-r from-neutral-50 to-white rounded-xl p-2 grid grid-cols-2 md:grid-cols-3 gap-2 text-sm shadow-inner border border-neutral-100">
                         <div class="rounded-lg bg-white p-2 border border-neutral-100">
                             <p class="text-neutral-500 text-xs uppercase tracking-wide">Подытог</p>
                             <p class="font-semibold text-lg text-neutral-900">{{ $this->total_amount }}c</p>

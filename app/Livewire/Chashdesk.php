@@ -49,6 +49,12 @@ class Chashdesk extends Component
     private ?\Illuminate\Support\Collection $todayOrdersCache = null;
     private ?array $todayOrdersSummaryCache = null;
 
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('login');
+    }
+
     public function mount()
     {
         $this->queues = Queue::where('status', 'В очереди')->whereDate('created_at', Carbon::today())->get();
