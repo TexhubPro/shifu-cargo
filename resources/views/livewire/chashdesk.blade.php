@@ -77,7 +77,7 @@
     </div>
     <div class="bg-neutral-200 rounded-2xl p-5 space-y-2">
 
-        <div class="grid grid-cols-4 gap-4">
+        <div class="grid grid-cols-3 gap-4">
             <div class="bg-white border border-lime-200 rounded-xl p-6 space-y-2 shadow-sm">
                 <div class="flex items-center justify-between">
                     <p class="text-xl font-semibold text-neutral-900">Удержанные заказы</p>
