@@ -537,19 +537,9 @@
     (function() {
         const initHotkeys = () => {
             const root = document.getElementById('cashdesk-root');
-            if (!root || typeof Mousetrap === 'undefined') {
+            if (!root) {
                 return;
             }
-
-            const binder = new Mousetrap(root);
-
-            // Разрешаем обработку даже когда фокус в input/textarea внутри кассы
-            binder.stopCallback = function(e, element) {
-                if (!root.contains(element)) {
-                    return true;
-                }
-                return false;
-            };
 
             const triggerClick = (id) => {
                 const el = document.getElementById(id);
@@ -576,6 +566,8 @@
             const cancelSubmitBtn = () => document.getElementById('cancel-submit-btn');
             const submitBtn = () => document.getElementById('btn-submit-order');
             const orderForm = () => document.querySelector('form[wire\\:submit=\"order_place\"]');
+            const componentEl = root.closest('[wire\\:id]');
+            const livewireComponent = componentEl ? Livewire.find(componentEl.getAttribute('wire:id')) : null;
             let confirmOpen = false;
 
             const showConfirm = () => {
@@ -643,89 +635,6 @@
             bindOnce(submitBtn(), 'click', 'submitClick', (event) => {
                 event.preventDefault();
                 showConfirm();
-            });
-
-            const combos = [{
-                    keys: ['shift+alt+e'],
-                    action: () => triggerClick('btn-add-expense')
-                },
-                {
-                    keys: ['shift+alt+q'],
-                    action: () => triggerClick('btn-open-queue')
-                },
-                {
-                    keys: ['shift+alt+c'],
-                    action: () => triggerClick('btn-currency-modal')
-                },
-                {
-                    keys: ['shift+alt+r'],
-                    action: () => triggerClick('btn-reports-modal')
-                },
-                {
-                    keys: ['shift+alt+h'],
-                    action: () => triggerClick('btn-hold-order')
-                },
-                {
-                    keys: ['shift+alt+k'],
-                    action: () => focusInput('client-input')
-                },
-                {
-                    keys: ['shift+alt+w'],
-                    action: () => focusInput('weight-input')
-                },
-                {
-                    keys: ['shift+alt+v'],
-                    action: () => focusInput('volume-input')
-                },
-                {
-                    keys: ['shift+alt+d'],
-                    action: () => focusInput('delivery-price-input')
-                },
-                {
-                    keys: ['shift+alt+o'],
-                    action: () => focusInput('order-no-input')
-                },
-                {
-                    keys: ['shift+alt+b'],
-                    action: () => focusInput('deliver-select')
-                },
-                {
-                    keys: ['shift+alt+s'],
-                    action: () => focusInput('received-amount-input')
-                },
-                {
-                    keys: ['shift+alt+u'],
-                    action: () => triggerClick('btn-save-currency')
-                },
-            ];
-
-            combos.forEach(({
-                keys,
-                action
-            }) => {
-                binder.bind(keys, (event) => {
-                    event.preventDefault();
-                    action();
-                    return false;
-                });
-            });
-
-            binder.bind(['shift+alt+enter'], (event) => {
-                event.preventDefault();
-                triggerClick('btn-submit-order');
-                return false;
-            });
-            binder.bind(['alt+enter', 'option+enter'], (event) => {
-                event.preventDefault();
-                triggerClick('btn-hold-order');
-                return false;
-            });
-
-            // Горячие клавиши: Cmd/Ctrl + Enter -> фокус на выбор клиента
-            binder.bind(['command+enter', 'ctrl+enter'], (event) => {
-                event.preventDefault();
-                focusInput('client-input');
-                return false;
             });
 
             document.addEventListener('keydown', (event) => {
