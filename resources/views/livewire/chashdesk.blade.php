@@ -1,4 +1,4 @@
-<div id="cashdesk-root" class="bg-white p-2 space-y-2">
+<div id="cashdesk-root" class="bg-white p-5 space-y-5">
     <div class="bg-gradient-to-r from-lime-500 via-emerald-500 to-teal-500 rounded-2xl p-3 shadow-lg">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
@@ -61,33 +61,13 @@
             </div>
         </div>
     </div>
-    <div class="bg-neutral-200 rounded-2xl p-2 space-y-2">
-        <div
-            class="bg-white border border-neutral-300 rounded-xl p-2 shadow flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-            <div>
-                <p class="text-sm uppercase text-emerald-600 tracking-wide">Рабочая панель кассира</p>
-                <flux:text class="text-sm font-semibold text-neutral-900" variant="strong">
-                    Заполните форму ниже, чтобы оформить заявку.
-                </flux:text>
-            </div>
-            <div class="flex flex-wrap gap-2 text-[11px]">
-                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Shift + Alt +
-                    Enter
-                    — оформить</span>
-                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Shift + Alt
-                    + H — удержать</span>
-                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Shift + Alt
-                    + T — сканер</span>
-                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Shift + Alt
-                    + Q — очередь</span>
-                <span class="bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 font-medium shadow-sm">Shift + Alt
-                    + E — расходы</span>
-            </div>
-        </div>
+    <div class="bg-neutral-200 rounded-2xl p-5 space-y-2">
+
         <div class="grid grid-cols-4 gap-4">
-            <div class="bg-white border border-lime-200 rounded-xl p-2 space-y-2 shadow-sm">
+            <div class="bg-white border border-lime-200 rounded-xl p-6 space-y-2 shadow-sm">
                 <div class="flex items-center justify-between">
-                    <flux:heading size="xs">Удержанные заказы</flux:heading>
+                    <p class="text-xl font-semibold text-neutral-900">Удержанные заказы</p>
+
                     <flux:badge color="lime" size="sm">{{ $heldOrders->count() }}</flux:badge>
                 </div>
                 <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
@@ -117,53 +97,56 @@
                     @endforelse
                 </div>
             </div>
-            <div class="bg-white border border-neutral-200 rounded-xl shadow-md p-2 space-y-2">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm uppercase text-neutral-500 tracking-wide">Трекинг панель</p>
-                        <p class="text-md font-semibold text-neutral-800">Добавление трек-кодов</p>
-                    </div>
-                    <flux:badge color="blue">{{ count($tracks) }}</flux:badge>
-                </div>
-                <form wire:submit="addTrack">
-                    <flux:input id="track-input" icon="qr-code" label="Сканируйте (Shift+Alt+T)" wire:model="newTrack"
-                        placeholder="Трек-код или штрих код груза" />
-                </form>
-                <div
-                    class="h-80 rounded-lg bg-neutral-50 border border-dashed border-neutral-300 overflow-y-auto p-2 space-y-2">
-                    @if ($tracks)
-                        @foreach ($tracks as $index => $track)
-                            <div class="bg-white rounded-xl px-3 py-2 shadow flex justify-between items-center text-sm">
-                                <span class="font-semibold text-neutral-800">{{ $track }}</span>
-                                <button type="button" wire:click="removeTrack({{ $index }})"
-                                    class="text-red-500 hover:text-red-600 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round"
-                                        class="icon icon-tabler icons-tabler-outline icon-tabler-x">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M18 6l-12 12" />
-                                        <path d="M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="text-center text-neutral-500 text-sm py-8">Трек-коды ещё не добавлены.</div>
-                    @endif
-                </div>
-            </div>
-            <form wire:submit="order_place" class="col-span-2" x-data @keydown.enter="$event.preventDefault()">
+            @if (false)
+                {{-- Трекинг-панель временно скрыта --}}
                 <div class="bg-white border border-neutral-200 rounded-xl shadow-md p-2 space-y-2">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm uppercase text-neutral-500 tracking-wide">Оформление заказа</p>
-                            <p class="text-xl font-semibold text-neutral-900">Информация о клиенте и грузе</p>
+                            <p class="text-sm uppercase text-neutral-500 tracking-wide">Трекинг панель</p>
+                            <p class="text-md font-semibold text-neutral-800">Добавление трек-кодов</p>
+                        </div>
+                        <flux:badge color="blue">{{ count($tracks) }}</flux:badge>
+                    </div>
+                    <form wire:submit="addTrack">
+                        <flux:input id="track-input" icon="qr-code" label="Сканируйте (Shift+Alt+T)"
+                            wire:model="newTrack" placeholder="Трек-код или штрих код груза" />
+                    </form>
+                    <div
+                        class="h-80 rounded-lg bg-neutral-50 border border-dashed border-neutral-300 overflow-y-auto p-2 space-y-2">
+                        @if ($tracks)
+                            @foreach ($tracks as $index => $track)
+                                <div
+                                    class="bg-white rounded-xl px-3 py-2 shadow flex justify-between items-center text-sm">
+                                    <span class="font-semibold text-neutral-800">{{ $track }}</span>
+                                    <button type="button" wire:click="removeTrack({{ $index }})"
+                                        class="text-red-500 hover:text-red-600 transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-x">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M18 6l-12 12" />
+                                            <path d="M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="text-center text-neutral-500 text-sm py-8">Трек-коды ещё не добавлены.</div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+            <form wire:submit="order_place" class="col-span-2" x-data @keydown.enter="$event.preventDefault()">
+                <div class="bg-white border border-neutral-200 rounded-xl shadow-md p-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-xl font-semibold text-neutral-900">Оформление заказа</p>
                         </div>
                         <flux:badge color="neutral">Live</flux:badge>
                     </div>
                     <div class="space-y-3">
-                        <flux:autocomplete id="client-input" wire:model.live="client" label="Клиент (Shift+Alt+K)"
+                        <flux:autocomplete id="client-input" wire:model.live="client" label="Клиент (Ctrl+Enter)"
                             placeholder="Выберите клиента" required>
                             @foreach ($users as $user)
                                 <flux:autocomplete.item>{{ $user->phone }}</flux:autocomplete.item>
@@ -188,44 +171,39 @@
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <!-- Вес груза -->
-                        <flux:input id="weight-input" label="Вес груза (Shift+Alt+W)"
-                            placeholder="Введите общий вес груза" wire:model.live="weight" required />
+                        <flux:input id="weight-input" label="Вес груза" placeholder="Введите общий вес груза"
+                            wire:model.live="weight" required />
 
                         <!-- Объём груза -->
-                        <flux:input id="volume-input" label="Объём груза (Shift+Alt+V)"
-                            placeholder="Введите примерный объём" wire:model.live="volume" />
+                        <flux:input id="volume-input" label="Объём груза" placeholder="Введите примерный объём"
+                            wire:model.live="volume" />
                     </div>
 
                     <!-- Скидка -->
 
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <!-- Тип оплаты -->
-                        <flux:select id="payment-type-select" wire:model.live="payment_type"
-                            placeholder="Выберите тип оплаты" label="Тип оплаты (Shift+Alt+P)" required>
-                            <flux:select.option>Алиф Моби</flux:select.option>
-                            <flux:select.option>Душанбе Сити</flux:select.option>
-                            <flux:select.option>Наличными</flux:select.option>
-                        </flux:select>
-
-
-
-                        <!-- Итоговая сумма -->
-                        <flux:input id="total-amount-input" label="Итоговая сумма (Shift+Alt+I)"
-                            placeholder="Введите общую сумму" wire:model.live="total_amount" type="text"
-                            inputmode="decimal" required />
-                    </div>
-                    <div class="space-y-2">
-                        <flux:label>Скидка · Shift+Alt+S / Тип · Shift+Alt+L</flux:label>
-                        <div class="flex flex-col md:flex-row gap-3">
-                            <flux:input id="discount-input" placeholder="10" wire:model.live="discount"
-                                type="text" inputmode="decimal" min="0" />
-                            <flux:select id="discount-type-select" wire:model="industry" wire:model.live="discountt"
-                                placeholder="Тип скидки (Shift+Alt+L)">
-                                <flux:select.option>Фиксированная</flux:select.option>
-                                <flux:select.option>Процентная</flux:select.option>
+                    @if (false)
+                        {{-- Тип оплаты и ручной ввод итога временно скрыты --}}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <!-- Тип оплаты -->
+                            <flux:select id="payment-type-select" wire:model.live="payment_type"
+                                placeholder="Выберите тип оплаты" label="Тип оплаты (Shift+Alt+P)" required>
+                                <flux:select.option>Алиф Моби</flux:select.option>
+                                <flux:select.option>Душанбе Сити</flux:select.option>
+                                <flux:select.option>Наличными</flux:select.option>
                             </flux:select>
+
+                            <!-- Итоговая сумма -->
+                            <flux:input id="total-amount-input" label="Итоговая сумма (Shift+Alt+I)"
+                                placeholder="Введите общую сумму" wire:model.live="total_amount" type="text"
+                                inputmode="decimal" required />
                         </div>
+                    @endif
+                    <div class="space-y-2">
+                        <flux:label>Полученная сумма</flux:label>
+                        <flux:input id="received-amount-input" placeholder="Сколько оплатил клиент"
+                            wire:model.live="received_amount" type="text" inputmode="decimal" min="0" />
+                        <p class="text-xs text-neutral-500">Недостающая сумма автоматически попадёт в скидку.</p>
                     </div>
                     <div
                         class="bg-gradient-to-r from-neutral-50 to-white rounded-xl p-2 grid grid-cols-2 md:grid-cols-4 gap-2 text-sm shadow-inner border border-neutral-100">
@@ -248,17 +226,13 @@
                     </div>
                     <!-- Кнопка -->
                     <div class="flex gap-3 flex-wrap">
-                        <flux:button type="button" wire:click="toggleDeliveryDetails"
-                            color="{{ $showDeliveryDetails ? 'red' : 'blue' }}">
-                            {{ $showDeliveryDetails ? 'Скрыть доставку' : 'Оформить доставку' }}
-                        </flux:button>
                         <flux:button id="btn-hold-order" type="button" class="w-full md:w-1/3"
                             wire:click="holdCurrentOrder" aria-keyshortcuts="Shift+Alt+H">
-                            Удержать заказ · Shift+Alt+H
+                            Удержать заказ
                         </flux:button>
-                        <flux:button id="btn-submit-order" type="submit" variant="primary" color="lime"
+                        <flux:button id="btn-submit-order" type="button" variant="primary" color="lime"
                             class="flex-1" aria-keyshortcuts="Shift+Alt+Enter">
-                            Оформить заявку · Shift+Alt+Enter
+                            Оформить заявку
                         </flux:button>
                     </div>
                 </div>
@@ -528,6 +502,34 @@
             </div>
         </div>
     </flux:modal>
+
+    <!-- Подтверждение оформления -->
+    <div id="confirm-submit-modal"
+        class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-4 space-y-3 border border-neutral-200">
+            <div class="flex items-start gap-3">
+                <div
+                    class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                    !
+                </div>
+                <div class="space-y-1">
+                    <p class="text-lg font-semibold text-neutral-900">Подтвердить оформление?</p>
+                    <p class="text-sm text-neutral-600">Нажмите «Подтвердить» для отправки заказа или «Отмена», чтобы
+                        вернуться и исправить данные.</p>
+                </div>
+            </div>
+            <div class="flex gap-2 justify-end">
+                <button id="cancel-submit-btn" type="button"
+                    class="px-4 py-2 rounded-lg border border-neutral-300 text-neutral-700 hover:bg-neutral-100 transition">
+                    Отмена (Esc)
+                </button>
+                <button id="confirm-submit-btn" type="button"
+                    class="px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition">
+                    Подтвердить (Enter)
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/mousetrap@1.6.5/mousetrap.min.js"></script>
@@ -566,6 +568,83 @@
                 }
             };
 
+            window.addEventListener('focus-weight-input', () => focusInput('weight-input'));
+            window.addEventListener('focus-received-amount', () => focusInput('received-amount-input'));
+
+            const confirmModal = () => document.getElementById('confirm-submit-modal');
+            const confirmSubmitBtn = () => document.getElementById('confirm-submit-btn');
+            const cancelSubmitBtn = () => document.getElementById('cancel-submit-btn');
+            const submitBtn = () => document.getElementById('btn-submit-order');
+            const orderForm = () => document.querySelector('form[wire\\:submit=\"order_place\"]');
+            let confirmOpen = false;
+
+            const showConfirm = () => {
+                const modal = confirmModal();
+                if (!modal) return;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                confirmOpen = true;
+                confirmSubmitBtn()?.focus();
+            };
+
+            const hideConfirm = () => {
+                const modal = confirmModal();
+                if (!modal) return;
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                confirmOpen = false;
+                focusInput('received-amount-input');
+            };
+
+            const bindOnce = (el, event, key, handler) => {
+                if (!el || el.dataset[key]) return;
+                el.dataset[key] = '1';
+                el.addEventListener(event, handler);
+            };
+
+            bindOnce(confirmSubmitBtn(), 'click', 'confirmSubmit', () => {
+                hideConfirm();
+                orderForm()?.requestSubmit();
+            });
+
+            bindOnce(cancelSubmitBtn(), 'click', 'cancelSubmit', hideConfirm);
+
+            bindOnce(document.getElementById('weight-input'), 'keydown', 'weightEnter', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    focusInput('received-amount-input');
+                }
+            });
+
+            bindOnce(document.getElementById('volume-input'), 'keydown', 'volumeEnter', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    focusInput('received-amount-input');
+                }
+            });
+
+            bindOnce(document.getElementById('received-amount-input'), 'keydown', 'receivedEnter', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    showConfirm();
+                }
+            });
+            bindOnce(document.getElementById('client-input'), 'keydown', 'clientEnter', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    focusInput('weight-input');
+                }
+            });
+
+            bindOnce(submitBtn(), 'click', 'submitClick', (event) => {
+                event.preventDefault();
+                showConfirm();
+            });
+
             const combos = [{
                     keys: ['shift+alt+e'],
                     action: () => triggerClick('btn-add-expense')
@@ -585,10 +664,6 @@
                 {
                     keys: ['shift+alt+h'],
                     action: () => triggerClick('btn-hold-order')
-                },
-                {
-                    keys: ['shift+alt+t'],
-                    action: () => focusInput('track-input')
                 },
                 {
                     keys: ['shift+alt+k'],
@@ -615,20 +690,8 @@
                     action: () => focusInput('deliver-select')
                 },
                 {
-                    keys: ['shift+alt+p'],
-                    action: () => focusInput('payment-type-select')
-                },
-                {
-                    keys: ['shift+alt+i'],
-                    action: () => focusInput('total-amount-input')
-                },
-                {
                     keys: ['shift+alt+s'],
-                    action: () => focusInput('discount-input')
-                },
-                {
-                    keys: ['shift+alt+l'],
-                    action: () => focusInput('discount-type-select')
+                    action: () => focusInput('received-amount-input')
                 },
                 {
                     keys: ['shift+alt+u'],
@@ -652,6 +715,49 @@
                 triggerClick('btn-submit-order');
                 return false;
             });
+            binder.bind(['alt+enter', 'option+enter'], (event) => {
+                event.preventDefault();
+                triggerClick('btn-hold-order');
+                return false;
+            });
+
+            // Горячие клавиши: Cmd/Ctrl + Enter -> фокус на выбор клиента
+            binder.bind(['command+enter', 'ctrl+enter'], (event) => {
+                event.preventDefault();
+                focusInput('client-input');
+                return false;
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && !confirmOpen) {
+                    event.preventDefault();
+                    focusInput('client-input');
+                    return;
+                }
+                if (!confirmOpen) {
+                    return;
+                }
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    hideConfirm();
+                } else if (event.key === 'Enter') {
+                    event.preventDefault();
+                    confirmSubmitBtn()?.click();
+                }
+            });
+
+            // После успешной отправки формы Livewire можно слушать событие
+            if (window.Livewire) {
+                Livewire.on('order-submitted', () => {
+                    focusInput('client-input');
+                });
+            }
+
+            // Переинициализация после обновлений Livewire
+            if (window.Livewire && !window.__cashdesk_bindings_set) {
+                window.__cashdesk_bindings_set = true;
+                Livewire.hook('message.processed', () => initHotkeys());
+            }
         };
 
         if (document.readyState === 'loading') {

@@ -30,6 +30,7 @@ class Chashdesk extends Component
     public $volume = 0;
     public $payment_type = 'Наличными';
     public $total_amount;
+    public $received_amount;
     public $discount = 0;
     public $discount_total = 0;
     public $discountt = 'Фиксированная';
@@ -115,6 +116,7 @@ class Chashdesk extends Component
             $this->activeHeldOrderId = null;
             $this->refreshHeldOrders();
         }
+        $this->dispatch('order-submitted');
         return redirect()->route('cashier');
     }
     public function updateTrackStatuses($user_id, $order_id)
@@ -173,6 +175,7 @@ class Chashdesk extends Component
                 'delivery_price' => $this->parseNumber($this->delivery_price),
                 'payment_type' => $this->payment_type,
                 'discount_type' => $this->discountt,
+                'received_amount' => $this->parseNumber($this->received_amount),
             ],
         ]);
 
@@ -205,6 +208,8 @@ class Chashdesk extends Component
         $this->discount_total = $held->discount_total;
         $this->discountt = $held->discountt ?? 'Фиксированная';
         $this->total_final = $held->total_final;
+        $heldMeta = is_array($held->meta) ? $held->meta : [];
+        $this->received_amount = $heldMeta['received_amount'] ?? ($held->total_amount - $held->discount_total);
         $this->tracks = $held->tracks ?? [];
         $this->selected_queue = $held->queue_id;
         $this->activeHeldOrderId = $held->id;
@@ -402,12 +407,20 @@ class Chashdesk extends Component
     public function updatedWeight()
     {
         $this->total_amounts();
+        $this->received_amount = $this->total_amount;
+        $this->total_amounts();
     }
     public function updatedVolume()
     {
         $this->total_amounts();
+        $this->received_amount = $this->total_amount;
+        $this->total_amounts();
     }
     public function updatedDelivery_price()
+    {
+        $this->total_amounts();
+    }
+    public function updatedReceivedAmount()
     {
         $this->total_amounts();
     }
@@ -427,19 +440,24 @@ class Chashdesk extends Component
 
         return (float) $value;
     }
+    protected function roundPrice(float $value): float
+    {
+        $fraction = $value - floor($value);
+
+        return $fraction > 0.5 ? ceil($value) : floor($value);
+    }
 
     public function total_amounts()
     {
         $weight = $this->parseNumber($this->weight);
         $volume = $this->parseNumber($this->volume);
         $cube_price = (float) $this->getCubePriceTJS();
-        $discount = $this->parseNumber($this->discount);
         $deliveryPrice = $this->parseNumber($this->delivery_price);
 
         if ($weight <= 10) {
             $kg_total = $weight * (float) $this->getKgPriceTJS();
         } elseif ($weight <= 20) {
-            $kg_total = $weight *  (float) $this->getKgPrice10TJS();
+            $kg_total = $weight * (float) $this->getKgPrice10TJS();
         } elseif ($weight <= 30) {
             $kg_total = $weight * (float) $this->getKgPrice20TJS();
         } else {
@@ -449,18 +467,27 @@ class Chashdesk extends Component
         $cube_total = $volume * $cube_price;
 
         // Общая сумма без скидки
-        $this->total_amount = $kg_total + $cube_total;
+        $this->total_amount = $this->roundPrice($kg_total + $cube_total);
+
+        // Полученная сумма
+        $receivedAmountInput = $this->received_amount;
+        $receivedAmount = ($receivedAmountInput === null || $receivedAmountInput === '')
+            ? 0
+            : $this->parseNumber($receivedAmountInput);
 
         // Расчёт скидки
-        $this->discount_total = 0;
-        if ($discount > 0) {
-            if ($this->discountt === 'Процентная' || $this->discountt === 'percent') {
-                $this->discount_total = $this->total_amount * ($discount / 100);
-            } else {
-                $this->discount_total = $discount;
-            }
+        $this->discount_total = max(0, $this->total_amount - $receivedAmount);
+        $discount = $this->parseNumber($this->discount);
+        if ($this->discount_total === 0 && $discount > 0) {
+            // Фоллбек для старого ввода скидок
+            $this->discount_total = $this->discountt === 'Процентная' || $this->discountt === 'percent'
+                ? $this->total_amount * ($discount / 100)
+                : $discount;
         }
-        $this->total_final = max(0, $this->total_amount - $this->discount_total + $deliveryPrice);
+        $this->discount_total = min($this->discount_total, $this->total_amount);
+
+        $final = $this->total_amount - $this->discount_total + $deliveryPrice;
+        $this->total_final = $this->roundPrice(max(0, $final));
     }
 
     public function addTrack()
@@ -579,6 +606,7 @@ class Chashdesk extends Component
         $this->volume = 0;
         $this->payment_type = 'Наличными';
         $this->total_amount = 0;
+        $this->received_amount = null;
         $this->discount = 0;
         $this->discount_total = 0;
         $this->discountt = 'Фиксированная';
