@@ -112,22 +112,6 @@
                                 <flux:autocomplete.item>{{ $user->phone }}</flux:autocomplete.item>
                             @endforeach
                         </flux:autocomplete>
-                        @if ($showDeliveryDetails)
-                            <div
-                                class="grid gap-3 grid-cols-1 md:grid-cols-3 border border-neutral-200 rounded-xl p-2 bg-neutral-50">
-                                <flux:input id="order-no-input" label="Номер заявки (Shift+Alt+O)"
-                                    placeholder="Введите номер заявки" wire:model.live="order_no" />
-                                <flux:select id="deliver-select" wire:model="deliver_boy"
-                                    label="Доставщик (Shift+Alt+B)" placeholder="Выберите доставщика">
-                                    @foreach ($delivers as $deliver)
-                                        <flux:select.option>{{ $deliver->name }}</flux:select.option>
-                                    @endforeach
-                                </flux:select>
-                                <flux:input id="delivery-price-input" label="Цена доставки (Shift+Alt+D)"
-                                    placeholder="Введите стоимость доставки" wire:model.live="delivery_price"
-                                    type="text" inputmode="decimal" />
-                            </div>
-                        @endif
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <!-- Вес груза -->
@@ -153,10 +137,6 @@
                         <div class="rounded-lg bg-white p-2 border border-neutral-100">
                             <p class="text-neutral-500 text-xs uppercase tracking-wide">Подытог</p>
                             <p class="font-semibold text-lg text-neutral-900">{{ $this->total_amount }}c</p>
-                        </div>
-                        <div class="rounded-lg bg-white p-2 border border-neutral-100">
-                            <p class="text-neutral-500 text-xs uppercase tracking-wide">Доставка</p>
-                            <p class="font-semibold text-lg text-neutral-900">{{ $delivery_price }}c</p>
                         </div>
                         <div class="rounded-lg bg-white p-2 border border-neutral-100">
                             <p class="text-neutral-500 text-xs uppercase tracking-wide">Скидка</p>
@@ -355,11 +335,6 @@
                         {{ number_format($this->todayOrdersSummary['discount'], 2, '.', ' ') }} c</p>
                 </div>
                 <div class="bg-white border border-neutral-200 rounded-xl p-3">
-                    <flux:label>Доставка суммарно</flux:label>
-                    <p class="text-2xl font-semibold">
-                        {{ number_format($this->todayOrdersSummary['delivery'], 2, '.', ' ') }} c</p>
-                </div>
-                <div class="bg-white border border-neutral-200 rounded-xl p-3">
                     <flux:label>Подытог суммарно</flux:label>
                     <p class="text-2xl font-semibold">
                         {{ number_format($this->todayOrdersSummary['subtotal'], 2, '.', ' ') }} c</p>
@@ -389,11 +364,6 @@
                                         {{ optional($order->created_at)->format('H:i') }}</p>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    @if ($order->delivery_total > 0)
-                                        <flux:button size="xs" color="lime" variant="outline">
-                                            Оплачено
-                                        </flux:button>
-                                    @endif
                                     <flux:badge color="blue">{{ number_format($order->total, 2, '.', ' ') }} c
                                     </flux:badge>
                                 </div>
@@ -421,18 +391,8 @@
                                     <p class="font-semibold">{{ number_format($order->subtotal, 2, '.', ' ') }} c</p>
                                 </div>
                                 <div class="bg-neutral-100 rounded-lg p-2">
-                                    <p class="text-neutral-500">Доставка</p>
-                                    <p class="font-semibold">{{ number_format($order->delivery_total, 2, '.', ' ') }}
-                                        c</p>
-                                </div>
-                                <div class="bg-neutral-100 rounded-lg p-2">
                                     <p class="text-neutral-500">Итог</p>
                                     <p class="font-semibold">{{ number_format($order->total, 2, '.', ' ') }} c</p>
-                                </div>
-                                <div class="bg-neutral-100 rounded-lg p-2">
-                                    <p class="text-neutral-500">Доставщик</p>
-                                    <p class="font-semibold">{{ optional($order->deliver)->name ?? 'Не назначен' }}
-                                    </p>
                                 </div>
                             </div>
                         </div>

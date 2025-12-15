@@ -25,7 +25,6 @@ class Chashdesk extends Component
     public $queues;
     public $users;
     public $order_no;
-    public $delivery_price = 0;
     public $weight = 0;
     public $volume = 0;
     public $payment_type = 'Наличными';
@@ -38,8 +37,6 @@ class Chashdesk extends Component
     public $total_final;
     public $client;
     public $amount;
-    public $delivers;
-    public $deliver_boy;
     public $tracks = []; // массив трек-кодов
     public $newTrack;    // ввод нового трека
     public $description;
@@ -47,14 +44,12 @@ class Chashdesk extends Component
     public $heldOrders = [];
     public $activeHeldOrderId;
     public $currencyForm = [];
-    public $showDeliveryDetails = false;
     private array $priceCache = [];
 
     public function mount()
     {
         $this->queues = Queue::where('status', 'В очереди')->whereDate('created_at', Carbon::today())->get();
         $this->users = User::where('role', 'customer')->get();
-        $this->delivers = User::where('role', 'deliver')->get();
         $this->refreshHeldOrders();
         $this->loadCurrencyForm();
         $this->loadPriceCache();
@@ -67,22 +62,11 @@ class Chashdesk extends Component
             ->orderBy('created_at')
             ->get();
     }
-    public function toggleDeliveryDetails()
-    {
-        $this->showDeliveryDetails = !$this->showDeliveryDetails;
-
-        if (!$this->showDeliveryDetails) {
-            $this->order_no = null;
-            $this->deliver_boy = null;
-            $this->delivery_price = 0;
-        }
-    }
     public function order_place()
     {
         $weight = $this->parseNumber($this->weight);
         $volume = $this->parseNumber($this->volume);
         $subtotal = $this->parseNumber($this->total_amount);
-        $deliveryTotal = $this->parseNumber($this->delivery_price);
         $discountTotal = $this->parseNumber($this->discount_total);
         $totalFinal = $this->parseNumber($this->total_final);
 
@@ -92,14 +76,13 @@ class Chashdesk extends Component
             $apl->save();
         }
         $user = User::where('phone', $this->client)->first();
-        $deliver = User::where('name', $this->deliver_boy)->first();
         $order = Order::create([
             'user_id' => $user->id ?? $this->client,
             'weight' => $weight,
             'cube' => $volume,
             'subtotal' => $subtotal,
-            'delivery_total' => $deliveryTotal,
-            'deliver_id' => $deliver->id ?? $this->deliver_boy,
+            'delivery_total' => 0,
+            'deliver_id' => null,
             'discount' => $discountTotal,
             'total' => $totalFinal,
             'status' => "Оплачено",
@@ -161,9 +144,7 @@ class Chashdesk extends Component
             'user_id' => $user->id ?? null,
             'client' => $this->client,
             'order_no' => $this->order_no,
-            'deliver_boy' => $this->deliver_boy,
             'queue_id' => $this->selected_queue,
-            'delivery_price' => $this->parseNumber($this->delivery_price),
             'weight' => $this->parseNumber($this->weight),
             'volume' => $this->parseNumber($this->volume),
             'payment_type' => $this->payment_type,
@@ -174,7 +155,6 @@ class Chashdesk extends Component
             'total_final' => $this->parseNumber($this->total_final),
             'tracks' => $this->tracks,
             'meta' => [
-                'delivery_price' => $this->parseNumber($this->delivery_price),
                 'payment_type' => $this->payment_type,
                 'discount_type' => $this->discountt,
                 'received_amount' => $this->parseNumber($this->received_amount),
@@ -200,8 +180,6 @@ class Chashdesk extends Component
 
         $this->client = $held->client;
         $this->order_no = $held->order_no;
-        $this->deliver_boy = $held->deliver_boy;
-        $this->delivery_price = $held->delivery_price;
         $this->weight = $held->weight;
         $this->volume = $held->volume;
         $this->payment_type = $held->payment_type ?? 'Наличными';
@@ -262,7 +240,6 @@ class Chashdesk extends Component
     {
         return Order::with(['user', 'deliver'])
             ->whereDate('created_at', Carbon::today())
-            ->orderByDesc('delivery_total')
             ->orderByDesc('created_at')
             ->get();
     }
@@ -275,7 +252,6 @@ class Chashdesk extends Component
             'weight' => $orders->sum('weight'),
             'cube' => $orders->sum('cube'),
             'discount' => $orders->sum('discount'),
-            'delivery' => $orders->sum('delivery_total'),
             'total' => $orders->sum('total'),
             'subtotal' => $orders->sum('subtotal'),
         ];
@@ -322,8 +298,6 @@ class Chashdesk extends Component
                 number_format($order->discount, 2, '.', ''),
                 number_format($order->subtotal, 2, '.', ''),
                 number_format($order->total, 2, '.', ''),
-                number_format($order->delivery_total, 2, '.', ''),
-                optional($order->deliver)->name ?? '—',
                 optional($order->created_at)?->format('Y-m-d H:i'),
             ]);
         }
@@ -335,7 +309,6 @@ class Chashdesk extends Component
         $lines[] = 'Вес суммарно;' . number_format($summary['weight'], 2, '.', '');
         $lines[] = 'Объём суммарно;' . number_format($summary['cube'], 2, '.', '');
         $lines[] = 'Скидка суммарно;' . number_format($summary['discount'], 2, '.', '');
-        $lines[] = 'Доставка суммарно;' . number_format($summary['delivery'], 2, '.', '');
         $lines[] = 'Подытог суммарно;' . number_format($summary['subtotal'], 2, '.', '');
         $lines[] = 'Итог суммарно;' . number_format($summary['total'], 2, '.', '');
 
@@ -484,7 +457,6 @@ class Chashdesk extends Component
         $weight = $this->parseNumber($this->weight);
         $volume = $this->parseNumber($this->volume);
         $cube_price = (float) $this->getCubePriceTJS();
-        $deliveryPrice = $this->parseNumber($this->delivery_price);
 
         if ($weight <= 10) {
             $kg_total = $weight * (float) $this->getKgPriceTJS();
@@ -518,7 +490,7 @@ class Chashdesk extends Component
         }
         $this->discount_total = min($this->discount_total, $this->total_amount);
 
-        $final = $this->total_amount - $this->discount_total + $deliveryPrice;
+        $final = $this->total_amount - $this->discount_total;
         $this->total_final = $this->roundPrice(max(0, $final));
     }
 
@@ -622,8 +594,6 @@ class Chashdesk extends Component
     {
         $this->client = null;
         $this->order_no = null;
-        $this->deliver_boy = null;
-        $this->delivery_price = 0;
         $this->weight = 0;
         $this->volume = 0;
         $this->payment_type = 'Наличными';
