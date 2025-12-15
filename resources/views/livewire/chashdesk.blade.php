@@ -3,9 +3,10 @@
         <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
                 <p class="text-white/80 text-sm uppercase tracking-wider">Панель быстрых действий</p>
-                <p class="text-white text-xl font-semibold">Рабочие инструменты кассы</p>
+                <p class="text-white text-xl font-semibold">Рабочие инструменты</p>
             </div>
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 w-full lg:w-auto">
+            <div class="grid grid-cols- lg:grid-cols-5 gap-3 w-full lg:w-auto max-w-6xl">
+
                 <flux:modal.trigger name="add-expences">
                     <flux:button id="btn-add-expense" aria-keyshortcuts="Shift+Alt+E" color="white" variant="ghost"
                         class="h-16 rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all">
@@ -47,7 +48,8 @@
                 </flux:modal.trigger>
                 <flux:modal.trigger name="cashdesk-reports">
                     <flux:button id="btn-reports-modal" aria-keyshortcuts="Shift+Alt+R" color="white" variant="ghost"
-                        class="h-16 rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all">
+                        class="h-16 rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all"
+                        wire:click="goReports">
                         <div class="flex items-center gap-3 text-left">
                             <span
                                 class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-xl">R</span>
@@ -58,6 +60,21 @@
                         </div>
                     </flux:button>
                 </flux:modal.trigger>
+
+                <div>
+                    <form method="POST" action="{{ url('/logout') }}" class="w-full">
+                        @csrf
+                        <button type="submit"
+                            class="h-16 rounded-xl bg-red-500 border border-white/30 w-full shadow-md hover:bg-red-400 transition-all flex items-center gap-3 text-left px-3 text-white">
+                            <span
+                                class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-xl">⏻</span>
+                            <div class="flex flex-col leading-tight">
+                                <span class="font-semibold text-white">Выйти</span>
+                                <span class="text-xs text-white/70">Logout</span>
+                            </div>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -283,129 +300,6 @@
             </flux:button>
         </form>
     </flux:modal>
-    <flux:modal name="cashdesk-reports" class="w-full max-w-6xl">
-        <div class="space-y-4">
-            <div class="flex items-start justify-between gap-3">
-                <div>
-                    <flux:heading size="lg">Быстрые отчеты</flux:heading>
-                    <flux:text class="mt-1">Заказы и статистика за {{ now()->format('d.m.Y') }}.</flux:text>
-                </div>
-                <flux:button wire:click="downloadTodayReport" variant="primary">
-                    Скачать отчёт за сегодня
-                </flux:button>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div class="bg-white border border-neutral-200 rounded-xl p-3">
-                    <flux:label>Заказы сегодня</flux:label>
-                    <p class="text-2xl font-semibold">{{ $this->reportStats['orders_today'] }}</p>
-                </div>
-                <div class="bg-white border border-neutral-200 rounded-xl p-3">
-                    <flux:label>Выручка</flux:label>
-                    <p class="text-2xl font-semibold">
-                        {{ number_format($this->reportStats['revenue_today'], 2, '.', ' ') }} c
-                    </p>
-                </div>
-                <div class="bg-white border border-neutral-200 rounded-xl p-3">
-                    <flux:label>Очередь</flux:label>
-                    <p class="text-2xl font-semibold">{{ $this->reportStats['queues_waiting'] }}</p>
-                </div>
-                <div class="bg-white border border-neutral-200 rounded-xl p-3">
-                    <flux:label>Удержанные</flux:label>
-                    <p class="text-2xl font-semibold">{{ $this->reportStats['held_orders'] }}</p>
-                </div>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div class="bg-white border border-neutral-200 rounded-xl p-3">
-                    <flux:label>Всего заказов</flux:label>
-                    <p class="text-2xl font-semibold">{{ $this->todayOrdersSummary['count'] }}</p>
-                </div>
-                <div class="bg-white border border-neutral-200 rounded-xl p-3">
-                    <flux:label>Вес суммарно</flux:label>
-                    <p class="text-2xl font-semibold">
-                        {{ number_format($this->todayOrdersSummary['weight'], 2, '.', ' ') }} кг</p>
-                </div>
-                <div class="bg-white border border-neutral-200 rounded-xl p-3">
-                    <flux:label>Объём суммарно</flux:label>
-                    <p class="text-2xl font-semibold">
-                        {{ number_format($this->todayOrdersSummary['cube'], 2, '.', ' ') }} м³</p>
-                </div>
-                <div class="bg-white border border-neutral-200 rounded-xl p-3">
-                    <flux:label>Скидки суммарно</flux:label>
-                    <p class="text-2xl font-semibold">
-                        {{ number_format($this->todayOrdersSummary['discount'], 2, '.', ' ') }} c</p>
-                </div>
-                <div class="bg-white border border-neutral-200 rounded-xl p-3">
-                    <flux:label>Подытог суммарно</flux:label>
-                    <p class="text-2xl font-semibold">
-                        {{ number_format($this->todayOrdersSummary['subtotal'], 2, '.', ' ') }} c</p>
-                </div>
-                <div class="bg-white border border-neutral-200 rounded-xl p-3">
-                    <flux:label>Итог суммарно</flux:label>
-                    <p class="text-2xl font-semibold">
-                        {{ number_format($this->todayOrdersSummary['total'], 2, '.', ' ') }} c</p>
-                </div>
-                <div class="bg-white border border-neutral-200 rounded-xl p-3">
-                    <flux:label>Расходы сегодня</flux:label>
-                    <p class="text-2xl font-semibold text-rose-600">
-                        {{ number_format($this->todayExpenses->sum('total'), 2, '.', ' ') }} c
-                    </p>
-                </div>
-            </div>
-            <div class="space-y-2">
-                <flux:label>Сегодняшние заказы</flux:label>
-                <div class="max-h-80 overflow-y-auto space-y-3 pr-1">
-                    @forelse ($this->todayOrders as $order)
-                        <div class="bg-white border border-neutral-200 rounded-xl p-3 shadow-sm">
-                            <div class="flex items-center justify-between gap-3">
-                                <div>
-                                    <p class="font-semibold text-sm">#{{ $order->id }} ·
-                                        {{ optional($order->user)->phone ?? 'Без телефона' }}</p>
-                                    <p class="text-xs text-neutral-500">
-                                        {{ optional($order->created_at)->format('H:i') }}</p>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <flux:badge color="blue">{{ number_format($order->total, 2, '.', ' ') }} c
-                                    </flux:badge>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 md:grid-cols-8 gap-2 text-xs mt-2">
-                                <div class="bg-neutral-100 rounded-lg p-2">
-                                    <p class="text-neutral-500">Клиент</p>
-                                    <p class="font-semibold">{{ optional($order->user)->name ?? '—' }}</p>
-                                </div>
-                                <div class="bg-neutral-100 rounded-lg p-2">
-                                    <p class="text-neutral-500">Телефон</p>
-                                    <p class="font-semibold">{{ optional($order->user)->phone ?? '—' }}</p>
-                                </div>
-                                <div class="bg-neutral-100 rounded-lg p-2">
-                                    <p class="text-neutral-500">Вес / Куб</p>
-                                    <p class="font-semibold">{{ number_format($order->weight, 2, '.', ' ') }} кг ·
-                                        {{ number_format($order->cube, 2, '.', ' ') }} м³</p>
-                                </div>
-                                <div class="bg-neutral-100 rounded-lg p-2">
-                                    <p class="text-neutral-500">Скидка</p>
-                                    <p class="font-semibold">{{ number_format($order->discount, 2, '.', ' ') }} c</p>
-                                </div>
-                                <div class="bg-neutral-100 rounded-lg p-2">
-                                    <p class="text-neutral-500">Подытог</p>
-                                    <p class="font-semibold">{{ number_format($order->subtotal, 2, '.', ' ') }} c</p>
-                                </div>
-                                <div class="bg-neutral-100 rounded-lg p-2">
-                                    <p class="text-neutral-500">Итог</p>
-                                    <p class="font-semibold">{{ number_format($order->total, 2, '.', ' ') }} c</p>
-                                </div>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="bg-white border border-dashed border-neutral-300 rounded-xl p-4 text-center">
-                            <p class="text-sm text-neutral-500">Сегодня ещё нет оформленных заказов.</p>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-        </div>
-    </flux:modal>
-
     <!-- Подтверждение оформления -->
     <div id="confirm-submit-modal"
         class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">

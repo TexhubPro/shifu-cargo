@@ -81,6 +81,7 @@ Route::middleware(['auth', Admin::class])->prefix('admin')->name('admin.')->grou
 });
 Route::middleware(['auth', Cashier::class])->group(function () {
     Route::get('/cashier', Chashdesk::class)->name('cashier');
+    Route::get('/cashier/reports', \App\Livewire\CashdeskReports::class)->name('cashier.reports');
     Route::get('/queue-control', QueueControl::class)->name('queue-control');
 });
 Route::middleware(['auth', MiddlewareManager::class])->group(function () {

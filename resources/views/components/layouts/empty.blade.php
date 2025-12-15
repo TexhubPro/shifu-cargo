@@ -1,5 +1,6 @@
 <!DOCTYPE>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" html class="{{ Route::is('cashier') ? 'light' : 'dark' }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" html
+    class="{{ Route::is('cashier') ? 'light' : 'dark' }}{{ Route::is('cashier.reports') ? 'light' : 'dark' }}">
 
 <head>
     <meta charset="utf-8">

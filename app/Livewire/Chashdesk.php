@@ -45,6 +45,9 @@ class Chashdesk extends Component
     public $activeHeldOrderId;
     public $currencyForm = [];
     private array $priceCache = [];
+    private ?array $currencyCache = null;
+    private ?\Illuminate\Support\Collection $todayOrdersCache = null;
+    private ?array $todayOrdersSummaryCache = null;
 
     public function mount()
     {
@@ -54,6 +57,10 @@ class Chashdesk extends Component
         $this->loadCurrencyForm();
         $this->loadPriceCache();
         $this->total_amounts();
+    }
+    public function goReports()
+    {
+        return redirect()->route('cashier.reports');
     }
     public function refreshQueues(): void
     {
@@ -102,6 +109,8 @@ class Chashdesk extends Component
             $this->refreshHeldOrders();
         }
         $this->dispatch('order-submitted');
+        $this->todayOrdersCache = null;
+        $this->todayOrdersSummaryCache = null;
         return redirect()->route('cashier');
     }
     public function updateTrackStatuses($user_id, $order_id)
@@ -238,16 +247,25 @@ class Chashdesk extends Component
     }
     public function getTodayOrdersProperty()
     {
-        return Order::with(['user', 'deliver'])
+        if ($this->todayOrdersCache !== null) {
+            return $this->todayOrdersCache;
+        }
+
+        $this->todayOrdersCache = Order::with(['user'])
             ->whereDate('created_at', Carbon::today())
             ->orderByDesc('created_at')
             ->get();
+
+        return $this->todayOrdersCache;
     }
 
     public function getTodayOrdersSummaryProperty(): array
     {
+        if ($this->todayOrdersSummaryCache !== null) {
+            return $this->todayOrdersSummaryCache;
+        }
         $orders = $this->todayOrders;
-        return [
+        $this->todayOrdersSummaryCache = [
             'count' => $orders->count(),
             'weight' => $orders->sum('weight'),
             'cube' => $orders->sum('cube'),
@@ -255,6 +273,7 @@ class Chashdesk extends Component
             'total' => $orders->sum('total'),
             'subtotal' => $orders->sum('subtotal'),
         ];
+        return $this->todayOrdersSummaryCache;
     }
 
     public function getTodayExpensesProperty()
@@ -266,6 +285,8 @@ class Chashdesk extends Component
 
     public function downloadTodayReport()
     {
+        $this->todayOrdersCache = null;
+        $this->todayOrdersSummaryCache = null;
         $orders = $this->todayOrders;
         $expenses = $this->todayExpenses;
         if ($orders->isEmpty()) {
@@ -341,6 +362,7 @@ class Chashdesk extends Component
     {
         $settings = Setting::whereIn('name', $this->currencySettingKeys())->get()->keyBy('name');
         $this->currencyForm['course_dollar'] = $settings['course_dollar']->content ?? null;
+        $this->currencyCache = $settings->toArray();
     }
 
     public function saveCurrencySettings(): void
@@ -426,6 +448,7 @@ class Chashdesk extends Component
             'kg_30' => (float) str_replace('$', '', $settings['kg_price_30']->content ?? 0),
             'cube' => (float) str_replace('$', '', $settings['cube_price']->content ?? 0),
         ];
+        $this->currencyCache = $settings->toArray();
     }
     private function priceValue(string $key, string $settingName): float
     {
@@ -551,18 +574,22 @@ class Chashdesk extends Component
 
     public function getCurrencyInfoProperty(): array
     {
-        $settings = Setting::whereIn('name', $this->currencySettingKeys())->get()->keyBy('name');
+        if ($this->currencyCache === null) {
+            $this->currencyCache = Setting::whereIn('name', $this->currencySettingKeys())->get()->keyBy('name')->toArray();
+        }
 
-        $course = $settings['course_dollar']->content ?? '0';
+        $settings = $this->currencyCache;
+        $course = $settings['course_dollar']['content'] ?? '0';
+        $updatedAt = $settings['course_dollar']['updated_at'] ?? null;
 
         return [
             'course_dollar' => $course,
-            'cube_price' => $settings['cube_price']->content ?? null,
-            'kg_price' => $settings['kg_price']->content ?? null,
-            'kg_price_10' => $settings['kg_price_10']->content ?? null,
-            'kg_price_20' => $settings['kg_price_20']->content ?? null,
-            'kg_price_30' => $settings['kg_price_30']->content ?? null,
-            'updated_at' => optional($settings['course_dollar'] ?? null)->updated_at,
+            'cube_price' => $settings['cube_price']['content'] ?? null,
+            'kg_price' => $settings['kg_price']['content'] ?? null,
+            'kg_price_10' => $settings['kg_price_10']['content'] ?? null,
+            'kg_price_20' => $settings['kg_price_20']['content'] ?? null,
+            'kg_price_30' => $settings['kg_price_30']['content'] ?? null,
+            'updated_at' => $updatedAt,
         ];
     }
 
@@ -607,6 +634,8 @@ class Chashdesk extends Component
         $this->newTrack = null;
         $this->selected_queue = null;
         $this->activeHeldOrderId = null;
+        $this->todayOrdersCache = null;
+        $this->todayOrdersSummaryCache = null;
         $this->total_amounts();
     }
 }
