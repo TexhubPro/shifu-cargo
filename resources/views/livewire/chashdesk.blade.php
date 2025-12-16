@@ -1,4 +1,4 @@
-<div id="cashdesk-root" class="bg-white p-5 space-y-5">
+<div id="cashdesk-root" class="bg-white p-5 space-y-5 min-h-screen">
     <div class="bg-gradient-to-r from-lime-500 via-emerald-500 to-teal-500 rounded-2xl p-3 shadow-lg">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
@@ -91,9 +91,13 @@
                             <div class="space-y-1">
                                 @php
                                     $heldUser = $held->user ?? null;
+                                    $heldPhone = $heldUser?->phone ?? $held->client;
+                                    $heldNamePhone = $heldUser?->name
+                                        ? $heldUser->name . ' — ' . ($heldPhone ?? '')
+                                        : $heldPhone ?? null;
                                 @endphp
                                 <p class="font-semibold text-neutral-800">
-                                    {{ $heldUser?->name ?? ($held->client ?? 'Без клиента') }}
+                                    {{ $heldNamePhone ?? 'Без клиента' }}
                                 </p>
                                 <p class="text-neutral-500">
                                     {{ number_format($held->total_final, 2, '.', ' ') }} c ·
