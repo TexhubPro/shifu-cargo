@@ -45,7 +45,7 @@ class Login extends Component
                 return redirect()->route('cashier');
             }
 
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('cashier');
         }
 
         $this->dispatch(
