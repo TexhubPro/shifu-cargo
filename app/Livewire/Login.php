@@ -24,19 +24,28 @@ class Login extends Component
         $user = User::where('phone', $this->phone)->first();
 
         if ($user && Hash::check($this->password, $user->password)) {
-            Auth::login($user, $this->remember);
+            Auth::login($user, true);
             $this->dispatch(
                 'alert',
                 'Вы успешно вошли в систему!'
             );
-            return match ($user->role) {
-                'admin' => redirect()->route('admin.dashboard'),
-                'deliver' => redirect()->route('deliver'),
-                'applicant' => redirect()->route('applicant'),
-                'manager' => redirect()->route('admin.dashboard'),
-                'cashier' => redirect()->route('cashier'),
-                default => redirect()->route('admin.dashboard'), // customer
-            };
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+            if ($user->role === 'deliver') {
+                return redirect()->route('deliver');
+            }
+            if ($user->role === 'applicant') {
+                return redirect()->route('applicant');
+            }
+            if ($user->role === 'manager') {
+                return redirect()->route('admin.dashboard');
+            }
+            if ($user->role === 'cashier') {
+                return redirect()->route('cashier');
+            }
+
+            return redirect()->route('admin.dashboard');
         }
 
         $this->dispatch(
