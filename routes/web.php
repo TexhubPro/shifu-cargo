@@ -41,6 +41,7 @@ use App\Livewire\MiniApp\Support;
 use App\Livewire\Queue as LivewireQueue;
 use App\Livewire\QueueControl;
 use App\Livewire\QueueKiosk;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -60,6 +61,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', Settings::class)->name('settings');
     Route::get('/notify', Notify::class)->name('notify');
     Route::get('/testqueue', SendNotification::class)->name('testqueue');
+    Route::get('/logout', function () {
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+
+        return redirect()->route('login');
+    })->name('logout');
 });
 Route::middleware(['auth', Admin::class])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');

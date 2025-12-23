@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        View::addNamespace('ui', base_path('packages/texhub/ui-components/resources/views'));
+
         RateLimiter::for('web-global', function (Request $request): Limit {
             return Limit::perMinute(60)
                 ->by($request->ip() ?? 'global')

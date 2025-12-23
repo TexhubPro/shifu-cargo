@@ -17,7 +17,8 @@
         "livewire/flux": "^2.5",
         "livewire/flux-pro": "^1.0",
         "livewire/livewire": "^3.6",
-        "maatwebsite/excel": "^3.1"
+        "maatwebsite/excel": "^3.1",
+        "texhub/ui-components": "1.0.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -83,12 +84,19 @@
     "minimum-stability": "beta",
     "prefer-stable": true,
     "repositories": [
-    {
-        "type": "path",
-        "url": "packages/flux-pro",
-        "options": {
-            "symlink": true
+        {
+            "type": "path",
+            "url": "packages/flux-pro",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "packages/texhub/ui-components",
+            "options": {
+                "symlink": true
+            }
         }
-    }
     ]
 }

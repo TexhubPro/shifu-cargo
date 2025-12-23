@@ -13,5 +13,6 @@ class UiComponentsServiceProvider extends ServiceProvider
 
         // Register Blade components under the "ui" alias (usage: <x-ui::sample />)
         Blade::componentNamespace('Texhub\\UiComponents\\View\\Components', 'ui');
+        Blade::anonymousComponentNamespace('ui', 'ui');
     }
 }

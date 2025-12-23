@@ -1,320 +1,122 @@
-<!DOCTYPE>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" html class="light">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-50">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('obfuscated.min.css') }}">
-    <title>{{ $title ?? 'Page Title' }}</title>
+    <title>{{ $title ?? 'Админка' }}</title>
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
 </head>
 
-<body class="bg-neutral-100">
-    <!-- Navigation Toggle -->
-    {{-- <div class="lg:hidden py-16 text-center">
-        <button type="button"
-            class="py-2 px-3 inline-flex justify-center items-center gap-x-2 text-start bg-gray-800 border border-gray-800 text-white text-sm font-medium rounded-lg shadow-2xs align-middle hover:bg-gray-950 focus:outline-hidden focus:bg-gray-900 dark:bg-white dark:text-neutral-800 dark:hover:bg-neutral-200 dark:focus:bg-neutral-200"
-            aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-sidebar-empty-content"
-            aria-label="Toggle navigation" data-hs-overlay="#hs-sidebar-empty-content">
-            Open
-        </button>
-    </div> --}}
-    <div>
-        <div class="lg:pl-64">
-            <div class="w-full z-50 bg-neutral-950 p-3 flex justify-between lg:justify-end items-center sticky top-0">
-                <flux:button size="sm" class="lg:hidden" icon="bars-3" aria-haspopup="dialog"
-                    aria-expanded="false" aria-controls="hs-sidebar-empty-content" aria-label="Toggle navigation"
-                    data-hs-overlay="#hs-sidebar-empty-content" />
-                <img src="{{ asset('logo/white_logo.svg') }}" class="h-8 lg:hidden" alt="">
-                @livewire('components.avatar')
-            </div>
-            <div class="p-3 space-y-3">
-                {{ $slot }}
-                @livewire('components.alert')
-            </div>
-        </div>
-    </div>
-    <!-- End Navigation Toggle -->
-
-    <!-- Sidebar -->
-    <div id="hs-sidebar-empty-content"
-        class="hs-overlay [--auto-close:lg] lg:block lg:translate-x-0 lg:end-auto lg:bottom-0 w-64
-hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform h-full hidden fixed top-0 start-0 bottom-0 z-60
-bg-lime-500 border-e border-gray-200 dark:bg-lime-500 dark:border-neutral-700"
-        role="dialog" tabindex="-1" aria-label="Sidebar">
-        <div class="relative flex flex-col h-full max-h-full ">
-            <!-- Header -->
-            <header class=" p-4 flex justify-between items-center gap-x-2">
-
-                <img src="{{ asset('logo/white_logo.svg') }}" class="h-15 bg-lime-950 px-3 pt-3 pb-1.5 rounded-xl"
-                    alt="">
-                <div class="lg:hidden -me-2">
-                    <!-- Close Button -->
-                    <button type="button"
-                        class="flex justify-center items-center gap-x-3 size-6 bg-white border border-gray-200 text-sm text-gray-600 hover:bg-gray-100 rounded-full disabled:opacity-50 disabled:pointer-events-none focus:outline-hidden focus:bg-gray-100 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:hover:text-neutral-200 dark:focus:text-neutral-200"
-                        data-hs-overlay="#hs-sidebar-empty-content">
-                        <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 6 6 18" />
-                            <path d="m6 6 12 12" />
+<body class="min-h-full text-gray-900 antialiased bg-slate-50">
+    <div class="flex min-h-screen bg-slate-50">
+        <aside id="app-sidebar"
+            class="fixed inset-y-0 start-0 z-40 w-70 transform transition-transform duration-300 bg-white border-e border-gray-200 shadow-xl -translate-x-full lg:translate-x-0 lg:static lg:shadow-none lg:transform-none">
+            <div class="flex flex-col h-full">
+                <div class="p-4 border-b border-gray-100 flex items-center justify-between lg:hidden">
+                    <div class="text-lg font-semibold">{{ $title ?? 'Админка' }}</div>
+                    <button type="button" class="text-gray-500 hover:text-gray-700" data-sidebar-close
+                        aria-label="Close sidebar">
+                        <svg class="size-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                         </svg>
-                        <span class="sr-only">Close</span>
                     </button>
-                    <!-- End Close Button -->
+                </div>
+                <div class="flex-1 overflow-y-auto">
+                    @include('ui::components.sidebar')
+                </div>
+            </div>
+        </aside>
+        <div id="app-sidebar-backdrop"
+            class="fixed inset-0 z-30 bg-slate-900/40 opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden">
+        </div>
+
+        <div class="flex-1 flex flex-col min-h-screen">
+            <header class="sticky top-0 z-20">
+                <div class="px-4 lg:px-8 py-3">
+                    @include('ui::components.header')
                 </div>
             </header>
-            <!-- End Header -->
-
-            <!-- Body -->
-            <nav
-                class="h-full overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
-                <main class="">
-                    <div class="hs-accordion-group pb-0 px-2  w-full flex flex-col flex-wrap"
-                        data-hs-accordion-always-open>
-                        @if (Auth::user()->role == 'admin')
-                            <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                                href="{{ route('admin.dashboard') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-dashboard">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M12 13m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                                    <path d="M13.45 11.55l2.05 -2.05" />
-                                    <path d="M6.4 20a9 9 0 1 1 11.2 0z" />
-                                </svg>
-                                Панель управления
-                            </a>
-                            <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                                href="{{ route('admin.analitic') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-report-analytics">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path
-                                        d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
-                                    <path
-                                        d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
-                                    <path d="M9 17v-5" />
-                                    <path d="M12 17v-1" />
-                                    <path d="M15 17v-3" />
-                                </svg>
-                                Отчеты
-                            </a>
-                            <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                                href="{{ route('admin.china') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-packages">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M7 16.5l-5 -3l5 -3l5 3v5.5l-5 3z" />
-                                    <path d="M2 13.5v5.5l5 3" />
-                                    <path d="M7 16.545l5 -3.03" />
-                                    <path d="M17 16.5l-5 -3l5 -3l5 3v5.5l-5 3z" />
-                                    <path d="M12 19l5 3" />
-                                    <path d="M17 16.5l5 -3" />
-                                    <path d="M12 13.5v-5.5l-5 -3l5 -3l5 3v5.5" />
-                                    <path d="M7 5.03v5.455" />
-                                    <path d="M12 8l5 -3" />
-                                </svg>
-                                Склад Хитой
-                            </a>
-                            <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                                href="{{ route('admin.dushanbe') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-package">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" />
-                                    <path d="M12 12l8 -4.5" />
-                                    <path d="M12 12l0 9" />
-                                    <path d="M12 12l-8 -4.5" />
-                                    <path d="M16 5.25l-8 4.5" />
-                                </svg>
-                                Склад Душанбе
-                            </a>
-                            <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                                href="{{ route('admin.register-pack') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-cash-register">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path
-                                        d="M21 15h-2.5c-.398 0 -.779 .158 -1.061 .439c-.281 .281 -.439 .663 -.439 1.061c0 .398 .158 .779 .439 1.061c.281 .281 .663 .439 1.061 .439h1c.398 0 .779 .158 1.061 .439c.281 .281 .439 .663 .439 1.061c0 .398 -.158 .779 -.439 1.061c-.281 .281 -.663 .439 -1.061 .439h-2.5" />
-                                    <path d="M19 21v1m0 -8v1" />
-                                    <path
-                                        d="M13 21h-7c-.53 0 -1.039 -.211 -1.414 -.586c-.375 -.375 -.586 -.884 -.586 -1.414v-10c0 -.53 .211 -1.039 .586 -1.414c.375 -.375 .884 -.586 1.414 -.586h2m12 3.12v-1.12c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-2" />
-                                    <path
-                                        d="M16 10v-6c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-4c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414v6m8 0h-8m8 0h1m-9 0h-1" />
-                                    <path d="M8 14v.01" />
-                                    <path d="M8 17v.01" />
-                                    <path d="M12 13.99v.01" />
-                                    <path d="M12 17v.01" />
-                                </svg>
-                                Регистрация груза
-                            </a>
-                        @endif
-                        <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                            href="{{ route('admin.trackcodes') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"
-                                class="icon icon-tabler icons-tabler-outline icon-tabler-scan">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M4 7v-1a2 2 0 0 1 2 -2h2" />
-                                <path d="M4 17v1a2 2 0 0 0 2 2h2" />
-                                <path d="M16 4h2a2 2 0 0 1 2 2v1" />
-                                <path d="M16 20h2a2 2 0 0 0 2 -2v-1" />
-                                <path d="M5 12l14 0" />
-                            </svg>
-                            Трек-коды
-                        </a>
-                        <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                            href="{{ route('admin.customers') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"
-                                class="icon icon-tabler icons-tabler-outline icon-tabler-users">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
-                                <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
-                            </svg>
-                            Клиенты и коды
-                        </a>
-                        <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                            href="{{ route('admin.applications') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"
-                                class="icon icon-tabler icons-tabler-outline icon-tabler-truck-delivery">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                                <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                                <path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5" />
-                                <path d="M3 9l4 0" />
-                            </svg>
-                            Заявки на доставку
-                        </a>
-                        @if (Auth::user()->role == 'admin')
-                            <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                                href="{{ route('admin.smsbulk') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-message-share">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M8 9h8" />
-                                    <path d="M8 13h6" />
-                                    <path d="M13 18l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v6" />
-                                    <path d="M16 22l5 -5" />
-                                    <path d="M21 21.5v-4.5h-4.5" />
-                                </svg>
-                                СМС рассылка
-                            </a>
-                        @endif
-                        <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                            href="{{ route('admin.chats') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"
-                                class="icon icon-tabler icons-tabler-outline icon-tabler-messages">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M21 14l-3 -3h-7a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1h9a1 1 0 0 1 1 1v10" />
-                                <path d="M14 15v2a1 1 0 0 1 -1 1h-7l-3 3v-10a1 1 0 0 1 1 -1h2" />
-                            </svg>
-                            Чат склиентами
-                        </a>
-                        @if (Auth::user()->role == 'admin')
-                            <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                                href="{{ route('admin.expences') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-dollar">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M13 21h-7a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v3" />
-                                    <path d="M16 3v4" />
-                                    <path d="M8 3v4" />
-                                    <path d="M4 11h12.5" />
-                                    <path d="M21 15h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
-                                    <path d="M19 21v1m0 -8v1" />
-                                </svg>
-                                Затраты
-                            </a>
-                        @endif
-                        <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                            href="{{ route('admin.orders') }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"
-                                class="icon icon-tabler icons-tabler-outline icon-tabler-sort-ascending-shapes">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M4 15l3 3l3 -3" />
-                                <path d="M7 6v12" />
-                                <path
-                                    d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-4z" />
-                                <path d="M17 14l-3.5 6h7z" />
-                            </svg>
-                            Заказы
-                        </a>
-                        @if (Auth::user()->role == 'admin')
-                            <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                                href="{{ route('admin.faqs') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-filter-question">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path
-                                        d="M15 19l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414" />
-                                    <path d="M19 22v.01" />
-                                    <path d="M19 19a2.003 2.003 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
-                                </svg>
-                                Частые вопросы
-                            </a>
-                            <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                                href="{{ route('admin.emplyones') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-user-hexagon">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M12 13a3 3 0 1 0 0 -6a3 3 0 0 0 0 6z" />
-                                    <path d="M6.201 18.744a4 4 0 0 1 3.799 -2.744h4a4 4 0 0 1 3.798 2.741" />
-                                    <path
-                                        d="M19.875 6.27c.7 .398 1.13 1.143 1.125 1.948v7.284c0 .809 -.443 1.555 -1.158 1.948l-6.75 4.27a2.269 2.269 0 0 1 -2.184 0l-6.75 -4.27a2.225 2.225 0 0 1 -1.158 -1.948v-7.285c0 -.809 .443 -1.554 1.158 -1.947l6.75 -3.98a2.33 2.33 0 0 1 2.25 0l6.75 3.98h-.033z" />
-                                </svg>
-                                Сотрудники
-                            </a>
-                            <a class=" flex items-center gap-x-3.5 font-semibold py-2 px-2.5  text-base text-white rounded-lg hover:bg-lime-600 focus:outline-hidden focus:bg-lime-700  dark:hover:bg-lime-600 dark:focus:bg-lime-700 dark:text-white"
-                                href="{{ route('admin.settings') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-settings">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path
-                                        d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
-                                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
-                                </svg>
-                                Настройки Т-БОТ
-                            </a>
-                        @endif
-                    </div>
-                </main>
-            </nav>
-            <!-- End Body -->
+            <main class="flex-1 px-4 lg:px-8 py-6 max-w-[calc(100vw-0px)] lg:max-w-[calc(100vw-256px)] overflow-hidden">
+                {{ $slot }}
+                @livewire('components.alert')
+            </main>
         </div>
     </div>
-    <!-- End Sidebar -->
+
+    <script>
+        (() => {
+            const sidebar = document.getElementById('app-sidebar');
+            const backdrop = document.getElementById('app-sidebar-backdrop');
+            if (!sidebar || !backdrop) return;
+
+            const open = () => {
+                sidebar.classList.remove('-translate-x-full');
+                backdrop.classList.remove('pointer-events-none');
+                requestAnimationFrame(() => backdrop.classList.add('opacity-100'));
+            };
+
+            const close = () => {
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('pointer-events-none');
+                backdrop.classList.remove('opacity-100');
+            };
+
+            document.querySelectorAll('[data-sidebar-toggle]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const isOpen = !sidebar.classList.contains('-translate-x-full');
+                    isOpen ? close() : open();
+                });
+            });
+
+            document.querySelectorAll('[data-sidebar-close]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    close();
+                });
+            });
+
+            backdrop.addEventListener('click', close);
+        })();
+
+        (() => {
+            const toggleButtons = document.querySelectorAll('[data-user-dropdown-toggle]');
+            if (!toggleButtons.length) return;
+
+            const closeAll = () => {
+                document.querySelectorAll('[id^="user-menu"]').forEach(menu => {
+                    menu.classList.add('hidden');
+                });
+            };
+
+            toggleButtons.forEach(button => {
+                const selector = button.getAttribute('data-user-dropdown-toggle');
+                const menu = selector ? document.querySelector(selector) : null;
+                if (!menu) return;
+
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const isHidden = menu.classList.contains('hidden');
+                    closeAll();
+                    if (isHidden) {
+                        menu.classList.remove('hidden');
+                    }
+                });
+            });
+
+            document.addEventListener('click', (event) => {
+                const target = event.target;
+                if (!(target instanceof Element)) return;
+                if (target.closest('[data-user-dropdown-toggle]')) return;
+                if (target.closest('#user-menu')) return;
+                closeAll();
+            });
+        })();
+    </script>
     @fluxScripts
 </body>
 

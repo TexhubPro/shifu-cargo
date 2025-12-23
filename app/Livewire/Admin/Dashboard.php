@@ -8,6 +8,7 @@ use App\Models\Registerpack;
 use App\Models\Trackcode;
 use App\Models\User;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
@@ -29,6 +30,11 @@ class Dashboard extends Component
     public $cubTj;
     public $shipped;
     public $received;
+    public $chartLabels = [];
+    public $trackcodesDaily = [];
+    public $ordersDaily = [];
+    public $expensesDaily = [];
+    public $clientsDaily = [];
 
     public function mount()
     {
@@ -38,7 +44,6 @@ class Dashboard extends Component
     }
     public function load()
     {
-
         $this->newClients = User::forPeriod($this->start, $this->end);
         $this->trackcodes = Trackcode::forPeriod($this->start, $this->end);
         $this->earnings = Order::forPeriod($this->start, $this->end);
@@ -51,6 +56,59 @@ class Dashboard extends Component
         $this->cubTj = Expences::forPeriodCubeDushanbe($this->start, $this->end);;
         $this->shipped = Registerpack::shipped($this->start, $this->end);
         $this->received = RegisterPack::received($this->start, $this->end);
+
+        $labels = [];
+        $period = CarbonPeriod::create(
+            Carbon::parse($this->start)->startOfDay(),
+            Carbon::parse($this->end)->startOfDay()
+        );
+
+        foreach ($period as $date) {
+            $labels[] = $date->format('Y-m-d');
+        }
+
+        $this->chartLabels = $labels;
+
+        $trackcodesRaw = Trackcode::query()
+            ->selectRaw('DATE(china) as day, COUNT(*) as total')
+            ->whereBetween('china', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
+            ->where('status', 'Получено в Иву')
+            ->groupBy('day')
+            ->pluck('total', 'day')
+            ->toArray();
+
+        $ordersRaw = Order::query()
+            ->selectRaw('DATE(created_at) as day, SUM(total) as total')
+            ->whereBetween('created_at', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
+            ->groupBy('day')
+            ->pluck('total', 'day')
+            ->toArray();
+
+        $expensesRaw = Expences::query()
+            ->selectRaw('DATE(data) as day, SUM(total) as total')
+            ->whereBetween('data', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
+            ->groupBy('day')
+            ->pluck('total', 'day')
+            ->toArray();
+
+        $clientsRaw = User::query()
+            ->selectRaw('DATE(created_at) as day, COUNT(*) as total')
+            ->whereBetween('created_at', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
+            ->groupBy('day')
+            ->pluck('total', 'day')
+            ->toArray();
+
+        $this->trackcodesDaily = [];
+        $this->ordersDaily = [];
+        $this->expensesDaily = [];
+        $this->clientsDaily = [];
+
+        foreach ($labels as $label) {
+            $this->trackcodesDaily[] = (int) ($trackcodesRaw[$label] ?? 0);
+            $this->ordersDaily[] = (float) ($ordersRaw[$label] ?? 0);
+            $this->expensesDaily[] = (float) ($expensesRaw[$label] ?? 0);
+            $this->clientsDaily[] = (int) ($clientsRaw[$label] ?? 0);
+        }
     }
     public function update()
     {
