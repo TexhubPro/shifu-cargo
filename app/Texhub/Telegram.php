@@ -173,33 +173,39 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             }
             return;
         }
-
-        $chat_open = Chat::where('user_id', $chat->id)->first();
-        if (!$chat_open) {
-            Chat::create([
-                'user_id' => $chat->id,
-                'status' => true,
-            ]);
-        } else {
-            $chat_open->status = true;
-            $chat_open->save();
-        }
         if ($this->chat->lang == 'ru') {
-            $this->chat->message("🔹 Привет! ✍️ Опишите свою проблему в одном сообщении и 📩 отправьте. 🔄 Консультант обязательно вам ответит! ✅")->replyKeyboard(ReplyKeyboard::make()
-                ->row([
-                    ReplyButton::make('❌ Закрыт чат'),
-                ])
-                ->resize())->send();
+            $this->chat->message("⚠️ В данный момент чат внутри Telegram‑бота отключен по техническим причинам. Пожалуйста, обращайтесь к нам в Instagram Direct.")->send();
         } else {
-            $this->chat->message("🔹 Салом! ✍️ Мушкилии худро дар як матн навишта 📩 равон кунед. 🔄 Мушовир ҳатман ба шумо ҷавоб мегардонад! ✅")->replyKeyboard(ReplyKeyboard::make()
-
-                ->row([
-                    ReplyButton::make('❌ Пушидани чат'),
-                ])
-                ->resize())->send();
+            $this->chat->message("⚠️ Айни ҳол чат дар дохили боти Telegram бо сабабҳои техникӣ ғайрифаъол аст. Лутфан ба мо дар Instagram Direct муроҷиат кунед.")->send();
         }
-        $chat->step = 'chat';
-        $chat->save();
+        return;
+
+        // $chat_open = Chat::where('user_id', $chat->id)->first();
+        // if (!$chat_open) {
+        //     Chat::create([
+        //         'user_id' => $chat->id,
+        //         'status' => true,
+        //     ]);
+        // } else {
+        //     $chat_open->status = true;
+        //     $chat_open->save();
+        // }
+        // if ($this->chat->lang == 'ru') {
+        //     $this->chat->message("🔹 Привет! ✍️ Опишите свою проблему в одном сообщении и 📩 отправьте. 🔄 Консультант обязательно вам ответит! ✅")->replyKeyboard(ReplyKeyboard::make()
+        //         ->row([
+        //             ReplyButton::make('❌ Закрыт чат'),
+        //         ])
+        //         ->resize())->send();
+        // } else {
+        //     $this->chat->message("🔹 Салом! ✍️ Мушкилии худро дар як матн навишта 📩 равон кунед. 🔄 Мушовир ҳатман ба шумо ҷавоб мегардонад! ✅")->replyKeyboard(ReplyKeyboard::make()
+
+        //         ->row([
+        //             ReplyButton::make('❌ Пушидани чат'),
+        //         ])
+        //         ->resize())->send();
+        // }
+        // $chat->step = 'chat';
+        // $chat->save();
     }
     public function sex_radio($id, $sex): void
     {
