@@ -100,7 +100,7 @@ class Customers extends Component
         }
 
         return $query->orderBy($this->getSortField(), $this->getSortDirection())
-            ->paginate($this->perPage);
+            ->simplePaginate($this->perPage);
     }
 
     public function check_user() {}

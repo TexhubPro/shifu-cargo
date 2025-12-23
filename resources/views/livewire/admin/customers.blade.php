@@ -47,6 +47,11 @@
                     <flux:select.option value="50">50</flux:select.option>
                     <flux:select.option value="100">100</flux:select.option>
                 </flux:select>
+                <div class="flex items-end">
+                    <span class="text-xs text-gray-500 bg-slate-50 px-3 py-2 rounded-xl">
+                        Показано: {{ $this->customers->count() }}
+                    </span>
+                </div>
             </div>
         </form>
 
