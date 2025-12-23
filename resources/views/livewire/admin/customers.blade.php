@@ -1,24 +1,55 @@
-<div>
-    <div class="mb-5">
+<div class="space-y-6">
+    <div class="flex flex-col gap-2">
         <flux:heading class="text-xl">Клиенты и коды</flux:heading>
-        <flux:text class="text-base" variant="subtle">Список клиентов и их зарегистрированные коды для отслеживания
-            грузов.
+        <flux:text class="text-sm" variant="subtle">
+            Список клиентов и их зарегистрированные коды для отслеживания грузов.
         </flux:text>
     </div>
-    <div class="bg-white p-2 rounded-xl border border-gray-200 space-y-3">
-        <div>
+
+    <div class="bg-white rounded-2xl p-4 lg:p-6 shadow-sm ring-1 ring-gray-100 space-y-4">
+        <div class="flex flex-col gap-1">
             <flux:heading>Информация о клиентах</flux:heading>
-            <flux:text>
-                Просмотрите информацию о клиентах, специальные коды и их заказы.
-            </flux:text>
+            <flux:text>Поиск, фильтрация и сортировка клиентов.</flux:text>
         </div>
-        <form class="space-y-3" wire:submit.prevent="check_user">
-            <flux:input icon="user" placeholder="Введите номер телефона или специальный код клиента" clearable
-                label="Номер телефона или специальный код клиента" wire:model="search" required />
-            <flux:button variant="primary" color="lime" class="w-full" type="submit">
-                Найти
-            </flux:button>
+
+        <form class="space-y-4" wire:submit.prevent="check_user">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <flux:input icon="user" placeholder="Введите имя" clearable label="Поиск по имени"
+                    wire:model.live.debounce.400ms="nameSearch" />
+                <flux:input icon="phone" placeholder="Введите телефон" clearable label="Поиск по телефону"
+                    wire:model.live.debounce.400ms="phoneSearch" />
+                <flux:input placeholder="Введите код" clearable label="Поиск по коду"
+                    wire:model.live.debounce.400ms="codeSearch" />
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                <flux:select label="Пол" wire:model.live="sex" placeholder="Все">
+                    <flux:select.option value="">Все</flux:select.option>
+                    <flux:select.option value="m">Мужской</flux:select.option>
+                    <flux:select.option value="z">Женский</flux:select.option>
+                </flux:select>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <flux:date-picker label="Дата от" wire:model.live="dateFrom" />
+                    <flux:date-picker label="Дата до" wire:model.live="dateTo" />
+                </div>
+                <flux:select label="Сортировка" wire:model.live="sortField">
+                    <flux:select.option value="created_at">По дате</flux:select.option>
+                    <flux:select.option value="name">По имени</flux:select.option>
+                    <flux:select.option value="code">По коду</flux:select.option>
+                    <flux:select.option value="trackcodes_count">По кол-ву кодов</flux:select.option>
+                    <flux:select.option value="orders_sum_total">По сумме заказов</flux:select.option>
+                </flux:select>
+                <flux:select label="Направление" wire:model.live="sortDirection">
+                    <flux:select.option value="desc">Сначала новые</flux:select.option>
+                    <flux:select.option value="asc">Сначала старые</flux:select.option>
+                </flux:select>
+                <flux:select label="На странице" wire:model.live="perPage">
+                    <flux:select.option value="25">25</flux:select.option>
+                    <flux:select.option value="50">50</flux:select.option>
+                    <flux:select.option value="100">100</flux:select.option>
+                </flux:select>
+            </div>
         </form>
+
         <flux:table :paginate="$this->customers" class="mt-5">
             <flux:table.columns>
                 <flux:table.column>Код</flux:table.column>
@@ -39,7 +70,8 @@
                         <flux:table.cell>{{ $item->phone }}</flux:table.cell>
                         <flux:table.cell>{{ $item->sex == 'z' ? 'Женский' : 'Мужской' }}</flux:table.cell>
                         <flux:table.cell>{{ $item->trackcodes_count }}</flux:table.cell>
-                        <flux:table.cell>{{ number_format($item->orders_sum_total ?? 0, 2, '.', ' ') }}c</flux:table.cell>
+                        <flux:table.cell>{{ number_format($item->orders_sum_total ?? 0, 2, '.', ' ') }}c
+                        </flux:table.cell>
                         <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
                         </flux:table.cell>
                         @if (Auth::user()->role == 'admin')

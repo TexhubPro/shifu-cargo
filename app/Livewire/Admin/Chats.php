@@ -16,6 +16,8 @@ class Chats extends Component
     public $messages;
     public $active_chat = null;
     public $chat_bar = false;
+    public $chatsLimit = 20;
+    public $chatsTotal = 0;
     public function add_message()
     {
         Message::create([
@@ -82,10 +84,18 @@ class Chats extends Component
 
     protected function refreshChatsList(): void
     {
+        $this->chatsTotal = Chat::count();
         $this->chats = Chat::with(['user', 'latestMessage', 'unreadMessages'])
             ->withCount('unreadMessages')
             ->orderByRaw('(SELECT MAX(created_at) FROM messages WHERE messages.chat_id = chats.id) DESC')
+            ->limit($this->chatsLimit)
             ->get();
+    }
+
+    public function loadMoreChats(): void
+    {
+        $this->chatsLimit += 20;
+        $this->refreshChatsList();
     }
 
     protected function updateChatUnreadCount(int $chatId, int $count): void

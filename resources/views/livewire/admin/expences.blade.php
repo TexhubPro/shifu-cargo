@@ -1,19 +1,62 @@
-<div>
-    <div class="flex justify-between gap-5 items-center">
-        <div>
-            <flux:heading class="text-xl">Добавление затрат</flux:heading>
-            <flux:text class="text-base" variant="subtle">
-                На этой странице можно добавить новую запись о расходах, указав склад, сумму и описание затрат для
-                точного
-                учета.
+<div class="space-y-6">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-col gap-2">
+            <flux:heading class="text-xl">Затраты</flux:heading>
+            <flux:text class="text-sm" variant="subtle">
+                Добавляйте и контролируйте записи о расходах по складам и кубатуре.
             </flux:text>
         </div>
         <flux:modal.trigger name="edit-profile">
             <flux:button variant="primary" color="lime">Добавить</flux:button>
         </flux:modal.trigger>
     </div>
-    <div class="bg-white p-4 rounded-xl border border-gray-200 space-y-3 mt-5">
-        <flux:table :paginate="$this->expences" class="">
+
+    <div class="bg-white rounded-2xl p-4 lg:p-6 shadow-sm ring-1 ring-gray-100 space-y-4">
+        <div class="flex flex-col gap-1">
+            <flux:heading>Фильтры и сортировка</flux:heading>
+            <flux:text>Используйте фильтры для быстрого поиска нужных затрат.</flux:text>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <flux:input icon="magnifying-glass" placeholder="Сумма или описание" clearable label="Поиск"
+                wire:model.live.debounce.400ms="search" />
+            <flux:select label="Склад" wire:model.live="warehouseFilter" placeholder="Все склады">
+                <flux:select.option value="">Все склады</flux:select.option>
+                <flux:select.option value="Склад Душанбе">Склад Душанбе</flux:select.option>
+                <flux:select.option value="Склад Иву">Склад Иву</flux:select.option>
+                <flux:select.option value="Кубатура Иву">Кубатура Иву</flux:select.option>
+                <flux:select.option value="Кубатура Душанбе">Кубатура Душанбе</flux:select.option>
+            </flux:select>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <flux:date-picker label="Дата от" wire:model.live="dateFrom" />
+                <flux:date-picker label="Дата до" wire:model.live="dateTo" />
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full lg:w-auto">
+                <flux:select label="Сортировка" wire:model.live="sortField">
+                    <flux:select.option value="created_at">По дате</flux:select.option>
+                    <flux:select.option value="total">По сумме</flux:select.option>
+                    <flux:select.option value="sklad">По складу</flux:select.option>
+                    <flux:select.option value="data">По дате расхода</flux:select.option>
+                </flux:select>
+                <flux:select label="Направление" wire:model.live="sortDirection">
+                    <flux:select.option value="desc">Сначала новые</flux:select.option>
+                    <flux:select.option value="asc">Сначала старые</flux:select.option>
+                </flux:select>
+                <flux:select label="На странице" wire:model.live="perPage">
+                    <flux:select.option value="25">25</flux:select.option>
+                    <flux:select.option value="50">50</flux:select.option>
+                    <flux:select.option value="100">100</flux:select.option>
+                </flux:select>
+            </div>
+            <span class="text-xs text-gray-500 bg-slate-50 px-3 py-2 rounded-xl">
+                Всего: {{ $this->expences->total() }}
+            </span>
+        </div>
+
+        <flux:table :paginate="$this->expences">
             <flux:table.columns>
                 <flux:table.column>Сумма</flux:table.column>
                 <flux:table.column>Описание</flux:table.column>

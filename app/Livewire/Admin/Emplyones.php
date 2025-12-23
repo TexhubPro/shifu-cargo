@@ -17,6 +17,12 @@ class Emplyones extends Component
     public $chat_id;
     public $password;
     public $role = 'manager';
+    public $editId;
+    public $editName;
+    public $editPhone;
+    public $editChatId;
+    public $editRole = 'manager';
+    public $editPassword;
 
     public function saveEmployee()
     {
@@ -58,6 +64,52 @@ class Emplyones extends Component
         $this->reset(['name', 'phone', 'password', 'role']);
 
         $this->dispatch('alert', 'Сотрудник успешно добавлен!');
+        Flux::modals()->close();
+    }
+
+    public function openEdit(int $id): void
+    {
+        $user = User::findOrFail($id);
+        $this->editId = $user->id;
+        $this->editName = $user->name;
+        $this->editPhone = $user->phone;
+        $this->editChatId = $user->chat_id;
+        $this->editRole = $user->role;
+        $this->editPassword = null;
+    }
+
+    public function updateEmployee(): void
+    {
+        $this->validate([
+            'editName' => 'required|string|min:3',
+            'editPhone' => 'required|string|unique:users,phone,' . $this->editId,
+            'editRole' => 'required|in:admin,deliver,customer,manager,cashier,applicant',
+            'editChatId' => 'nullable|string',
+            'editPassword' => 'nullable|string|min:6',
+        ], [
+            'editName.required' => 'Введите имя сотрудника.',
+            'editPhone.required' => 'Введите номер телефона.',
+            'editPhone.unique' => 'Пользователь с таким номером уже существует.',
+            'editPassword.min' => 'Пароль должен содержать минимум 6 символов.',
+            'editRole.required' => 'Выберите должность.',
+        ]);
+
+        $user = User::findOrFail($this->editId);
+        $data = [
+            'name' => $this->editName,
+            'phone' => $this->editPhone,
+            'chat_id' => $this->editChatId,
+            'role' => $this->editRole,
+        ];
+
+        if (!empty($this->editPassword)) {
+            $data['password'] = Hash::make($this->editPassword);
+        }
+
+        $user->update($data);
+
+        $this->reset(['editId', 'editName', 'editPhone', 'editChatId', 'editRole', 'editPassword']);
+        $this->dispatch('alert', 'Данные сотрудника обновлены!');
         Flux::modals()->close();
     }
     #[Computed]

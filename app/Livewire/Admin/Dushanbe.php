@@ -23,6 +23,9 @@ class Dushanbe extends Component
     public $flightDates;
     public $user_code;
     public $user_id = null;
+    public $search = '';
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
     #[Computed]
     public function trackcodes()
     {
@@ -37,8 +40,40 @@ class Dushanbe extends Component
             $query->where('user_id', $this->user_id);
         }
 
-        return $query->orderByDesc('created_at')
+        return $query->orderBy($this->getSortField(), $this->getSortDirection())
             ->paginate(50);
+    }
+
+    protected function getSortField(): string
+    {
+        $allowed = ['created_at', 'code', 'user_id'];
+        return in_array($this->sortField, $allowed, true) ? $this->sortField : 'created_at';
+    }
+
+    protected function getSortDirection(): string
+    {
+        return $this->sortDirection === 'asc' ? 'asc' : 'desc';
+    }
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedUserCode(): void
+    {
+        $this->user_id = null;
+        $this->resetPage();
+    }
+
+    public function updatedSortField(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSortDirection(): void
+    {
+        $this->resetPage();
     }
 
     public function check_user()

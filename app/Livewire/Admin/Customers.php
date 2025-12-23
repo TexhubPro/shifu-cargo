@@ -13,8 +13,56 @@ class Customers extends Component
 {
     use WithPagination;
 
-    public $search = null;
-    public function updatedSearch(): void
+    public $nameSearch = '';
+    public $phoneSearch = '';
+    public $codeSearch = '';
+    public $sex = '';
+    public $dateFrom;
+    public $dateTo;
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
+    public $perPage = 25;
+    public function updatedNameSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPhoneSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedCodeSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSex(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDateFrom(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDateTo(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSortField(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSortDirection(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage(): void
     {
         $this->resetPage();
     }
@@ -23,24 +71,53 @@ class Customers extends Component
     {
         $query = User::query()
             ->where('role', 'customer')
+            ->select(['id', 'code', 'name', 'phone', 'sex', 'created_at'])
             ->withCount('trackcodes')
             ->withSum('orders as orders_sum_total', 'total');
 
-        if (!empty($this->search)) {
-            $query->where(function ($q) {
-                $q->where('code', 'like', '%' . $this->search . '%')
-                    ->orWhere('phone', 'like', '%' . $this->search . '%');
-            });
+        if (!empty($this->nameSearch)) {
+            $query->where('name', 'like', '%' . $this->nameSearch . '%');
         }
 
-        return $query->orderByDesc('created_at')
-            ->paginate(50);
+        if (!empty($this->phoneSearch)) {
+            $query->where('phone', 'like', '%' . $this->phoneSearch . '%');
+        }
+
+        if (!empty($this->codeSearch)) {
+            $query->where('code', 'like', '%' . $this->codeSearch . '%');
+        }
+
+        if (!empty($this->sex)) {
+            $query->where('sex', $this->sex);
+        }
+
+        if (!empty($this->dateFrom)) {
+            $query->where('created_at', '>=', $this->dateFrom . ' 00:00:00');
+        }
+
+        if (!empty($this->dateTo)) {
+            $query->where('created_at', '<=', $this->dateTo . ' 23:59:59');
+        }
+
+        return $query->orderBy($this->getSortField(), $this->getSortDirection())
+            ->paginate($this->perPage);
     }
 
     public function check_user() {}
     public function delete($id)
     {
         User::find($id)->delete();
+    }
+
+    protected function getSortField(): string
+    {
+        $allowed = ['created_at', 'name', 'code', 'trackcodes_count', 'orders_sum_total'];
+        return in_array($this->sortField, $allowed, true) ? $this->sortField : 'created_at';
+    }
+
+    protected function getSortDirection(): string
+    {
+        return $this->sortDirection === 'asc' ? 'asc' : 'desc';
     }
     public function render()
     {

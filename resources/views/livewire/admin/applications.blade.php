@@ -1,9 +1,9 @@
-<div>
-    <div class="mb-5">
+<div class="space-y-6">
+    <div class="flex flex-col gap-2">
         <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
                 <flux:heading class="text-xl">Заявки на доставку</flux:heading>
-                <flux:text class="text-base" variant="subtle">Обработка и подтверждение заявок на доставку грузов клиентам.
+                <flux:text class="text-sm" variant="subtle">Обработка и подтверждение заявок на доставку грузов клиентам.
                 </flux:text>
             </div>
             <flux:button color="red" variant="outline" wire:click="cleanInvalid" wire:confirm>
@@ -11,8 +11,50 @@
             </flux:button>
         </div>
     </div>
-    <div class="bg-white p-2 rounded-xl border border-gray-200 space-y-3">
-        <flux:table :paginate="$this->orders" class="">
+
+    <div class="bg-white rounded-2xl p-4 lg:p-6 shadow-sm ring-1 ring-gray-100 space-y-4">
+        <div class="flex flex-col gap-1">
+            <flux:heading>Фильтры и сортировка</flux:heading>
+            <flux:text>Поиск заявок и управление списком.</flux:text>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <flux:input icon="user" placeholder="Имя клиента" clearable label="Поиск по имени"
+                wire:model.live.debounce.400ms="searchName" />
+            <flux:input icon="phone" placeholder="Телефон" clearable label="Поиск по телефону"
+                wire:model.live.debounce.400ms="searchPhone" />
+            <flux:select label="Статус" wire:model.live="status" placeholder="Все статусы">
+                <flux:select.option value="">Все статусы</flux:select.option>
+                <flux:select.option value="В ожидании">В ожидании</flux:select.option>
+                <flux:select.option value="Собрано">Собрано</flux:select.option>
+                <flux:select.option value="У доставщика">У доставщика</flux:select.option>
+                <flux:select.option value="Доставлено">Доставлено</flux:select.option>
+                <flux:select.option value="Отменено">Отменено</flux:select.option>
+            </flux:select>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+
+            <flux:date-picker label="Дата от" wire:model.live="dateFrom" />
+            <flux:date-picker label="Дата до" wire:model.live="dateTo" />
+            <flux:select label="Сортировка" wire:model.live="sortField">
+                <flux:select.option value="created_at">По дате</flux:select.option>
+                <flux:select.option value="name">По имени</flux:select.option>
+                <flux:select.option value="status">По статусу</flux:select.option>
+                <flux:select.option value="phone">По телефону</flux:select.option>
+            </flux:select>
+            <flux:select label="Направление" wire:model.live="sortDirection">
+                <flux:select.option value="desc">Сначала новые</flux:select.option>
+                <flux:select.option value="asc">Сначала старые</flux:select.option>
+            </flux:select>
+            <flux:select label="На странице" wire:model.live="perPage" class="w-full">
+                <flux:select.option value="25">25</flux:select.option>
+                <flux:select.option value="50">50</flux:select.option>
+                <flux:select.option value="100">100</flux:select.option>
+            </flux:select>
+        </div>
+
+        <flux:table :paginate="$this->orders">
             <flux:table.columns>
                 <flux:table.column>Клиент</flux:table.column>
                 <flux:table.column>Номер тел</flux:table.column>

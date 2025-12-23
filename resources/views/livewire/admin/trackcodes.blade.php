@@ -1,22 +1,51 @@
-<div>
-    <div class="mb-5">
+<div class="space-y-6">
+    <div class="flex flex-col gap-2">
         <flux:heading class="text-xl">Трек-коды</flux:heading>
-        <flux:text class="text-base" variant="subtle">Просмотр, добавление и обновление трек-кодов клиентов.</flux:text>
+        <flux:text class="text-sm" variant="subtle">Просмотр, фильтрация и обновление трек-кодов клиентов.</flux:text>
     </div>
-    <div class="bg-white p-2 rounded-xl border border-gray-200 space-y-3">
-        <div>
+
+    <div class="bg-white rounded-2xl p-4 lg:p-6 shadow-sm ring-1 ring-gray-100 space-y-4">
+        <div class="flex flex-col gap-1">
             <flux:heading>Проверка трек-кодов</flux:heading>
-            <flux:text>
-                Проверьте статус трек-кода или измените его при необходимости.
-            </flux:text>
+            <flux:text>Отслеживайте статус и управляйте списком трек-кодов.</flux:text>
         </div>
-        <form class="space-y-3" wire:submit.prevent="search_form">
-            <flux:input icon="qr-code" placeholder="Сканируйте штрихкод или введите трек-код вручную" clearable
-                label="Трек-код" wire:model="search" />
-            <flux:button variant="primary" color="lime" class="w-full" type="submit">
-                Проверить
-            </flux:button>
+
+        <form class="space-y-4 grid" wire:submit.prevent="search_form">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                <flux:input icon="qr-code" placeholder="Введите трек-код" clearable label="Поиск по трек-коду"
+                    wire:model.live.debounce.400ms="search" />
+                <flux:input icon="user-circle" placeholder="Код клиента" clearable label="Поиск по коду клиента"
+                    wire:model.live.debounce.400ms="user_code" />
+                <flux:select label="Статус" wire:model.live="status" placeholder="Все статусы">
+                    <flux:select.option value="">Все статусы</flux:select.option>
+                    <flux:select.option value="В ожидании">В ожидании</flux:select.option>
+                    <flux:select.option value="Получено в Иву">Получено в Иву</flux:select.option>
+                    <flux:select.option value="В пункте выдачи">В пункте выдачи</flux:select.option>
+                    <flux:select.option value="Получено">Получено</flux:select.option>
+                </flux:select>
+                <flux:select label="Сортировка" wire:model.live="sortField">
+                    <flux:select.option value="created_at">По дате</flux:select.option>
+                    <flux:select.option value="code">По трек-коду</flux:select.option>
+                    <flux:select.option value="status">По статусу</flux:select.option>
+                    <flux:select.option value="user_id">По клиенту</flux:select.option>
+                </flux:select>
+                <flux:select label="Направление" wire:model.live="sortDirection" class="w-full">
+                    <flux:select.option value="desc">Сначала новые</flux:select.option>
+                    <flux:select.option value="asc">Сначала старые</flux:select.option>
+                </flux:select>
+            </div>
+            <div class="flex items-center gap-2 justify-between">
+                <flux:button variant="primary" color="lime" class="w-full sm:w-auto" type="button"
+                    wire:click="checkUser">
+                    Применить фильтр
+                </flux:button>
+                <span class="text-xs text-gray-500 bg-slate-50 px-3 py-2 rounded-xl">
+                    Всего: {{ $this->trackcodes->total() }}
+                </span>
+            </div>
+
         </form>
+
         <flux:table :paginate="$this->trackcodes" class="mt-5">
             <flux:table.columns>
                 <flux:table.column>Трек-код</flux:table.column>
@@ -76,5 +105,4 @@
             </flux:table.rows>
         </flux:table>
     </div>
-
 </div>

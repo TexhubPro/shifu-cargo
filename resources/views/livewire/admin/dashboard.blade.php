@@ -241,12 +241,147 @@
             </div>
         </div>
 
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+            <div class="xl:col-span-2 bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-700">Деньги по дням</p>
+                        <p class="text-xs text-gray-400">Выручка и расходы за период</p>
+                    </div>
+                    <div class="flex items-center gap-3 text-xs text-gray-500">
+                        <div class="flex items-center gap-2">
+                            <span class="h-2.5 w-2.5 rounded-full bg-indigo-500"></span>
+                            Выручка
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="h-2.5 w-2.5 rounded-full bg-amber-500"></span>
+                            Расходы
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-5">
+                    @php
+                        $seriesA = $ordersDaily;
+                        $seriesB = $expensesDaily;
+                        $width = 640;
+                        $height = 220;
+                        $padding = 18;
+                        $count = max(count($seriesA), count($seriesB));
+                        $maxA = $seriesA ? max($seriesA) : 0;
+                        $maxB = $seriesB ? max($seriesB) : 0;
+                        $max = max(1, $maxA, $maxB);
+                        $step = $count > 1 ? ($width - 2 * $padding) / ($count - 1) : 0;
+                        $pointsA = [];
+                        $pointsB = [];
+                        for ($i = 0; $i < $count; $i++) {
+                            $x = $padding + $step * $i;
+                            $valA = (float) ($seriesA[$i] ?? 0);
+                            $valB = (float) ($seriesB[$i] ?? 0);
+                            $pointsA[] = $x . ',' . ($height - $padding - ($valA / $max) * ($height - 2 * $padding));
+                            $pointsB[] = $x . ',' . ($height - $padding - ($valB / $max) * ($height - 2 * $padding));
+                        }
+                        $polylineA = implode(' ', $pointsA);
+                        $polylineB = implode(' ', $pointsB);
+                        $baseline = $height - $padding;
+                        $xStart = $count ? $padding : 0;
+                        $xEnd = $count ? $padding + $step * ($count - 1) : 0;
+                        $areaA = $count
+                            ? 'M ' .
+                                $pointsA[0] .
+                                ' L ' .
+                                implode(' L ', $pointsA) .
+                                ' L ' .
+                                $xEnd .
+                                ' ' .
+                                $baseline .
+                                ' L ' .
+                                $xStart .
+                                ' ' .
+                                $baseline .
+                                ' Z'
+                            : '';
+                    @endphp
+                    <svg viewBox="0 0 {{ $width }} {{ $height }}" class="w-full h-56">
+                        <defs>
+                            <linearGradient id="moneyGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#6366f1" stop-opacity="0.22" />
+                                <stop offset="100%" stop-color="#6366f1" stop-opacity="0" />
+                            </linearGradient>
+                        </defs>
+                        <g stroke="#e5e7eb" stroke-width="1">
+                            <line x1="{{ $padding }}" y1="{{ $padding }}" x2="{{ $width - $padding }}"
+                                y2="{{ $padding }}" />
+                            <line x1="{{ $padding }}" y1="{{ $height / 2 }}" x2="{{ $width - $padding }}"
+                                y2="{{ $height / 2 }}" />
+                            <line x1="{{ $padding }}" y1="{{ $height - $padding }}"
+                                x2="{{ $width - $padding }}" y2="{{ $height - $padding }}" />
+                        </g>
+                        @if ($areaA)
+                            <path d="{{ $areaA }}" fill="url(#moneyGradient)" />
+                        @endif
+                        <polyline points="{{ $polylineA }}" fill="none" stroke="#6366f1" stroke-width="3"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <polyline points="{{ $polylineB }}" fill="none" stroke="#f59e0b" stroke-width="3"
+                            stroke-dasharray="6 6" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <div class="mt-3 text-xs text-gray-400 flex justify-between">
+                    <span>{{ $chartLabels[0] ?? '' }}</span>
+                    <span>{{ \Illuminate\Support\Arr::last($chartLabels) ?? '' }}</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-700">Ключевые показатели</p>
+                        <p class="text-xs text-gray-400">Быстрый обзор</p>
+                    </div>
+                    <span class="text-xs text-slate-500 bg-slate-50 px-3 py-1 rounded-full">за период</span>
+                </div>
+                <div class="mt-5 space-y-3">
+                    <div class="rounded-xl border border-slate-100 p-4">
+                        <div class="text-xs text-gray-500">Доставка</div>
+                        <div class="mt-2 text-lg font-semibold text-gray-900">{{ $deliveryTotal }} с</div>
+                        <div class="mt-3 h-1.5 w-full bg-rose-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-rose-500"
+                                style="width: {{ max(8, round(($deliveryTotal / $maxKpi) * 100)) }}%"></div>
+                        </div>
+                    </div>
+                    <div class="rounded-xl border border-slate-100 p-4">
+                        <div class="text-xs text-gray-500">Чистая прибыль</div>
+                        <div class="mt-2 text-lg font-semibold text-gray-900">{{ $profitTotal }} с</div>
+                        <div class="mt-3 h-1.5 w-full bg-emerald-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-emerald-500"
+                                style="width: {{ max(8, round(($profitTotal / $maxKpi) * 100)) }}%"></div>
+                        </div>
+                    </div>
+                    <flux:modal.trigger name="dushanbe">
+                        <div class="rounded-xl border border-slate-100 p-4">
+                            <div class="text-xs text-gray-500">Затраты Душанбе</div>
+                            <div class="mt-2 text-lg font-semibold text-gray-900">
+                                {{ $expensesDushanbe->sum('total') }} с
+                            </div>
+                        </div>
+                    </flux:modal.trigger>
+                    <flux:modal.trigger name="ivu">
+                        <div class="rounded-xl border border-slate-100 p-4">
+                            <div class="text-xs text-gray-500">Затраты Иву</div>
+                            <div class="mt-2 text-lg font-semibold text-gray-900">
+                                {{ $expensesIvu->sum('total') }} с
+                            </div>
+                        </div>
+                    </flux:modal.trigger>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm font-semibold text-gray-700">Трек-коды по дням</p>
-                        <p class="text-xs text-gray-400 mt-1">Получено в Иву</p>
+                        <p class="text-xs text-gray-400">Получено в Иву</p>
                     </div>
                     <span class="text-xs text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
                         {{ array_sum($trackcodesDaily) }} шт
@@ -255,11 +390,12 @@
                 <div class="mt-4">
                     @php
                         $data = $trackcodesDaily;
-                        $width = 320;
-                        $height = 120;
-                        $padding = 12;
+                        $width = 480;
+                        $height = 180;
+                        $padding = 16;
                         $count = count($data);
-                        $max = max(1, ...$data);
+                        $max = $data ? max($data) : 0;
+                        $max = max(1, $max);
                         $step = $count > 1 ? ($width - 2 * $padding) / ($count - 1) : 0;
                         $points = [];
                         foreach ($data as $i => $value) {
@@ -268,9 +404,9 @@
                             $points[] = $x . ',' . $y;
                         }
                         $polyline = implode(' ', $points);
+                        $baseline = $height - $padding;
                         $xStart = $count ? $padding : 0;
                         $xEnd = $count ? $padding + $step * ($count - 1) : 0;
-                        $baseline = $height - $padding;
                         $area = $count
                             ? 'M ' .
                                 $points[0] .
@@ -287,10 +423,9 @@
                                 ' Z'
                             : '';
                     @endphp
-                    <svg viewBox="0 0 {{ $width }} {{ $height }}" class="w-full h-28">
+                    <svg viewBox="0 0 {{ $width }} {{ $height }}" class="w-full h-44">
                         <defs>
-                            <linearGradient id="trackcodesGradient" x1="0" y1="0" x2="0"
-                                y2="1">
+                            <linearGradient id="trackcodesGradient" x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="0%" stop-color="#10b981" stop-opacity="0.25" />
                                 <stop offset="100%" stop-color="#10b981" stop-opacity="0" />
                             </linearGradient>
@@ -311,140 +446,8 @@
             <div class="bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-semibold text-gray-700">Выручка по дням</p>
-                        <p class="text-xs text-gray-400 mt-1">Сумма заказов</p>
-                    </div>
-                    <span class="text-xs text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
-                        {{ array_sum($ordersDaily) }} c
-                    </span>
-                </div>
-                <div class="mt-4">
-                    @php
-                        $data = $ordersDaily;
-                        $width = 320;
-                        $height = 120;
-                        $padding = 12;
-                        $count = count($data);
-                        $max = max(1, ...$data);
-                        $step = $count > 1 ? ($width - 2 * $padding) / ($count - 1) : 0;
-                        $points = [];
-                        foreach ($data as $i => $value) {
-                            $x = $padding + $step * $i;
-                            $y = $height - $padding - ($value / $max) * ($height - 2 * $padding);
-                            $points[] = $x . ',' . $y;
-                        }
-                        $polyline = implode(' ', $points);
-                        $xStart = $count ? $padding : 0;
-                        $xEnd = $count ? $padding + $step * ($count - 1) : 0;
-                        $baseline = $height - $padding;
-                        $area = $count
-                            ? 'M ' .
-                                $points[0] .
-                                ' L ' .
-                                implode(' L ', $points) .
-                                ' L ' .
-                                $xEnd .
-                                ' ' .
-                                $baseline .
-                                ' L ' .
-                                $xStart .
-                                ' ' .
-                                $baseline .
-                                ' Z'
-                            : '';
-                    @endphp
-                    <svg viewBox="0 0 {{ $width }} {{ $height }}" class="w-full h-28">
-                        <defs>
-                            <linearGradient id="ordersGradient" x1="0" y1="0" x2="0"
-                                y2="1">
-                                <stop offset="0%" stop-color="#6366f1" stop-opacity="0.25" />
-                                <stop offset="100%" stop-color="#6366f1" stop-opacity="0" />
-                            </linearGradient>
-                        </defs>
-                        @if ($area)
-                            <path d="{{ $area }}" fill="url(#ordersGradient)" />
-                        @endif
-                        <polyline points="{{ $polyline }}" fill="none" stroke="#6366f1" stroke-width="3"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </div>
-                <div class="mt-2 text-xs text-gray-400 flex justify-between">
-                    <span>{{ $chartLabels[0] ?? '' }}</span>
-                    <span>{{ \Illuminate\Support\Arr::last($chartLabels) ?? '' }}</span>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold text-gray-700">Расходы по дням</p>
-                        <p class="text-xs text-gray-400 mt-1">Сумма расходов</p>
-                    </div>
-                    <span class="text-xs text-amber-600 bg-amber-50 px-3 py-1 rounded-full">
-                        {{ array_sum($expensesDaily) }} c
-                    </span>
-                </div>
-                <div class="mt-4">
-                    @php
-                        $data = $expensesDaily;
-                        $width = 320;
-                        $height = 120;
-                        $padding = 12;
-                        $count = count($data);
-                        $max = max(1, ...$data);
-                        $step = $count > 1 ? ($width - 2 * $padding) / ($count - 1) : 0;
-                        $points = [];
-                        foreach ($data as $i => $value) {
-                            $x = $padding + $step * $i;
-                            $y = $height - $padding - ($value / $max) * ($height - 2 * $padding);
-                            $points[] = $x . ',' . $y;
-                        }
-                        $polyline = implode(' ', $points);
-                        $xStart = $count ? $padding : 0;
-                        $xEnd = $count ? $padding + $step * ($count - 1) : 0;
-                        $baseline = $height - $padding;
-                        $area = $count
-                            ? 'M ' .
-                                $points[0] .
-                                ' L ' .
-                                implode(' L ', $points) .
-                                ' L ' .
-                                $xEnd .
-                                ' ' .
-                                $baseline .
-                                ' L ' .
-                                $xStart .
-                                ' ' .
-                                $baseline .
-                                ' Z'
-                            : '';
-                    @endphp
-                    <svg viewBox="0 0 {{ $width }} {{ $height }}" class="w-full h-28">
-                        <defs>
-                            <linearGradient id="expensesGradient" x1="0" y1="0" x2="0"
-                                y2="1">
-                                <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.25" />
-                                <stop offset="100%" stop-color="#f59e0b" stop-opacity="0" />
-                            </linearGradient>
-                        </defs>
-                        @if ($area)
-                            <path d="{{ $area }}" fill="url(#expensesGradient)" />
-                        @endif
-                        <polyline points="{{ $polyline }}" fill="none" stroke="#f59e0b" stroke-width="3"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </div>
-                <div class="mt-2 text-xs text-gray-400 flex justify-between">
-                    <span>{{ $chartLabels[0] ?? '' }}</span>
-                    <span>{{ \Illuminate\Support\Arr::last($chartLabels) ?? '' }}</span>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-semibold text-gray-700">Новые клиенты</p>
-                        <p class="text-xs text-gray-400 mt-1">Регистрация по дням</p>
+                        <p class="text-sm font-semibold text-gray-700">Новые клиенты по дням</p>
+                        <p class="text-xs text-gray-400">Динамика регистраций</p>
                     </div>
                     <span class="text-xs text-sky-600 bg-sky-50 px-3 py-1 rounded-full">
                         {{ array_sum($clientsDaily) }} шт
@@ -453,51 +456,30 @@
                 <div class="mt-4">
                     @php
                         $data = $clientsDaily;
-                        $width = 320;
-                        $height = 120;
-                        $padding = 12;
+                        $width = 480;
+                        $height = 180;
+                        $padding = 14;
                         $count = count($data);
-                        $max = max(1, ...$data);
-                        $step = $count > 1 ? ($width - 2 * $padding) / ($count - 1) : 0;
-                        $points = [];
-                        foreach ($data as $i => $value) {
-                            $x = $padding + $step * $i;
-                            $y = $height - $padding - ($value / $max) * ($height - 2 * $padding);
-                            $points[] = $x . ',' . $y;
-                        }
-                        $polyline = implode(' ', $points);
-                        $xStart = $count ? $padding : 0;
-                        $xEnd = $count ? $padding + $step * ($count - 1) : 0;
-                        $baseline = $height - $padding;
-                        $area = $count
-                            ? 'M ' .
-                                $points[0] .
-                                ' L ' .
-                                implode(' L ', $points) .
-                                ' L ' .
-                                $xEnd .
-                                ' ' .
-                                $baseline .
-                                ' L ' .
-                                $xStart .
-                                ' ' .
-                                $baseline .
-                                ' Z'
-                            : '';
+                        $max = $data ? max($data) : 0;
+                        $max = max(1, $max);
+                        $gap = 6;
+                        $barWidth = $count > 0
+                            ? max(2, ($width - 2 * $padding - ($count - 1) * $gap) / $count)
+                            : 0;
                     @endphp
-                    <svg viewBox="0 0 {{ $width }} {{ $height }}" class="w-full h-28">
-                        <defs>
-                            <linearGradient id="clientsGradient" x1="0" y1="0" x2="0"
-                                y2="1">
-                                <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.25" />
-                                <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0" />
-                            </linearGradient>
-                        </defs>
-                        @if ($area)
-                            <path d="{{ $area }}" fill="url(#clientsGradient)" />
-                        @endif
-                        <polyline points="{{ $polyline }}" fill="none" stroke="#0ea5e9" stroke-width="3"
-                            stroke-linecap="round" stroke-linejoin="round" />
+                    <svg viewBox="0 0 {{ $width }} {{ $height }}" class="w-full h-44">
+                        <g>
+                            @for ($i = 0; $i < $count; $i++)
+                                @php
+                                    $value = (float) ($data[$i] ?? 0);
+                                    $barHeight = ($value / $max) * ($height - 2 * $padding);
+                                    $x = $padding + $i * ($barWidth + $gap);
+                                    $y = $height - $padding - $barHeight;
+                                @endphp
+                                <rect x="{{ $x }}" y="{{ $y }}" width="{{ $barWidth }}"
+                                    height="{{ $barHeight }}" rx="6" fill="#0ea5e9" opacity="0.8" />
+                            @endfor
+                        </g>
                     </svg>
                 </div>
                 <div class="mt-2 text-xs text-gray-400 flex justify-between">
@@ -505,102 +487,6 @@
                     <span>{{ \Illuminate\Support\Arr::last($chartLabels) ?? '' }}</span>
                 </div>
             </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-            <div class="bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-500">Заработок от доставки</p>
-                        <p class="text-2xl font-semibold text-gray-900 mt-2">{{ $deliveryTotal }} с</p>
-                    </div>
-                    <div class="h-10 w-10 rounded-xl bg-rose-50 text-rose-600 inline-flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                            <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
-                            <path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5" />
-                            <path d="M3 9l4 0" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="mt-4 h-1.5 w-full bg-rose-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-rose-500"
-                        style="width: {{ max(8, round(($deliveryTotal / $maxKpi) * 100)) }}%"></div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-500">Чистая прибыль</p>
-                        <p class="text-2xl font-semibold text-gray-900 mt-2">{{ $profitTotal }} с</p>
-                    </div>
-                    <div
-                        class="h-10 w-10 rounded-xl bg-emerald-50 text-emerald-600 inline-flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M14 3v4a1 1 0 0 0 1 1h4" />
-                            <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
-                            <path d="M9 17l0 -5" />
-                            <path d="M12 17l0 -1" />
-                            <path d="M15 17l0 -3" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="mt-4 h-1.5 w-full bg-emerald-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-emerald-500"
-                        style="width: {{ max(8, round(($profitTotal / $maxKpi) * 100)) }}%"></div>
-                </div>
-            </div>
-
-            <flux:modal.trigger name="dushanbe">
-                <div class="bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Затраты Душанбе</p>
-                            <p class="text-2xl font-semibold text-gray-900 mt-2">{{ $expensesDushanbe->sum('total') }}
-                                с</p>
-                        </div>
-                        <div
-                            class="h-10 w-10 rounded-xl bg-pink-50 text-pink-600 inline-flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M3 21v-13l9 -4l9 4v13" />
-                                <path d="M13 13h4v8h-10v-6h6" />
-                                <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </flux:modal.trigger>
-
-            <flux:modal.trigger name="ivu">
-                <div class="bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500">Затраты Иву</p>
-                            <p class="text-2xl font-semibold text-gray-900 mt-2">{{ $expensesIvu->sum('total') }} с
-                            </p>
-                        </div>
-                        <div
-                            class="h-10 w-10 rounded-xl bg-sky-50 text-sky-600 inline-flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="size-5" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M3 21v-13l9 -4l9 4v13" />
-                                <path d="M13 13h4v8h-10v-6h6" />
-                                <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </flux:modal.trigger>
         </div>
     @endif
 

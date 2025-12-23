@@ -19,6 +19,13 @@ class Expences extends Component
     public $hidden = false;
     public $description;
     public $data;
+    public $search = '';
+    public $warehouseFilter = '';
+    public $dateFrom;
+    public $dateTo;
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
+    public $perPage = 25;
     // Правила валидации
     protected $rules = [
         'warehouse' => 'required|string',
@@ -75,12 +82,76 @@ class Expences extends Component
     {
         $query = ModelsExpences::query();
 
+        if (!empty($this->search)) {
+            $query->where(function ($q) {
+                $q->where('content', 'like', '%' . $this->search . '%')
+                    ->orWhere('total', 'like', '%' . $this->search . '%');
+            });
+        }
 
-        return $query->orderByDesc('created_at')
-            ->paginate(50);
+        if (!empty($this->warehouseFilter)) {
+            $query->where('sklad', $this->warehouseFilter);
+        }
+
+        if (!empty($this->dateFrom)) {
+            $query->where('data', '>=', $this->dateFrom . ' 00:00:00');
+        }
+
+        if (!empty($this->dateTo)) {
+            $query->where('data', '<=', $this->dateTo . ' 23:59:59');
+        }
+
+        return $query->orderBy($this->getSortField(), $this->getSortDirection())
+            ->paginate($this->perPage);
     }
     public function render()
     {
         return view('livewire.admin.expences');
+    }
+
+    protected function getSortField(): string
+    {
+        $allowed = ['created_at', 'total', 'sklad', 'data'];
+        return in_array($this->sortField, $allowed, true) ? $this->sortField : 'created_at';
+    }
+
+    protected function getSortDirection(): string
+    {
+        return $this->sortDirection === 'asc' ? 'asc' : 'desc';
+    }
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedWarehouseFilter(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDateFrom(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedDateTo(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSortField(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSortDirection(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPerPage(): void
+    {
+        $this->resetPage();
     }
 }

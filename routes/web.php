@@ -22,7 +22,9 @@ use App\Http\Middleware\Deliver as MidDeliver;
 use App\Livewire\Admin\Analitic;
 use App\Livewire\Admin\Faqs as AdminFaqs;
 use App\Livewire\Admin\Orders;
+use App\Livewire\Admin\OrderShow;
 use App\Livewire\Admin\RegisterPack;
+use App\Livewire\Admin\Profile as AdminProfile;
 use App\Livewire\Applicant;
 use App\Livewire\Login;
 use App\Livewire\Manager;
@@ -84,8 +86,10 @@ Route::middleware(['auth', Admin::class])->prefix('admin')->name('admin.')->grou
     Route::get('/expences', Expences::class)->name('expences');
     Route::get('/faqs', AdminFaqs::class)->name('faqs');
     Route::get('/orders', Orders::class)->name('orders');
+    Route::get('/orders/{order}', OrderShow::class)->name('orders.show');
     Route::get('/analitic', Analitic::class)->name('analitic');
     Route::get('/register-pack', RegisterPack::class)->name('register-pack');
+    Route::get('/admin-profile', AdminProfile::class)->name('admin-profile');
 });
 Route::middleware(['auth', Cashier::class])->group(function () {
     Route::get('/cashier', Chashdesk::class)->name('cashier');

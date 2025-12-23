@@ -26,6 +26,13 @@
                         </div>
                     </button>
                 @endforeach
+                @if ($chatsTotal > ($chats?->count() ?? 0))
+                    <div class="pt-2">
+                        <flux:button variant="outline" class="w-full" wire:click="loadMoreChats">
+                            Загрузить еще 20
+                        </flux:button>
+                    </div>
+                @endif
             </div>
             <div
                 class="h-full {{ $active_chat ? ' ' : ' hidden lg:block' }} bg-neutral-100 rounded-lg col-span-2 p-2
