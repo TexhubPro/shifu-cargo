@@ -1,5 +1,5 @@
 <div>
-    <div class="flex gap-2 justify-between items-center">
+    {{-- <div class="flex gap-2 justify-between items-center">
         <div>
             <flux:heading>Оформить доставку</flux:heading>
             <flux:text>Заполните данные и мы организуем доставку вашего груза</flux:text>
@@ -8,7 +8,7 @@
             <flux:button variant="primary" size="sm" color="lime">Заказать</flux:button>
         </flux:modal.trigger>
     </div>
-    @if($applications->count() > 0)
+    @if ($applications->count() > 0)
     <flux:table :paginate="$applications">
         <flux:table.columns>
             <flux:table.column>#</flux:table.column>
@@ -121,5 +121,26 @@
                 </div>
             </form>
         </div>
-    </flux:modal>
+    </flux:modal> --}}
+    <div
+        class="rounded-2xl border border-amber-200/50 bg-gradient-to-br from-amber-50 via-white to-amber-100/40 p-5 shadow-sm">
+        <div class="flex items-start gap-3">
+            <div
+                class="flex size-10 items-center justify-center rounded-full bg-amber-100 text-amber-700 ring-1 ring-amber-200">
+                ⚠️
+            </div>
+            <div class="space-y-2">
+                <div class="text-base font-semibold text-amber-900">Заказать доставку временно недоступно</div>
+                <div class="text-sm leading-6 text-amber-900/80">
+                    Сейчас заказ доставки временно недоступен. В ближайшее время сервис снова заработает, мы обязательно
+                    сообщим об этом.
+                </div>
+                <a class="inline-flex items-center gap-2 text-sm font-semibold text-amber-700 hover:text-amber-800"
+                    href="https://www.instagram.com/cargo_shifu" target="_blank" rel="noopener noreferrer">
+                    Написать в Instagram
+                    <span aria-hidden="true">→</span>
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
