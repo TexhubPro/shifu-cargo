@@ -635,17 +635,6 @@
                     });
 
                     if (!response.ok) {
-                        let message = 'Ошибка оформления заказа.';
-                        try {
-                            const data = await response.json();
-                            const firstError = data?.errors ? Object.values(data.errors)[0]?.[0] : null;
-                            if (firstError) {
-                                message = firstError;
-                            }
-                        } catch (error) {
-                            // ignore json parse errors
-                        }
-                        alert(message);
                         unlockSubmit();
                         return;
                     }
@@ -653,7 +642,6 @@
                     resetOrderForm();
                     unlockSubmit();
                 } catch (error) {
-                    alert('Сбой сети. Попробуйте ещё раз.');
                     unlockSubmit();
                 }
             };
