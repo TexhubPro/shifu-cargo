@@ -14,10 +14,19 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-power">
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-cash-register">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M7 6a7.75 7.75 0 1 0 10 0" />
-                                    <path d="M12 4l0 8" />
+                                    <path
+                                        d="M21 15h-2.5c-.398 0 -.779 .158 -1.061 .439c-.281 .281 -.439 .663 -.439 1.061c0 .398 .158 .779 .439 1.061c.281 .281 .663 .439 1.061 .439h1c.398 0 .779 .158 1.061 .439c.281 .281 .439 .663 .439 1.061c0 .398 -.158 .779 -.439 1.061c-.281 .281 -.663 .439 -1.061 .439h-2.5" />
+                                    <path d="M19 21v1m0 -8v1" />
+                                    <path
+                                        d="M13 21h-7c-.53 0 -1.039 -.211 -1.414 -.586c-.375 -.375 -.586 -.884 -.586 -1.414v-10c0 -.53 .211 -1.039 .586 -1.414c.375 -.375 .884 -.586 1.414 -.586h2m12 3.12v-1.12c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-2" />
+                                    <path
+                                        d="M16 10v-6c0 -.53 -.211 -1.039 -.586 -1.414c-.375 -.375 -.884 -.586 -1.414 -.586h-4c-.53 0 -1.039 .211 -1.414 .586c-.375 .375 -.586 .884 -.586 1.414v6m8 0h-8m8 0h1m-9 0h-1" />
+                                    <path d="M8 14v.01" />
+                                    <path d="M8 17v.01" />
+                                    <path d="M12 13.99v.01" />
+                                    <path d="M12 17v.01" />
                                 </svg></span>
                             <div class="flex flex-col leading-tight">
                                 <span class="font-semibold text-white whitespace-break-spaces">Добавить расходы</span>
@@ -31,10 +40,14 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-power">
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-users-group">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M7 6a7.75 7.75 0 1 0 10 0" />
-                                    <path d="M12 4l0 8" />
+                                    <path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                    <path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1" />
+                                    <path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                    <path d="M17 10h2a2 2 0 0 1 2 2v1" />
+                                    <path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                    <path d="M3 13v-1a2 2 0 0 1 2 -2h2" />
                                 </svg></span>
                             <div class="flex flex-col leading-tight">
                                 <span class="font-semibold text-white whitespace-break-spaces">Выбрать из очереди</span>
@@ -48,10 +61,12 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-power">
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-file-dollar">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M7 6a7.75 7.75 0 1 0 10 0" />
-                                    <path d="M12 4l0 8" />
+                                    <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                                    <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" />
+                                    <path d="M14 11h-2.5a1.5 1.5 0 0 0 0 3h1a1.5 1.5 0 0 1 0 3h-2.5" />
+                                    <path d="M12 17v1m0 -8v1" />
                                 </svg></span>
                             <div class="flex flex-col leading-tight">
                                 <span class="font-semibold text-white whitespace-break-spaces">Курс валюты</span>
@@ -63,10 +78,15 @@
                         <span class=" text-white p-2 bg-white/50 rounded-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-power">
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-device-analytics">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M7 6a7.75 7.75 0 1 0 10 0" />
-                                <path d="M12 4l0 8" />
+                                <path
+                                    d="M3 4m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1z" />
+                                <path d="M7 20l10 0" />
+                                <path d="M9 16l0 4" />
+                                <path d="M15 16l0 4" />
+                                <path d="M8 12l3 -3l2 2l3 -3" />
                             </svg></span>
                         <div class="flex flex-col leading-tight">
                             <span class="font-semibold text-white whitespace-break-spaces">Отчёты кассы</span>
