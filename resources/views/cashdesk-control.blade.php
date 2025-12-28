@@ -10,7 +10,7 @@
                     <button id="btn-add-expense" aria-keyshortcuts="Shift+Alt+E" type="button"
                         class="rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all flex items-center gap-3 text-left p-2 text-white">
                         <div class="flex items-center gap-3 text-left">
-                            <span class=" text-white p-2 bg-white/50 rounded-lg">
+                            <span class=" text-white p-2 bg-white/20 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round"
@@ -36,7 +36,7 @@
                     <button id="btn-open-queue" aria-keyshortcuts="Shift+Alt+Q" type="button"
                         class="rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all flex items-center gap-3 text-left p-2 text-white">
                         <div class="flex items-center gap-3 text-left">
-                            <span class=" text-white p-2 bg-white/50 rounded-lg">
+                            <span class=" text-white p-2 bg-white/20 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round"
@@ -57,7 +57,7 @@
                     <button id="btn-currency-modal" aria-keyshortcuts="Shift+Alt+C" type="button"
                         class="rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all flex items-center gap-3 text-left p-2 text-white">
                         <div class="flex items-center gap-3 text-left">
-                            <span class=" text-white p-2 bg-white/50 rounded-lg">
+                            <span class=" text-white p-2 bg-white/20 rounded-lg">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round"
@@ -75,7 +75,7 @@
                     </button>
                     <a id="btn-reports-modal" aria-keyshortcuts="Shift+Alt+R" href="{{ route('cashier.reports') }}"
                         class="rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all flex items-center gap-3 text-left p-2 text-white">
-                        <span class=" text-white p-2 bg-white/50 rounded-lg">
+                        <span class=" text-white p-2 bg-white/20 rounded-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round"
@@ -94,7 +94,7 @@
                     </a>
                     <a href="{{ route('logout') }}"
                         class="rounded-xl bg-red-500 border border-white/30 w-full shadow-md hover:bg-red-400 transition-all flex items-center gap-3 text-left p-2 text-white">
-                        <span class=" text-white p-2 bg-white/50 rounded-lg">
+                        <span class=" text-white p-2 bg-white/20 rounded-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-power">
