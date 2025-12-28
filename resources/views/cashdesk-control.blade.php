@@ -92,13 +92,13 @@
                                     </p>
                                 </div>
                                 <div class="flex items-center gap-1">
-                                    <form method="GET" action="{{ route('cashdesk-control.held.load', $held) }}">
+                                    <form method="GET" action="{{ route('cashier.held.load', $held) }}">
                                         <button type="submit"
                                             class="px-2 py-1 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 transition">
                                             ✓
                                         </button>
                                     </form>
-                                    <form method="POST" action="{{ route('cashdesk-control.held.delete', $held) }}">
+                                    <form method="POST" action="{{ route('cashier.held.delete', $held) }}">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
@@ -113,7 +113,7 @@
                         @endforelse
                     </div>
                 </div>
-                <form method="POST" action="{{ route('cashdesk-control.order') }}" class="col-span-2"
+                <form method="POST" action="{{ route('cashier.order') }}" class="col-span-2"
                     id="cashdesk-order-form">
                     @csrf
                     <input type="hidden" name="order_no" value="{{ $form['order_no'] }}">
@@ -191,7 +191,7 @@
                         </div>
                         <div class="flex gap-3 flex-wrap">
                             <button id="btn-hold-order" type="submit"
-                                formaction="{{ route('cashdesk-control.hold') }}"
+                                formaction="{{ route('cashier.hold') }}"
                                 class="w-full md:w-1/3 rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold shadow-sm hover:bg-neutral-50 transition"
                                 aria-keyshortcuts="Shift+Alt+H">
                                 Удержать заказ
@@ -209,7 +209,7 @@
         <div id="modal-add-expense"
             class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
             <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-4 space-y-4 border border-neutral-200">
-                <form method="POST" action="{{ route('cashdesk-control.expense') }}" class="space-y-4">
+                <form method="POST" action="{{ route('cashier.expense') }}" class="space-y-4">
                     @csrf
                     <div class="bg-gradient-to-r from-lime-500 to-emerald-500 rounded-xl p-2 text-white shadow-md">
                         <p class="text-lg font-semibold">Добавить расходы</p>
@@ -299,7 +299,7 @@
                                     Пол: {{ $item->sex == 'm' ? 'Мужчина' : 'Женщина' }}
                                 </p>
                             </div>
-                            <form method="POST" action="{{ route('cashdesk-control.queue.select', $item) }}">
+                            <form method="POST" action="{{ route('cashier.queue.select', $item) }}">
                                 @csrf
                                 <button type="submit"
                                     class="rounded-lg bg-rose-500 text-white px-3 py-1 text-sm font-semibold hover:bg-rose-600 transition">
@@ -322,7 +322,7 @@
         <div id="modal-currency-info"
             class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
             <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full p-4 space-y-4 border border-neutral-200">
-                <form method="POST" action="{{ route('cashdesk-control.currency') }}" class="space-y-4">
+                <form method="POST" action="{{ route('cashier.currency') }}" class="space-y-4">
                     @csrf
                     <div>
                         <p class="text-lg font-semibold">Курс и тарифы</p>

@@ -93,17 +93,16 @@ Route::middleware(['auth', Admin::class])->prefix('admin')->name('admin.')->grou
     Route::get('/admin-profile', AdminProfile::class)->name('admin-profile');
 });
 Route::middleware(['auth', Cashier::class])->group(function () {
-    // Route::get('/cashier', Chashdesk::class)->name('cashier');
     Route::get('/cashier/reports', \App\Livewire\CashdeskReports::class)->name('cashier.reports');
     Route::get('/queue-control', QueueControl::class)->name('queue-control');
     Route::get('/cashier', [CashdeskControlController::class, 'index'])->name('cashier');
-    Route::post('/cashdesk-control/order', [CashdeskControlController::class, 'placeOrder'])->name('cashdesk-control.order');
-    Route::post('/cashdesk-control/hold', [CashdeskControlController::class, 'holdOrder'])->name('cashdesk-control.hold');
-    Route::get('/cashdesk-control/held/{heldOrder}', [CashdeskControlController::class, 'loadHeldOrder'])->name('cashdesk-control.held.load');
-    Route::delete('/cashdesk-control/held/{heldOrder}', [CashdeskControlController::class, 'deleteHeldOrder'])->name('cashdesk-control.held.delete');
-    Route::post('/cashdesk-control/queue/{queue}', [CashdeskControlController::class, 'selectQueue'])->name('cashdesk-control.queue.select');
-    Route::post('/cashdesk-control/expense', [CashdeskControlController::class, 'addExpense'])->name('cashdesk-control.expense');
-    Route::post('/cashdesk-control/currency', [CashdeskControlController::class, 'saveCurrency'])->name('cashdesk-control.currency');
+    Route::post('/cashier/order', [CashdeskControlController::class, 'placeOrder'])->name('cashier.order');
+    Route::post('/cashier/hold', [CashdeskControlController::class, 'holdOrder'])->name('cashier.hold');
+    Route::get('/cashier/held/{heldOrder}', [CashdeskControlController::class, 'loadHeldOrder'])->name('cashier.held.load');
+    Route::delete('/cashier/held/{heldOrder}', [CashdeskControlController::class, 'deleteHeldOrder'])->name('cashier.held.delete');
+    Route::post('/cashier/queue/{queue}', [CashdeskControlController::class, 'selectQueue'])->name('cashier.queue.select');
+    Route::post('/cashier/expense', [CashdeskControlController::class, 'addExpense'])->name('cashier.expense');
+    Route::post('/cashier/currency', [CashdeskControlController::class, 'saveCurrency'])->name('cashier.currency');
 });
 Route::middleware(['auth', MiddlewareManager::class])->group(function () {
     Route::get('/manager', Manager::class)->name('manager');

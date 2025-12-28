@@ -160,7 +160,7 @@ class CashdeskControlController extends Controller
             HeldOrder::find($data['active_held_order_id'])?->delete();
         }
 
-        if ($request->expectsJson()) {
+        if ($request->expectsJson() || $request->ajax()) {
             return response()->json(['ok' => true]);
         }
 
