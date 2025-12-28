@@ -13,8 +13,7 @@
                             <span
                                 class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-2xl">+</span>
                             <div class="flex flex-col leading-tight">
-                                <span class="font-semibold text-white">Добавить расходы</span>
-                                <span class="text-xs text-white/70">Shift + Alt + E</span>
+                                <span class="font-semibold text-white whitespace-break-spaces">Добавить расходы</span>
                             </div>
                         </div>
                     </button>
@@ -24,8 +23,7 @@
                             <span
                                 class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-xl">Q</span>
                             <div class="flex flex-col leading-tight">
-                                <span class="font-semibold text-white">Выбрать из очереди</span>
-                                <span class="text-xs text-white/70">Shift + Alt + Q</span>
+                                <span class="font-semibold text-white whitespace-break-spaces">Выбрать из очереди</span>
                             </div>
                         </div>
                     </button>
@@ -35,8 +33,7 @@
                             <span
                                 class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-xl">$</span>
                             <div class="flex flex-col leading-tight">
-                                <span class="font-semibold text-white">Курс валюты</span>
-                                <span class="text-xs text-white/70">Shift + Alt + C</span>
+                                <span class="font-semibold text-white whitespace-break-spaces">Курс валюты</span>
                             </div>
                         </div>
                     </button>
@@ -45,8 +42,7 @@
                         <span
                             class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-xl">R</span>
                         <div class="flex flex-col leading-tight">
-                            <span class="font-semibold text-white">Отчёты кассы</span>
-                            <span class="text-xs text-white/70">Shift + Alt + R</span>
+                            <span class="font-semibold text-white whitespace-break-spaces">Отчёты кассы</span>
                         </div>
                     </a>
                     <a href="{{ route('logout') }}"
@@ -55,7 +51,6 @@
                             class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-xl">⏻</span>
                         <div class="flex flex-col leading-tight">
                             <span class="font-semibold text-white">Выйти</span>
-                            <span class="text-xs text-white/70">Logout</span>
                         </div>
                     </a>
                 </div>
