@@ -440,9 +440,7 @@
             bindOnce(confirmSubmitBtn(), 'click', 'confirmSubmit', () => {
                 hideConfirm();
                 orderForm()?.requestSubmit();
-                setTimeout(() => {
-                    clearCashdeskFields();
-                }, 0);
+                window.__cashdesk_clear_pending = true;
             });
 
             bindOnce(cancelSubmitBtn(), 'click', 'cancelSubmit', hideConfirm);
@@ -512,6 +510,12 @@
             if (window.Livewire && !window.__cashdesk_bindings_set) {
                 window.__cashdesk_bindings_set = true;
                 Livewire.hook('message.processed', () => initHotkeys());
+                Livewire.hook('message.sent', () => {
+                    if (window.__cashdesk_clear_pending) {
+                        window.__cashdesk_clear_pending = false;
+                        clearCashdeskFields();
+                    }
+                });
             }
         };
 
