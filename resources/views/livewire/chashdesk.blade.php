@@ -534,17 +534,19 @@
 
         const formatValue = (value) => `${value}c`;
 
+        let receivedDirty = false;
+
         const calc = () => {
             const weight = parseNumber(els.weight?.value);
             const volume = parseNumber(els.volume?.value);
 
             let kgPrice = prices.kg;
             if (weight > 10 && weight <= 20) {
-                kgPrice = prices.kg10;
+                kgPrice = prices.kg10 || prices.kg;
             } else if (weight > 20 && weight <= 30) {
-                kgPrice = prices.kg20;
+                kgPrice = prices.kg20 || prices.kg10 || prices.kg;
             } else if (weight > 30) {
-                kgPrice = prices.kg30;
+                kgPrice = prices.kg30 || prices.kg20 || prices.kg10 || prices.kg;
             }
 
             const kgTotal = weight * (kgPrice || 0);
@@ -552,8 +554,7 @@
             const totalAmount = roundPrice(kgTotal + cubeTotal);
 
             const receivedEl = els.received;
-            const receivedHasValue = receivedEl && receivedEl.value !== null && receivedEl.value !== '';
-            if (receivedEl && !receivedHasValue) {
+            if (receivedEl && !receivedDirty) {
                 receivedEl.value = totalAmount;
             }
             const received = parseNumber(receivedEl?.value);
@@ -589,6 +590,11 @@
         bind(els.weight);
         bind(els.volume);
         bind(els.received);
+        if (els.received) {
+            els.received.addEventListener('input', () => {
+                receivedDirty = els.received.value !== '';
+            });
+        }
         calc();
     })();
 </script>
