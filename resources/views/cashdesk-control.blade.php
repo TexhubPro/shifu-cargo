@@ -3,8 +3,8 @@
         <div class="bg-gradient-to-r from-lime-500 via-emerald-500 to-teal-500 rounded-2xl p-3 shadow-lg">
             <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div>
-                    <p class="text-white/80 text-sm uppercase tracking-wider">Панель быстрых действий</p>
-                    <p class="text-white text-xl font-semibold">Рабочие инструменты</p>
+                    <p class="text-white/80 text-sm uppercase tracking-wider">Панель действий</p>
+                    <p class="text-white text-xl font-semibold">Shifu Cargo</p>
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-5 gap-3 w-full lg:w-auto max-w-6xl">
                     <button id="btn-add-expense" aria-keyshortcuts="Shift+Alt+E" type="button"
@@ -113,8 +113,7 @@
                         @endforelse
                     </div>
                 </div>
-                <form method="POST" action="{{ route('cashier.order') }}" class="col-span-2"
-                    id="cashdesk-order-form">
+                <form method="POST" action="{{ route('cashier.order') }}" class="col-span-2" id="cashdesk-order-form">
                     @csrf
                     <input type="hidden" name="order_no" value="{{ $form['order_no'] }}">
                     <input type="hidden" name="selected_queue" value="{{ $form['selected_queue'] }}">
@@ -190,8 +189,7 @@
                             </div>
                         </div>
                         <div class="flex gap-3 flex-wrap">
-                            <button id="btn-hold-order" type="submit"
-                                formaction="{{ route('cashier.hold') }}"
+                            <button id="btn-hold-order" type="submit" formaction="{{ route('cashier.hold') }}"
                                 class="w-full md:w-1/3 rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold shadow-sm hover:bg-neutral-50 transition"
                                 aria-keyshortcuts="Shift+Alt+H">
                                 Удержать заказ
@@ -409,8 +407,10 @@
         </div>
         <div id="order-loading"
             class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
-            <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 border border-neutral-200 text-center space-y-3">
-                <div class="mx-auto w-12 h-12 rounded-full border-4 border-neutral-200 border-t-emerald-600 animate-spin">
+            <div
+                class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 border border-neutral-200 text-center space-y-3">
+                <div
+                    class="mx-auto w-12 h-12 rounded-full border-4 border-neutral-200 border-t-emerald-600 animate-spin">
                 </div>
                 <p class="text-lg font-semibold text-neutral-900">Оформляем заказ…</p>
                 <p class="text-sm text-neutral-500">Пожалуйста, подождите.</p>
@@ -645,9 +645,9 @@
                     }
 
                     if (!response.ok || (responseData && responseData.ok === false)) {
-                        const message = responseData?.message
-                            || (responseData?.errors ? Object.values(responseData.errors)[0]?.[0] : null)
-                            || 'Ошибка оформления заказа.';
+                        const message = responseData?.message ||
+                            (responseData?.errors ? Object.values(responseData.errors)[0]?.[0] : null) ||
+                            'Ошибка оформления заказа.';
                         alert(message);
                         unlockSubmit();
                         return;
