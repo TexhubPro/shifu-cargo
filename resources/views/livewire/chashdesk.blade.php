@@ -1,9 +1,6 @@
-<div id="cashdesk-root" class="bg-white p-5 space-y-5 min-h-screen"
-    data-price-kg="{{ $this->priceInfo['kg'] }}"
-    data-price-kg-10="{{ $this->priceInfo['kg_10'] }}"
-    data-price-kg-20="{{ $this->priceInfo['kg_20'] }}"
-    data-price-kg-30="{{ $this->priceInfo['kg_30'] }}"
-    data-price-cube="{{ $this->priceInfo['cube'] }}">
+<div id="cashdesk-root" class="bg-white p-5 space-y-5 min-h-screen" data-price-kg="{{ $this->priceInfo['kg'] }}"
+    data-price-kg-10="{{ $this->priceInfo['kg_10'] }}" data-price-kg-20="{{ $this->priceInfo['kg_20'] }}"
+    data-price-kg-30="{{ $this->priceInfo['kg_30'] }}" data-price-cube="{{ $this->priceInfo['cube'] }}">
     <div class="bg-gradient-to-r from-lime-500 via-emerald-500 to-teal-500 rounded-2xl p-3 shadow-lg">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
@@ -563,16 +560,6 @@
             return Number.isNaN(parsed) ? 0 : parsed;
         };
 
-        const emitInput = (el) => {
-            if (!el) return;
-            el.dispatchEvent(new Event('input', {
-                bubbles: true
-            }));
-            el.dispatchEvent(new Event('change', {
-                bubbles: true
-            }));
-        };
-
         const roundPrice = (value) => {
             const fraction = value - Math.floor(value);
             return fraction > 0.5 ? Math.ceil(value) : Math.floor(value);
@@ -606,14 +593,13 @@
 
             const receivedEl = els.received;
             const receivedValue = receivedEl ? String(receivedEl.value ?? '') : '';
-            const canAutofill = receivedEl
-                && (!window.__cashdesk_received_dirty
-                    || receivedValue === ''
-                    || receivedValue === window.__cashdesk_last_auto_received);
+            const canAutofill = receivedEl &&
+                (!window.__cashdesk_received_dirty ||
+                    receivedValue === '' ||
+                    receivedValue === window.__cashdesk_last_auto_received);
             if (canAutofill) {
                 receivedEl.value = String(totalAmount);
                 window.__cashdesk_last_auto_received = String(totalAmount);
-                emitInput(receivedEl);
             }
             const received = parseNumber(receivedEl?.value);
             let discount = Math.max(0, totalAmount - received);
@@ -634,18 +620,9 @@
             const totalInput = document.getElementById('total-amount-input');
             const discountInput = document.getElementById('discount-total-input');
             const finalInput = document.getElementById('total-final-input');
-            if (totalInput) {
-                totalInput.value = totalAmount;
-                emitInput(totalInput);
-            }
-            if (discountInput) {
-                discountInput.value = discount;
-                emitInput(discountInput);
-            }
-            if (finalInput) {
-                finalInput.value = totalFinal;
-                emitInput(finalInput);
-            }
+            if (totalInput) totalInput.value = totalAmount;
+            if (discountInput) discountInput.value = discount;
+            if (finalInput) finalInput.value = totalFinal;
         };
 
         const bind = (el) => {
