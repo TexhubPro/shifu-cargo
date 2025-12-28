@@ -6,7 +6,7 @@
                     <p class="text-white/80 text-sm uppercase tracking-wider">Панель действий</p>
                     <p class="text-white text-xl font-semibold">Shifu Cargo</p>
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-5 gap-3 w-full lg:w-auto max-w-6xl">
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-3 w-full lg:w-auto max-w-[80rem]">
                     <button id="btn-add-expense" aria-keyshortcuts="Shift+Alt+E" type="button"
                         class="h-16 rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all">
                         <div class="flex items-center gap-3 text-left">
