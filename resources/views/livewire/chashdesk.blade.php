@@ -589,10 +589,14 @@
 
         bind(els.weight);
         bind(els.volume);
-        bind(els.received);
         if (els.received) {
             els.received.addEventListener('input', () => {
                 receivedDirty = els.received.value !== '';
+                calc();
+            });
+            els.received.addEventListener('change', () => {
+                receivedDirty = els.received.value !== '';
+                calc();
             });
         }
         calc();
