@@ -19,6 +19,7 @@ use App\Livewire\Chashdesk;
 use App\Livewire\Components\SendNotification;
 use App\Livewire\Deliver;
 use App\Http\Middleware\Deliver as MidDeliver;
+use App\Http\Controllers\CashdeskControlController;
 use App\Livewire\Admin\Analitic;
 use App\Livewire\Admin\Faqs as AdminFaqs;
 use App\Livewire\Admin\Orders;
@@ -95,6 +96,14 @@ Route::middleware(['auth', Cashier::class])->group(function () {
     Route::get('/cashier', Chashdesk::class)->name('cashier');
     Route::get('/cashier/reports', \App\Livewire\CashdeskReports::class)->name('cashier.reports');
     Route::get('/queue-control', QueueControl::class)->name('queue-control');
+    Route::get('/cashdesk-control', [CashdeskControlController::class, 'index'])->name('cashdesk-control');
+    Route::post('/cashdesk-control/order', [CashdeskControlController::class, 'placeOrder'])->name('cashdesk-control.order');
+    Route::post('/cashdesk-control/hold', [CashdeskControlController::class, 'holdOrder'])->name('cashdesk-control.hold');
+    Route::get('/cashdesk-control/held/{heldOrder}', [CashdeskControlController::class, 'loadHeldOrder'])->name('cashdesk-control.held.load');
+    Route::delete('/cashdesk-control/held/{heldOrder}', [CashdeskControlController::class, 'deleteHeldOrder'])->name('cashdesk-control.held.delete');
+    Route::post('/cashdesk-control/queue/{queue}', [CashdeskControlController::class, 'selectQueue'])->name('cashdesk-control.queue.select');
+    Route::post('/cashdesk-control/expense', [CashdeskControlController::class, 'addExpense'])->name('cashdesk-control.expense');
+    Route::post('/cashdesk-control/currency', [CashdeskControlController::class, 'saveCurrency'])->name('cashdesk-control.currency');
 });
 Route::middleware(['auth', MiddlewareManager::class])->group(function () {
     Route::get('/manager', Manager::class)->name('manager');
