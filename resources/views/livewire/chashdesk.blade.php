@@ -551,7 +551,12 @@
             const cubeTotal = volume * (prices.cube || 0);
             const totalAmount = roundPrice(kgTotal + cubeTotal);
 
-            const received = parseNumber(els.received?.value);
+            const receivedEl = els.received;
+            const receivedHasValue = receivedEl && receivedEl.value !== null && receivedEl.value !== '';
+            if (receivedEl && !receivedHasValue) {
+                receivedEl.value = totalAmount;
+            }
+            const received = parseNumber(receivedEl?.value);
             let discount = Math.max(0, totalAmount - received);
             discount = Math.min(discount, totalAmount);
 
