@@ -1,4 +1,9 @@
-<div id="cashdesk-root" class="bg-white p-5 space-y-5 min-h-screen">
+<div id="cashdesk-root" class="bg-white p-5 space-y-5 min-h-screen"
+    data-price-kg="{{ $this->priceInfo['kg'] }}"
+    data-price-kg-10="{{ $this->priceInfo['kg_10'] }}"
+    data-price-kg-20="{{ $this->priceInfo['kg_20'] }}"
+    data-price-kg-30="{{ $this->priceInfo['kg_30'] }}"
+    data-price-cube="{{ $this->priceInfo['cube'] }}">
     <div class="bg-gradient-to-r from-lime-500 via-emerald-500 to-teal-500 rounded-2xl p-3 shadow-lg">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
@@ -159,15 +164,21 @@
                         class="bg-gradient-to-r from-neutral-50 to-white rounded-xl p-2 grid grid-cols-2 md:grid-cols-3 gap-2 text-sm shadow-inner border border-neutral-100">
                         <div class="rounded-lg bg-white p-2 border border-neutral-100">
                             <p class="text-neutral-500 text-xs uppercase tracking-wide">Подытог</p>
-                            <p class="font-semibold text-lg text-neutral-900">{{ $this->total_amount }}c</p>
+                            <p id="total-amount-value" class="font-semibold text-lg text-neutral-900">
+                                {{ $this->total_amount }}c
+                            </p>
                         </div>
                         <div class="rounded-lg bg-white p-2 border border-neutral-100">
                             <p class="text-neutral-500 text-xs uppercase tracking-wide">Скидка</p>
-                            <p class="font-semibold text-lg text-rose-600">{{ $this->discount_total }}c</p>
+                            <p id="discount-total-value" class="font-semibold text-lg text-rose-600">
+                                {{ $this->discount_total }}c
+                            </p>
                         </div>
                         <div class="rounded-lg bg-white p-2 border border-neutral-100">
                             <p class="text-neutral-500 text-xs uppercase tracking-wide">Итог</p>
-                            <p class="font-semibold text-lg text-emerald-600">{{ $total_final }}c</p>
+                            <p id="total-final-value" class="font-semibold text-lg text-emerald-600">
+                                {{ $total_final }}c
+                            </p>
                         </div>
                     </div>
                     <!-- Кнопка -->
@@ -477,5 +488,92 @@
         } else {
             initHotkeys();
         }
+    })();
+</script>
+
+<script>
+    (function() {
+        const root = document.getElementById('cashdesk-root');
+        if (!root) {
+            return;
+        }
+
+        const prices = {
+            kg: parseFloat(root.dataset.priceKg) || 0,
+            kg10: parseFloat(root.dataset.priceKg10) || 0,
+            kg20: parseFloat(root.dataset.priceKg20) || 0,
+            kg30: parseFloat(root.dataset.priceKg30) || 0,
+            cube: parseFloat(root.dataset.priceCube) || 0,
+        };
+
+        const els = {
+            weight: document.getElementById('weight-input'),
+            volume: document.getElementById('volume-input'),
+            received: document.getElementById('received-amount-input'),
+            total: document.getElementById('total-amount-value'),
+            discount: document.getElementById('discount-total-value'),
+            final: document.getElementById('total-final-value'),
+        };
+
+        const parseNumber = (value) => {
+            if (value === null || value === undefined || value === '') {
+                return 0;
+            }
+            const normalized = String(value).replace(/\s+/g, '').replace(',', '.');
+            const parsed = parseFloat(normalized);
+            return Number.isNaN(parsed) ? 0 : parsed;
+        };
+
+        const roundPrice = (value) => {
+            const fraction = value - Math.floor(value);
+            return fraction > 0.5 ? Math.ceil(value) : Math.floor(value);
+        };
+
+        const formatValue = (value) => `${value}c`;
+
+        const calc = () => {
+            const weight = parseNumber(els.weight?.value);
+            const volume = parseNumber(els.volume?.value);
+
+            let kgPrice = prices.kg;
+            if (weight > 10 && weight <= 20) {
+                kgPrice = prices.kg10;
+            } else if (weight > 20 && weight <= 30) {
+                kgPrice = prices.kg20;
+            } else if (weight > 30) {
+                kgPrice = prices.kg30;
+            }
+
+            const kgTotal = weight * (kgPrice || 0);
+            const cubeTotal = volume * (prices.cube || 0);
+            const totalAmount = roundPrice(kgTotal + cubeTotal);
+
+            const received = parseNumber(els.received?.value);
+            let discount = Math.max(0, totalAmount - received);
+            discount = Math.min(discount, totalAmount);
+
+            const totalFinal = roundPrice(Math.max(0, totalAmount - discount));
+
+            if (els.total) {
+                els.total.textContent = formatValue(totalAmount);
+            }
+            if (els.discount) {
+                els.discount.textContent = formatValue(discount);
+            }
+            if (els.final) {
+                els.final.textContent = formatValue(totalFinal);
+            }
+        };
+
+        const bind = (el) => {
+            if (!el) return;
+            el.addEventListener('input', calc);
+            el.addEventListener('change', calc);
+        };
+
+        bind(els.weight);
+        bind(els.volume);
+        bind(els.received);
+        calc();
     })();
 </script>

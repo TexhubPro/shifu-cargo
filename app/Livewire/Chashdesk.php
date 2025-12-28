@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Application;
 use Flux\Flux;
 use App\Models\User;
 use App\Models\Setting;
@@ -12,11 +11,11 @@ use App\Models\Order;
 use App\Models\Queue;
 use App\Models\Trackcode;
 use App\Models\HeldOrder;
-use App\Texhub\Telegram;
+use App\Jobs\CreateCashdeskOrder;
 use Carbon\Carbon;
 use Livewire\Attributes\Layout;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 
 #[Layout('components.layouts.empty')]
 class Chashdesk extends Component
@@ -58,7 +57,7 @@ class Chashdesk extends Component
     public function mount()
     {
         $this->queues = Queue::where('status', 'В очереди')->whereDate('created_at', Carbon::today())->get();
-        $this->users = User::where('role', 'customer')->get();
+        $this->loadUsersCache();
         $this->refreshHeldOrders();
         $this->loadCurrencyForm();
         $this->loadPriceCache();
@@ -77,43 +76,18 @@ class Chashdesk extends Component
     }
     public function order_place()
     {
-        $weight = $this->parseNumber($this->weight);
-        $volume = $this->parseNumber($this->volume);
-        $subtotal = $this->parseNumber($this->total_amount);
-        $discountTotal = $this->parseNumber($this->discount_total);
-        $totalFinal = $this->parseNumber($this->total_final);
-
-        if ($this->order_no) {
-            $apl = Application::find($this->order_no);
-            $apl->status = "Доставляется";
-            $apl->save();
-        }
-        $user = User::where('phone', $this->client)->first();
-        $order = Order::create([
-            'user_id' => $user->id ?? $this->client,
-            'weight' => $weight,
-            'cube' => $volume,
-            'subtotal' => $subtotal,
-            'delivery_total' => 0,
-            'deliver_id' => null,
-            'discount' => $discountTotal,
-            'total' => $totalFinal,
-            'status' => "Оплачено",
-
+        CreateCashdeskOrder::dispatch([
+            'order_no' => $this->order_no,
+            'client' => $this->client,
+            'weight' => $this->weight,
+            'volume' => $this->volume,
+            'total_amount' => $this->total_amount,
+            'discount_total' => $this->discount_total,
+            'total_final' => $this->total_final,
+            'tracks' => $this->tracks,
+            'selected_queue' => $this->selected_queue,
+            'active_held_order_id' => $this->activeHeldOrderId,
         ]);
-        if ($user) {
-            $sms = new Telegram();
-            $sms->sms_order($user->id, $order->id);
-        }
-        $this->updateTrackStatuses($user?->id, $order->id);
-        if ($this->selected_queue) {
-            Queue::find($this->selected_queue)->delete();
-        }
-        if ($this->activeHeldOrderId) {
-            HeldOrder::find($this->activeHeldOrderId)?->delete();
-            $this->activeHeldOrderId = null;
-            $this->refreshHeldOrders();
-        }
         $this->dispatch('order-submitted');
         $this->todayOrdersCache = null;
         $this->todayOrdersSummaryCache = null;
@@ -250,6 +224,15 @@ class Chashdesk extends Component
     public function refreshHeldOrders()
     {
         $this->heldOrders = HeldOrder::latest()->get();
+    }
+
+    private function loadUsersCache(): void
+    {
+        $this->users = Cache::remember('cashdesk.users', 300, function () {
+            return User::where('role', 'customer')
+                ->orderBy('phone')
+                ->get(['id', 'phone', 'name']);
+        });
     }
     public function getTodayOrdersProperty()
     {
@@ -596,6 +579,17 @@ class Chashdesk extends Component
             'kg_price_20' => $settings['kg_price_20']['content'] ?? null,
             'kg_price_30' => $settings['kg_price_30']['content'] ?? null,
             'updated_at' => $updatedAt,
+        ];
+    }
+
+    public function getPriceInfoProperty(): array
+    {
+        return [
+            'kg' => $this->getKgPriceTJS(),
+            'kg_10' => $this->getKgPrice10TJS(),
+            'kg_20' => $this->getKgPrice20TJS(),
+            'kg_30' => $this->getKgPrice30TJS(),
+            'cube' => $this->getCubePriceTJS(),
         ];
     }
 
