@@ -439,8 +439,11 @@
 
             bindOnce(confirmSubmitBtn(), 'click', 'confirmSubmit', () => {
                 hideConfirm();
-                orderForm()?.requestSubmit();
+                if (typeof window.__cashdesk_calc === 'function') {
+                    window.__cashdesk_calc();
+                }
                 window.__cashdesk_clear_pending = true;
+                orderForm()?.requestSubmit();
             });
 
             bindOnce(cancelSubmitBtn(), 'click', 'cancelSubmit', hideConfirm);
@@ -634,6 +637,7 @@
                 calc();
             });
         }
+        window.__cashdesk_calc = calc;
         calc();
     })();
 </script>
