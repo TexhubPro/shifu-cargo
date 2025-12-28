@@ -96,7 +96,7 @@ Route::middleware(['auth', Cashier::class])->group(function () {
     // Route::get('/cashier', Chashdesk::class)->name('cashier');
     Route::get('/cashier/reports', \App\Livewire\CashdeskReports::class)->name('cashier.reports');
     Route::get('/queue-control', QueueControl::class)->name('queue-control');
-    Route::get('/cashier', [CashdeskControlController::class, 'index'])->name('cashdesk-control');
+    Route::get('/cashier', [CashdeskControlController::class, 'index'])->name('cashier');
     Route::post('/cashdesk-control/order', [CashdeskControlController::class, 'placeOrder'])->name('cashdesk-control.order');
     Route::post('/cashdesk-control/hold', [CashdeskControlController::class, 'holdOrder'])->name('cashdesk-control.hold');
     Route::get('/cashdesk-control/held/{heldOrder}', [CashdeskControlController::class, 'loadHeldOrder'])->name('cashdesk-control.held.load');
