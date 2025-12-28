@@ -411,9 +411,38 @@
                 el.addEventListener(event, handler);
             };
 
+            const clearCashdeskFields = () => {
+                const ids = ['client-input', 'weight-input', 'volume-input', 'received-amount-input'];
+                ids.forEach((id) => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.value = '';
+                    }
+                });
+                const total = document.getElementById('total-amount-value');
+                const discount = document.getElementById('discount-total-value');
+                const final = document.getElementById('total-final-value');
+                if (total) total.textContent = '0c';
+                if (discount) discount.textContent = '0c';
+                if (final) final.textContent = '0c';
+
+                const totalInput = document.getElementById('total-amount-input');
+                const discountInput = document.getElementById('discount-total-input');
+                const finalInput = document.getElementById('total-final-input');
+                if (totalInput) totalInput.value = '0';
+                if (discountInput) discountInput.value = '0';
+                if (finalInput) finalInput.value = '0';
+
+                window.__cashdesk_received_dirty = false;
+                focusInput('client-input');
+            };
+
             bindOnce(confirmSubmitBtn(), 'click', 'confirmSubmit', () => {
                 hideConfirm();
                 orderForm()?.requestSubmit();
+                setTimeout(() => {
+                    clearCashdeskFields();
+                }, 0);
             });
 
             bindOnce(cancelSubmitBtn(), 'click', 'cancelSubmit', hideConfirm);
@@ -534,7 +563,9 @@
 
         const formatValue = (value) => `${value}c`;
 
-        let receivedDirty = false;
+        if (window.__cashdesk_received_dirty === undefined) {
+            window.__cashdesk_received_dirty = false;
+        }
 
         const calc = () => {
             const weight = parseNumber(els.weight?.value);
@@ -554,7 +585,7 @@
             const totalAmount = roundPrice(kgTotal + cubeTotal);
 
             const receivedEl = els.received;
-            if (receivedEl && !receivedDirty) {
+            if (receivedEl && !window.__cashdesk_received_dirty) {
                 receivedEl.value = totalAmount;
             }
             const received = parseNumber(receivedEl?.value);
@@ -591,11 +622,11 @@
         bind(els.volume);
         if (els.received) {
             els.received.addEventListener('input', () => {
-                receivedDirty = true;
+                window.__cashdesk_received_dirty = true;
                 calc();
             });
             els.received.addEventListener('change', () => {
-                receivedDirty = true;
+                window.__cashdesk_received_dirty = true;
                 calc();
             });
         }
