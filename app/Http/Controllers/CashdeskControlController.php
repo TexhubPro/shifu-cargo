@@ -127,7 +127,7 @@ class CashdeskControlController extends Controller
             HeldOrder::find($data['active_held_order_id'])?->delete();
         }
 
-        return redirect()->route('cashdesk-control')
+        return redirect()->route('cashier')
             ->with('cashdesk.form', ['client' => null]);
     }
 
@@ -168,7 +168,7 @@ class CashdeskControlController extends Controller
             }
         }
 
-        return redirect()->route('cashdesk-control');
+        return redirect()->route('cashier');
     }
 
     public function loadHeldOrder(HeldOrder $heldOrder): RedirectResponse
@@ -183,14 +183,14 @@ class CashdeskControlController extends Controller
             'active_held_order_id' => $heldOrder->id,
         ];
 
-        return redirect()->route('cashdesk-control')->with('cashdesk.form', $form);
+        return redirect()->route('cashier')->with('cashdesk.form', $form);
     }
 
     public function deleteHeldOrder(HeldOrder $heldOrder): RedirectResponse
     {
         $heldOrder->delete();
 
-        return redirect()->route('cashdesk-control');
+        return redirect()->route('cashier');
     }
 
     public function selectQueue(Queue $queue): RedirectResponse
@@ -203,7 +203,7 @@ class CashdeskControlController extends Controller
             'selected_queue' => $queue->id,
         ];
 
-        return redirect()->route('cashdesk-control')->with('cashdesk.form', $form);
+        return redirect()->route('cashier')->with('cashdesk.form', $form);
     }
 
     public function addExpense(Request $request): RedirectResponse
@@ -220,7 +220,7 @@ class CashdeskControlController extends Controller
             'data' => Carbon::now(),
         ]);
 
-        return redirect()->route('cashdesk-control');
+        return redirect()->route('cashier');
     }
 
     public function saveCurrency(Request $request): RedirectResponse
@@ -234,7 +234,7 @@ class CashdeskControlController extends Controller
             ['content' => $data['course_dollar']]
         );
 
-        return redirect()->route('cashdesk-control');
+        return redirect()->route('cashier');
     }
 
     private function validatedOrderData(Request $request): array
