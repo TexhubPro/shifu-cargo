@@ -547,28 +547,6 @@
 
 <script>
     (function() {
-        const root = document.getElementById('cashdesk-root');
-        if (!root) {
-            return;
-        }
-
-        const prices = {
-            kg: parseFloat(root.dataset.priceKg) || 0,
-            kg10: parseFloat(root.dataset.priceKg10) || 0,
-            kg20: parseFloat(root.dataset.priceKg20) || 0,
-            kg30: parseFloat(root.dataset.priceKg30) || 0,
-            cube: parseFloat(root.dataset.priceCube) || 0,
-        };
-
-        const els = {
-            weight: document.getElementById('weight-input'),
-            volume: document.getElementById('volume-input'),
-            received: document.getElementById('received-amount-input'),
-            total: document.getElementById('total-amount-value'),
-            discount: document.getElementById('discount-total-value'),
-            final: document.getElementById('total-final-value'),
-        };
-
         const parseNumber = (value) => {
             if (value === null || value === undefined || value === '') {
                 return 0;
@@ -576,16 +554,6 @@
             const normalized = String(value).replace(/\s+/g, '').replace(',', '.');
             const parsed = parseFloat(normalized);
             return Number.isNaN(parsed) ? 0 : parsed;
-        };
-
-        const emitInput = (el) => {
-            if (!el) return;
-            el.dispatchEvent(new Event('input', {
-                bubbles: true
-            }));
-            el.dispatchEvent(new Event('change', {
-                bubbles: true
-            }));
         };
 
         const roundPrice = (value) => {
@@ -599,88 +567,106 @@
             window.__cashdesk_autofill_mode = true;
         }
 
-        const calc = () => {
-            const weight = parseNumber(els.weight?.value);
-            const volume = parseNumber(els.volume?.value);
-
-            let kgPrice = prices.kg;
-            if (weight > 10 && weight <= 20) {
-                kgPrice = prices.kg10 || prices.kg;
-            } else if (weight > 20 && weight <= 30) {
-                kgPrice = prices.kg20 || prices.kg10 || prices.kg;
-            } else if (weight > 30) {
-                kgPrice = prices.kg30 || prices.kg20 || prices.kg10 || prices.kg;
+        const initCalc = () => {
+            const root = document.getElementById('cashdesk-root');
+            if (!root) {
+                return;
             }
 
-            const kgTotal = weight * (kgPrice || 0);
-            const cubeTotal = volume * (prices.cube || 0);
-            const totalAmount = roundPrice(kgTotal + cubeTotal);
+            const prices = {
+                kg: parseFloat(root.dataset.priceKg) || 0,
+                kg10: parseFloat(root.dataset.priceKg10) || 0,
+                kg20: parseFloat(root.dataset.priceKg20) || 0,
+                kg30: parseFloat(root.dataset.priceKg30) || 0,
+                cube: parseFloat(root.dataset.priceCube) || 0,
+            };
 
-            const receivedEl = els.received;
-            if (receivedEl && window.__cashdesk_autofill_mode) {
-                receivedEl.value = String(totalAmount);
-            }
-            const received = parseNumber(receivedEl?.value);
-            let discount = Math.max(0, totalAmount - received);
-            discount = Math.min(discount, totalAmount);
+            const els = {
+                weight: document.getElementById('weight-input'),
+                volume: document.getElementById('volume-input'),
+                received: document.getElementById('received-amount-input'),
+                total: document.getElementById('total-amount-value'),
+                discount: document.getElementById('discount-total-value'),
+                final: document.getElementById('total-final-value'),
+            };
 
-            const totalFinal = roundPrice(Math.max(0, totalAmount - discount));
+            const calc = () => {
+                const weight = parseNumber(els.weight?.value);
+                const volume = parseNumber(els.volume?.value);
 
-            if (els.total) {
-                els.total.textContent = formatValue(totalAmount);
-            }
-            if (els.discount) {
-                els.discount.textContent = formatValue(discount);
-            }
-            if (els.final) {
-                els.final.textContent = formatValue(totalFinal);
-            }
+                let kgPrice;
+                if (weight <= 10) {
+                    kgPrice = prices.kg;
+                } else if (weight <= 20) {
+                    kgPrice = prices.kg10 || prices.kg;
+                } else if (weight <= 30) {
+                    kgPrice = prices.kg20 || prices.kg10 || prices.kg;
+                } else {
+                    kgPrice = prices.kg30 || prices.kg20 || prices.kg10 || prices.kg;
+                }
 
-            const totalInput = document.getElementById('total-amount-input');
-            const discountInput = document.getElementById('discount-total-input');
-            const finalInput = document.getElementById('total-final-input');
-            if (totalInput) totalInput.value = totalAmount;
-            if (discountInput) discountInput.value = discount;
-            if (finalInput) finalInput.value = totalFinal;
-        };
+                const kgTotal = weight * (kgPrice || 0);
+                const cubeTotal = volume * (prices.cube || 0);
+                const totalAmount = roundPrice(kgTotal + cubeTotal);
 
-        const bind = (el) => {
-            if (!el) return;
-            el.addEventListener('input', calc);
-            el.addEventListener('change', calc);
-        };
+                const receivedEl = els.received;
+                if (receivedEl && window.__cashdesk_autofill_mode) {
+                    receivedEl.value = String(totalAmount);
+                }
+                const received = parseNumber(receivedEl?.value);
+                let discount = Math.max(0, totalAmount - received);
+                discount = Math.min(discount, totalAmount);
 
-        if (els.weight) {
-            els.weight.addEventListener('input', () => {
+                const totalFinal = roundPrice(Math.max(0, totalAmount - discount));
+
+                if (els.total) {
+                    els.total.textContent = formatValue(totalAmount);
+                }
+                if (els.discount) {
+                    els.discount.textContent = formatValue(discount);
+                }
+                if (els.final) {
+                    els.final.textContent = formatValue(totalFinal);
+                }
+
+                const totalInput = document.getElementById('total-amount-input');
+                const discountInput = document.getElementById('discount-total-input');
+                const finalInput = document.getElementById('total-final-input');
+                if (totalInput) totalInput.value = totalAmount;
+                if (discountInput) discountInput.value = discount;
+                if (finalInput) finalInput.value = totalFinal;
+            };
+
+            const bindOnce = (el, key, handler) => {
+                if (!el || el.dataset[key]) return;
+                el.dataset[key] = '1';
+                el.addEventListener('input', handler);
+                el.addEventListener('change', handler);
+            };
+
+            bindOnce(els.weight, 'cashdeskWeightCalc', () => {
                 window.__cashdesk_autofill_mode = true;
                 calc();
             });
-            els.weight.addEventListener('change', () => {
+            bindOnce(els.volume, 'cashdeskVolumeCalc', () => {
                 window.__cashdesk_autofill_mode = true;
                 calc();
             });
-        }
-        if (els.volume) {
-            els.volume.addEventListener('input', () => {
-                window.__cashdesk_autofill_mode = true;
-                calc();
-            });
-            els.volume.addEventListener('change', () => {
-                window.__cashdesk_autofill_mode = true;
-                calc();
-            });
-        }
-        if (els.received) {
-            els.received.addEventListener('input', () => {
+            bindOnce(els.received, 'cashdeskReceivedCalc', () => {
                 window.__cashdesk_autofill_mode = false;
                 calc();
             });
-            els.received.addEventListener('change', () => {
-                window.__cashdesk_autofill_mode = false;
-                calc();
-            });
+
+            window.__cashdesk_calc = calc;
+            calc();
+        };
+
+        window.__cashdesk_calc_init = initCalc;
+        initCalc();
+
+        if (window.Livewire && !window.__cashdesk_calc_hooked) {
+            window.__cashdesk_calc_hooked = true;
+            Livewire.hook('message.processed', () => initCalc());
         }
-        window.__cashdesk_calc = calc;
-        calc();
     })();
 </script>
