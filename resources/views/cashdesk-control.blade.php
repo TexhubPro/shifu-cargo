@@ -634,7 +634,21 @@
                         body: formData,
                     });
 
-                    if (!response.ok) {
+                    let responseData = null;
+                    const contentType = response.headers.get('content-type') || '';
+                    if (contentType.includes('application/json')) {
+                        try {
+                            responseData = await response.json();
+                        } catch (error) {
+                            responseData = null;
+                        }
+                    }
+
+                    if (!response.ok || (responseData && responseData.ok === false)) {
+                        const message = responseData?.message
+                            || (responseData?.errors ? Object.values(responseData.errors)[0]?.[0] : null)
+                            || 'Ошибка оформления заказа.';
+                        alert(message);
                         unlockSubmit();
                         return;
                     }
