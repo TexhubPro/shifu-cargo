@@ -547,6 +547,7 @@
             const loadingModal = () => document.getElementById('order-loading');
             let confirmOpen = false;
             let submitting = false;
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
             const showConfirm = () => {
                 const modal = confirmModal();
@@ -584,6 +585,79 @@
                 return true;
             };
 
+            const unlockSubmit = () => {
+                submitting = false;
+                submitBtn()?.removeAttribute('disabled');
+                confirmSubmitBtn()?.removeAttribute('disabled');
+                cancelSubmitBtn()?.removeAttribute('disabled');
+                document.getElementById('btn-hold-order')?.removeAttribute('disabled');
+                const modal = loadingModal();
+                if (modal) {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }
+            };
+
+            const resetOrderForm = () => {
+                if (clientInput) clientInput.value = '';
+                if (weightInput) weightInput.value = '';
+                if (volumeInput) volumeInput.value = '';
+                if (receivedInput) receivedInput.value = '';
+                updateTotals(false);
+                focusInput('client-input');
+            };
+
+            const submitOrderAjax = async () => {
+                if (!lockSubmit()) {
+                    return;
+                }
+                hideConfirm();
+
+                try {
+                    const formEl = orderForm();
+                    if (!formEl) {
+                        unlockSubmit();
+                        return;
+                    }
+
+                    const formData = new FormData(formEl);
+                    if (csrfToken) {
+                        formData.set('_token', csrfToken);
+                    }
+
+                    const response = await fetch(formEl.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                        },
+                        body: formData,
+                    });
+
+                    if (!response.ok) {
+                        let message = 'Ошибка оформления заказа.';
+                        try {
+                            const data = await response.json();
+                            const firstError = data?.errors ? Object.values(data.errors)[0]?.[0] : null;
+                            if (firstError) {
+                                message = firstError;
+                            }
+                        } catch (error) {
+                            // ignore json parse errors
+                        }
+                        alert(message);
+                        unlockSubmit();
+                        return;
+                    }
+
+                    resetOrderForm();
+                    unlockSubmit();
+                } catch (error) {
+                    alert('Сбой сети. Попробуйте ещё раз.');
+                    unlockSubmit();
+                }
+            };
+
             const bindOnce = (el, event, key, handler) => {
                 if (!el || el.dataset[key]) return;
                 el.dataset[key] = '1';
@@ -591,11 +665,7 @@
             };
 
             bindOnce(confirmSubmitBtn(), 'click', 'confirmSubmit', () => {
-                if (!lockSubmit()) {
-                    return;
-                }
-                hideConfirm();
-                orderForm()?.requestSubmit();
+                submitOrderAjax();
             });
 
             bindOnce(cancelSubmitBtn(), 'click', 'cancelSubmit', hideConfirm);
@@ -641,9 +711,11 @@
             });
 
             orderForm()?.addEventListener('submit', (event) => {
-                if (!lockSubmit()) {
-                    event.preventDefault();
+                const submitter = event.submitter;
+                if (submitter && submitter.id === 'btn-hold-order') {
+                    return;
                 }
+                event.preventDefault();
             });
 
             document.addEventListener('keydown', (event) => {

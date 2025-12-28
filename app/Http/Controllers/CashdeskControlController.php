@@ -127,6 +127,10 @@ class CashdeskControlController extends Controller
             HeldOrder::find($data['active_held_order_id'])?->delete();
         }
 
+        if ($request->expectsJson()) {
+            return response()->json(['ok' => true]);
+        }
+
         return redirect()->route('cashier')
             ->with('cashdesk.form', ['client' => null]);
     }
