@@ -585,14 +585,8 @@
 
         const formatValue = (value) => `${value}c`;
 
-        if (window.__cashdesk_received_dirty === undefined) {
-            window.__cashdesk_received_dirty = false;
-        }
-        if (window.__cashdesk_last_auto_received === undefined) {
-            window.__cashdesk_last_auto_received = '';
-        }
-        if (window.__cashdesk_autofill_received === undefined) {
-            window.__cashdesk_autofill_received = false;
+        if (window.__cashdesk_autofill_mode === undefined) {
+            window.__cashdesk_autofill_mode = true;
         }
 
         const calc = () => {
@@ -613,14 +607,8 @@
             const totalAmount = roundPrice(kgTotal + cubeTotal);
 
             const receivedEl = els.received;
-            const receivedValue = receivedEl ? String(receivedEl.value ?? '') : '';
-            const canAutofill = receivedEl &&
-                (!window.__cashdesk_received_dirty ||
-                    receivedValue === window.__cashdesk_last_auto_received);
-            if (canAutofill) {
-                window.__cashdesk_autofill_received = true;
+            if (receivedEl && window.__cashdesk_autofill_mode) {
                 receivedEl.value = String(totalAmount);
-                window.__cashdesk_last_auto_received = String(totalAmount);
             }
             const received = parseNumber(receivedEl?.value);
             let discount = Math.max(0, totalAmount - received);
@@ -652,23 +640,33 @@
             el.addEventListener('change', calc);
         };
 
-        bind(els.weight);
-        bind(els.volume);
+        if (els.weight) {
+            els.weight.addEventListener('input', () => {
+                window.__cashdesk_autofill_mode = true;
+                calc();
+            });
+            els.weight.addEventListener('change', () => {
+                window.__cashdesk_autofill_mode = true;
+                calc();
+            });
+        }
+        if (els.volume) {
+            els.volume.addEventListener('input', () => {
+                window.__cashdesk_autofill_mode = true;
+                calc();
+            });
+            els.volume.addEventListener('change', () => {
+                window.__cashdesk_autofill_mode = true;
+                calc();
+            });
+        }
         if (els.received) {
             els.received.addEventListener('input', () => {
-                if (window.__cashdesk_autofill_received) {
-                    window.__cashdesk_autofill_received = false;
-                } else {
-                    window.__cashdesk_received_dirty = true;
-                }
+                window.__cashdesk_autofill_mode = false;
                 calc();
             });
             els.received.addEventListener('change', () => {
-                if (window.__cashdesk_autofill_received) {
-                    window.__cashdesk_autofill_received = false;
-                } else {
-                    window.__cashdesk_received_dirty = true;
-                }
+                window.__cashdesk_autofill_mode = false;
                 calc();
             });
         }
