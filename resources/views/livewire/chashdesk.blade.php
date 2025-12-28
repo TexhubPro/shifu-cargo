@@ -1,6 +1,4 @@
-<div id="cashdesk-root" class="bg-white p-5 space-y-5 min-h-screen" data-price-kg="{{ $this->priceInfo['kg'] }}"
-    data-price-kg-10="{{ $this->priceInfo['kg_10'] }}" data-price-kg-20="{{ $this->priceInfo['kg_20'] }}"
-    data-price-kg-30="{{ $this->priceInfo['kg_30'] }}" data-price-cube="{{ $this->priceInfo['cube'] }}">
+<div id="cashdesk-root" class="bg-white p-5 space-y-5 min-h-screen">
     <div class="bg-gradient-to-r from-lime-500 via-emerald-500 to-teal-500 rounded-2xl p-3 shadow-lg">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
@@ -131,7 +129,7 @@
                         <flux:badge color="neutral">Live</flux:badge>
                     </div>
                     <div class="space-y-3">
-                        <flux:autocomplete id="client-input" wire:model.defer="client" label="Клиент (Ctrl+Enter)"
+                        <flux:autocomplete id="client-input" wire:model.live="client" label="Клиент (Ctrl+Enter)"
                             placeholder="Выберите клиента" required>
                             @foreach ($users as $user)
                                 <flux:autocomplete.item>{{ $user->phone }}</flux:autocomplete.item>
@@ -141,11 +139,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <!-- Вес груза -->
                         <flux:input id="weight-input" label="Вес груза" placeholder="Введите общий вес груза"
-                            wire:model.defer="weight" required />
+                            wire:model.live="weight" required />
 
                         <!-- Объём груза -->
                         <flux:input id="volume-input" label="Объём груза" placeholder="Введите примерный объём"
-                            wire:model.defer="volume" />
+                            wire:model.live="volume" />
                     </div>
 
                     <!-- Скидка -->
@@ -154,31 +152,22 @@
                     <div class="space-y-2">
                         <flux:label>Полученная сумма</flux:label>
                         <flux:input id="received-amount-input" placeholder="Сколько оплатил клиент"
-                            wire:model.defer="received_amount" type="text" inputmode="decimal" min="0" />
-                        <input id="total-amount-input" type="hidden" wire:model.defer="total_amount">
-                        <input id="discount-total-input" type="hidden" wire:model.defer="discount_total">
-                        <input id="total-final-input" type="hidden" wire:model.defer="total_final">
+                            wire:model.live="received_amount" type="text" inputmode="decimal" min="0" />
                         <p class="text-xs text-neutral-500">Недостающая сумма автоматически попадёт в скидку.</p>
                     </div>
                     <div
                         class="bg-gradient-to-r from-neutral-50 to-white rounded-xl p-2 grid grid-cols-2 md:grid-cols-3 gap-2 text-sm shadow-inner border border-neutral-100">
                         <div class="rounded-lg bg-white p-2 border border-neutral-100">
                             <p class="text-neutral-500 text-xs uppercase tracking-wide">Подытог</p>
-                            <p id="total-amount-value" class="font-semibold text-lg text-neutral-900">
-                                {{ $this->total_amount }}c
-                            </p>
+                            <p class="font-semibold text-lg text-neutral-900">{{ $this->total_amount }}c</p>
                         </div>
                         <div class="rounded-lg bg-white p-2 border border-neutral-100">
                             <p class="text-neutral-500 text-xs uppercase tracking-wide">Скидка</p>
-                            <p id="discount-total-value" class="font-semibold text-lg text-rose-600">
-                                {{ $this->discount_total }}c
-                            </p>
+                            <p class="font-semibold text-lg text-rose-600">{{ $this->discount_total }}c</p>
                         </div>
                         <div class="rounded-lg bg-white p-2 border border-neutral-100">
                             <p class="text-neutral-500 text-xs uppercase tracking-wide">Итог</p>
-                            <p id="total-final-value" class="font-semibold text-lg text-emerald-600">
-                                {{ $total_final }}c
-                            </p>
+                            <p class="font-semibold text-lg text-emerald-600">{{ $total_final }}c</p>
                         </div>
                     </div>
                     <!-- Кнопка -->
@@ -408,56 +397,8 @@
                 el.addEventListener(event, handler);
             };
 
-            const clearCashdeskFields = () => {
-                const ids = ['client-input', 'weight-input', 'volume-input', 'received-amount-input'];
-                ids.forEach((id) => {
-                    const el = document.getElementById(id);
-                    if (el) {
-                        el.value = '';
-                    }
-                });
-                const total = document.getElementById('total-amount-value');
-                const discount = document.getElementById('discount-total-value');
-                const final = document.getElementById('total-final-value');
-                if (total) total.textContent = '0c';
-                if (discount) discount.textContent = '0c';
-                if (final) final.textContent = '0c';
-
-                const totalInput = document.getElementById('total-amount-input');
-                const discountInput = document.getElementById('discount-total-input');
-                const finalInput = document.getElementById('total-final-input');
-                if (totalInput) totalInput.value = '0';
-                if (discountInput) discountInput.value = '0';
-                if (finalInput) finalInput.value = '0';
-
-                window.__cashdesk_received_dirty = false;
-                focusInput('client-input');
-            };
-
-            const emitInputLocal = (el) => {
-                if (!el) return;
-                el.dispatchEvent(new Event('input', {
-                    bubbles: true
-                }));
-                el.dispatchEvent(new Event('change', {
-                    bubbles: true
-                }));
-            };
-
-            const syncLivewireFields = () => {
-                emitInputLocal(document.getElementById('received-amount-input'));
-                emitInputLocal(document.getElementById('total-amount-input'));
-                emitInputLocal(document.getElementById('discount-total-input'));
-                emitInputLocal(document.getElementById('total-final-input'));
-            };
-
             bindOnce(confirmSubmitBtn(), 'click', 'confirmSubmit', () => {
                 hideConfirm();
-                if (typeof window.__cashdesk_calc === 'function') {
-                    window.__cashdesk_calc();
-                }
-                syncLivewireFields();
-                window.__cashdesk_clear_pending = true;
                 orderForm()?.requestSubmit();
             });
 
@@ -528,12 +469,6 @@
             if (window.Livewire && !window.__cashdesk_bindings_set) {
                 window.__cashdesk_bindings_set = true;
                 Livewire.hook('message.processed', () => initHotkeys());
-                Livewire.hook('message.sent', () => {
-                    if (window.__cashdesk_clear_pending) {
-                        window.__cashdesk_clear_pending = false;
-                        clearCashdeskFields();
-                    }
-                });
             }
         };
 
@@ -541,132 +476,6 @@
             document.addEventListener('DOMContentLoaded', initHotkeys);
         } else {
             initHotkeys();
-        }
-    })();
-</script>
-
-<script>
-    (function() {
-        const parseNumber = (value) => {
-            if (value === null || value === undefined || value === '') {
-                return 0;
-            }
-            const normalized = String(value).replace(/\s+/g, '').replace(',', '.');
-            const parsed = parseFloat(normalized);
-            return Number.isNaN(parsed) ? 0 : parsed;
-        };
-
-        const roundPrice = (value) => {
-            const fraction = value - Math.floor(value);
-            return fraction > 0.5 ? Math.ceil(value) : Math.floor(value);
-        };
-
-        const formatValue = (value) => `${value}c`;
-
-        if (window.__cashdesk_autofill_mode === undefined) {
-            window.__cashdesk_autofill_mode = true;
-        }
-
-        const initCalc = () => {
-            const root = document.getElementById('cashdesk-root');
-            if (!root) {
-                return;
-            }
-
-            const prices = {
-                kg: parseFloat(root.dataset.priceKg) || 0,
-                kg10: parseFloat(root.dataset.priceKg10) || 0,
-                kg20: parseFloat(root.dataset.priceKg20) || 0,
-                kg30: parseFloat(root.dataset.priceKg30) || 0,
-                cube: parseFloat(root.dataset.priceCube) || 0,
-            };
-
-            const els = {
-                weight: document.getElementById('weight-input'),
-                volume: document.getElementById('volume-input'),
-                received: document.getElementById('received-amount-input'),
-                total: document.getElementById('total-amount-value'),
-                discount: document.getElementById('discount-total-value'),
-                final: document.getElementById('total-final-value'),
-            };
-
-            const calc = () => {
-                const weight = parseNumber(els.weight?.value);
-                const volume = parseNumber(els.volume?.value);
-
-                let kgPrice;
-                if (weight <= 10) {
-                    kgPrice = prices.kg;
-                } else if (weight <= 20) {
-                    kgPrice = prices.kg10 || prices.kg;
-                } else if (weight <= 30) {
-                    kgPrice = prices.kg20 || prices.kg10 || prices.kg;
-                } else {
-                    kgPrice = prices.kg30 || prices.kg20 || prices.kg10 || prices.kg;
-                }
-
-                const kgTotal = weight * (kgPrice || 0);
-                const cubeTotal = volume * (prices.cube || 0);
-                const totalAmount = roundPrice(kgTotal + cubeTotal);
-
-                const receivedEl = els.received;
-                if (receivedEl && window.__cashdesk_autofill_mode) {
-                    receivedEl.value = String(totalAmount);
-                }
-                const received = parseNumber(receivedEl?.value);
-                let discount = Math.max(0, totalAmount - received);
-                discount = Math.min(discount, totalAmount);
-
-                const totalFinal = roundPrice(Math.max(0, totalAmount - discount));
-
-                if (els.total) {
-                    els.total.textContent = formatValue(totalAmount);
-                }
-                if (els.discount) {
-                    els.discount.textContent = formatValue(discount);
-                }
-                if (els.final) {
-                    els.final.textContent = formatValue(totalFinal);
-                }
-
-                const totalInput = document.getElementById('total-amount-input');
-                const discountInput = document.getElementById('discount-total-input');
-                const finalInput = document.getElementById('total-final-input');
-                if (totalInput) totalInput.value = totalAmount;
-                if (discountInput) discountInput.value = discount;
-                if (finalInput) finalInput.value = totalFinal;
-            };
-
-            const bindOnce = (el, key, handler) => {
-                if (!el || el.dataset[key]) return;
-                el.dataset[key] = '1';
-                el.addEventListener('input', handler);
-                el.addEventListener('change', handler);
-            };
-
-            bindOnce(els.weight, 'cashdeskWeightCalc', () => {
-                window.__cashdesk_autofill_mode = true;
-                calc();
-            });
-            bindOnce(els.volume, 'cashdeskVolumeCalc', () => {
-                window.__cashdesk_autofill_mode = true;
-                calc();
-            });
-            bindOnce(els.received, 'cashdeskReceivedCalc', () => {
-                window.__cashdesk_autofill_mode = false;
-                calc();
-            });
-
-            window.__cashdesk_calc = calc;
-            calc();
-        };
-
-        window.__cashdesk_calc_init = initCalc;
-        initCalc();
-
-        if (window.Livewire && !window.__cashdesk_calc_hooked) {
-            window.__cashdesk_calc_hooked = true;
-            Livewire.hook('message.processed', () => initCalc());
         }
     })();
 </script>
