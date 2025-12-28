@@ -134,7 +134,7 @@
                         <flux:badge color="neutral">Live</flux:badge>
                     </div>
                     <div class="space-y-3">
-                        <flux:autocomplete id="client-input" wire:model.live="client" label="Клиент (Ctrl+Enter)"
+                        <flux:autocomplete id="client-input" wire:model.defer="client" label="Клиент (Ctrl+Enter)"
                             placeholder="Выберите клиента" required>
                             @foreach ($users as $user)
                                 <flux:autocomplete.item>{{ $user->phone }}</flux:autocomplete.item>
@@ -144,11 +144,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <!-- Вес груза -->
                         <flux:input id="weight-input" label="Вес груза" placeholder="Введите общий вес груза"
-                            wire:model.live="weight" required />
+                            wire:model.defer="weight" required />
 
                         <!-- Объём груза -->
                         <flux:input id="volume-input" label="Объём груза" placeholder="Введите примерный объём"
-                            wire:model.live="volume" />
+                            wire:model.defer="volume" />
                     </div>
 
                     <!-- Скидка -->
@@ -157,7 +157,10 @@
                     <div class="space-y-2">
                         <flux:label>Полученная сумма</flux:label>
                         <flux:input id="received-amount-input" placeholder="Сколько оплатил клиент"
-                            wire:model.live="received_amount" type="text" inputmode="decimal" min="0" />
+                            wire:model.defer="received_amount" type="text" inputmode="decimal" min="0" />
+                        <input id="total-amount-input" type="hidden" wire:model.defer="total_amount">
+                        <input id="discount-total-input" type="hidden" wire:model.defer="discount_total">
+                        <input id="total-final-input" type="hidden" wire:model.defer="total_final">
                         <p class="text-xs text-neutral-500">Недостающая сумма автоматически попадёт в скидку.</p>
                     </div>
                     <div
@@ -563,6 +566,13 @@
             if (els.final) {
                 els.final.textContent = formatValue(totalFinal);
             }
+
+            const totalInput = document.getElementById('total-amount-input');
+            const discountInput = document.getElementById('discount-total-input');
+            const finalInput = document.getElementById('total-final-input');
+            if (totalInput) totalInput.value = totalAmount;
+            if (discountInput) discountInput.value = discount;
+            if (finalInput) finalInput.value = totalFinal;
         };
 
         const bind = (el) => {
