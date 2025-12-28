@@ -560,6 +560,16 @@
             return Number.isNaN(parsed) ? 0 : parsed;
         };
 
+        const emitInput = (el) => {
+            if (!el) return;
+            el.dispatchEvent(new Event('input', {
+                bubbles: true
+            }));
+            el.dispatchEvent(new Event('change', {
+                bubbles: true
+            }));
+        };
+
         const roundPrice = (value) => {
             const fraction = value - Math.floor(value);
             return fraction > 0.5 ? Math.ceil(value) : Math.floor(value);
@@ -572,6 +582,9 @@
         }
         if (window.__cashdesk_last_auto_received === undefined) {
             window.__cashdesk_last_auto_received = '';
+        }
+        if (window.__cashdesk_autofill_received === undefined) {
+            window.__cashdesk_autofill_received = false;
         }
 
         const calc = () => {
@@ -595,11 +608,12 @@
             const receivedValue = receivedEl ? String(receivedEl.value ?? '') : '';
             const canAutofill = receivedEl &&
                 (!window.__cashdesk_received_dirty ||
-                    receivedValue === '' ||
                     receivedValue === window.__cashdesk_last_auto_received);
             if (canAutofill) {
+                window.__cashdesk_autofill_received = true;
                 receivedEl.value = String(totalAmount);
                 window.__cashdesk_last_auto_received = String(totalAmount);
+                emitInput(receivedEl);
             }
             const received = parseNumber(receivedEl?.value);
             let discount = Math.max(0, totalAmount - received);
@@ -620,9 +634,18 @@
             const totalInput = document.getElementById('total-amount-input');
             const discountInput = document.getElementById('discount-total-input');
             const finalInput = document.getElementById('total-final-input');
-            if (totalInput) totalInput.value = totalAmount;
-            if (discountInput) discountInput.value = discount;
-            if (finalInput) finalInput.value = totalFinal;
+            if (totalInput) {
+                totalInput.value = totalAmount;
+                emitInput(totalInput);
+            }
+            if (discountInput) {
+                discountInput.value = discount;
+                emitInput(discountInput);
+            }
+            if (finalInput) {
+                finalInput.value = totalFinal;
+                emitInput(finalInput);
+            }
         };
 
         const bind = (el) => {
@@ -631,33 +654,23 @@
             el.addEventListener('change', calc);
         };
 
-        if (els.weight) {
-            els.weight.addEventListener('input', () => {
-                window.__cashdesk_received_dirty = false;
-                calc();
-            });
-            els.weight.addEventListener('change', () => {
-                window.__cashdesk_received_dirty = false;
-                calc();
-            });
-        }
-        if (els.volume) {
-            els.volume.addEventListener('input', () => {
-                window.__cashdesk_received_dirty = false;
-                calc();
-            });
-            els.volume.addEventListener('change', () => {
-                window.__cashdesk_received_dirty = false;
-                calc();
-            });
-        }
+        bind(els.weight);
+        bind(els.volume);
         if (els.received) {
             els.received.addEventListener('input', () => {
-                window.__cashdesk_received_dirty = true;
+                if (window.__cashdesk_autofill_received) {
+                    window.__cashdesk_autofill_received = false;
+                } else {
+                    window.__cashdesk_received_dirty = true;
+                }
                 calc();
             });
             els.received.addEventListener('change', () => {
-                window.__cashdesk_received_dirty = true;
+                if (window.__cashdesk_autofill_received) {
+                    window.__cashdesk_autofill_received = false;
+                } else {
+                    window.__cashdesk_received_dirty = true;
+                }
                 calc();
             });
         }
