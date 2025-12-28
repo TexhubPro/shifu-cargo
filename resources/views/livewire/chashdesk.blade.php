@@ -434,11 +434,21 @@
                 focusInput('client-input');
             };
 
+            const emitInputLocal = (el) => {
+                if (!el) return;
+                el.dispatchEvent(new Event('input', {
+                    bubbles: true
+                }));
+                el.dispatchEvent(new Event('change', {
+                    bubbles: true
+                }));
+            };
+
             const syncLivewireFields = () => {
-                emitInput(document.getElementById('received-amount-input'));
-                emitInput(document.getElementById('total-amount-input'));
-                emitInput(document.getElementById('discount-total-input'));
-                emitInput(document.getElementById('total-final-input'));
+                emitInputLocal(document.getElementById('received-amount-input'));
+                emitInputLocal(document.getElementById('total-amount-input'));
+                emitInputLocal(document.getElementById('discount-total-input'));
+                emitInputLocal(document.getElementById('total-final-input'));
             };
 
             bindOnce(confirmSubmitBtn(), 'click', 'confirmSubmit', () => {
