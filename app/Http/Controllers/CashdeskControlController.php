@@ -83,7 +83,7 @@ class CashdeskControlController extends Controller
         return redirect()->route('login');
     }
 
-    public function placeOrder(Request $request): RedirectResponse
+    public function placeOrder(Request $request)
     {
         $data = $this->validatedOrderData($request);
 
