@@ -88,10 +88,12 @@ class Chashdesk extends Component
             'selected_queue' => $this->selected_queue,
             'active_held_order_id' => $this->activeHeldOrderId,
         ]);
+        $this->resetOrderForm();
+        $this->refreshHeldOrders();
+        $this->refreshQueues();
         $this->dispatch('order-submitted');
         $this->todayOrdersCache = null;
         $this->todayOrdersSummaryCache = null;
-        return redirect()->route('cashier');
     }
     public function updateTrackStatuses($user_id, $order_id)
     {
