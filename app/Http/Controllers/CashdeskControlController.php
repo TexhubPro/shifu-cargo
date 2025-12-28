@@ -118,37 +118,41 @@ class CashdeskControlController extends Controller
         $orderId = $order->id;
 
         dispatch(function () use ($userId, $orderId, $trackCodes, $clientValue) {
-            if ($userId) {
-                $sms = new Telegram();
-                $sms->sms_order($userId, $orderId);
-            }
-
-            $trackUserId = $userId ?? $clientValue;
-            foreach ($trackCodes as $code) {
-                $trimmed = trim($code);
-                if ($trimmed === '') {
-                    continue;
+            try {
+                if ($userId) {
+                    $sms = new Telegram();
+                    $sms->sms_order($userId, $orderId);
                 }
 
-                $track = Trackcode::where('code', $trimmed)->first();
-                if ($track) {
-                    $track->customer = Carbon::now();
-                    $track->status = 'Получено';
-                    $track->user_id = $trackUserId;
-                    $track->order_id = $orderId;
-                    $track->save();
-                    continue;
-                }
+                $trackUserId = $userId ?? $clientValue;
+                foreach ($trackCodes as $code) {
+                    $trimmed = trim($code);
+                    if ($trimmed === '') {
+                        continue;
+                    }
 
-                Trackcode::create([
-                    'code' => $trimmed,
-                    'china' => Carbon::now(),
-                    'dushanbe' => Carbon::now(),
-                    'customer' => Carbon::now(),
-                    'status' => 'Получено',
-                    'user_id' => $trackUserId,
-                    'order_id' => $orderId,
-                ]);
+                    $track = Trackcode::where('code', $trimmed)->first();
+                    if ($track) {
+                        $track->customer = Carbon::now();
+                        $track->status = 'Получено';
+                        $track->user_id = $trackUserId;
+                        $track->order_id = $orderId;
+                        $track->save();
+                        continue;
+                    }
+
+                    Trackcode::create([
+                        'code' => $trimmed,
+                        'china' => Carbon::now(),
+                        'dushanbe' => Carbon::now(),
+                        'customer' => Carbon::now(),
+                        'status' => 'Получено',
+                        'user_id' => $trackUserId,
+                        'order_id' => $orderId,
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                report($e);
             }
         })->afterResponse();
 
