@@ -38,7 +38,7 @@
                         </div>
                     </button>
                     <a id="btn-reports-modal" aria-keyshortcuts="Shift+Alt+R" href="{{ route('cashier.reports') }}"
-                        class="h-16 rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all flex items-center gap-3 text-left px-3 text-white">
+                        class="h-16 rounded-xl bg-red-500 border border-white/30 w-full shadow-md hover:bg-red-400 transition-all flex items-center gap-3 text-left px-3 text-white">
                         <span
                             class="bg-white/25 rounded-2xl w-11 h-11 flex items-center justify-center text-white text-xl">R</span>
                         <div class="flex flex-col leading-tight">
