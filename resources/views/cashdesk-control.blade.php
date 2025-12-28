@@ -407,6 +407,15 @@
                 </div>
             </div>
         </div>
+        <div id="order-loading"
+            class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+            <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 border border-neutral-200 text-center space-y-3">
+                <div class="mx-auto w-12 h-12 rounded-full border-4 border-neutral-200 border-t-emerald-600 animate-spin">
+                </div>
+                <p class="text-lg font-semibold text-neutral-900">Оформляем заказ…</p>
+                <p class="text-sm text-neutral-500">Пожалуйста, подождите.</p>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/mousetrap@1.6.5/mousetrap.min.js"></script>
@@ -535,7 +544,9 @@
             const cancelSubmitBtn = () => document.getElementById('cancel-submit-btn');
             const submitBtn = () => document.getElementById('btn-submit-order');
             const orderForm = () => document.getElementById('cashdesk-order-form');
+            const loadingModal = () => document.getElementById('order-loading');
             let confirmOpen = false;
+            let submitting = false;
 
             const showConfirm = () => {
                 const modal = confirmModal();
@@ -555,6 +566,24 @@
                 focusInput('received-amount-input');
             };
 
+            const showLoading = () => {
+                const modal = loadingModal();
+                if (!modal) return;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            };
+
+            const lockSubmit = () => {
+                if (submitting) return false;
+                submitting = true;
+                submitBtn()?.setAttribute('disabled', 'disabled');
+                confirmSubmitBtn()?.setAttribute('disabled', 'disabled');
+                cancelSubmitBtn()?.setAttribute('disabled', 'disabled');
+                document.getElementById('btn-hold-order')?.setAttribute('disabled', 'disabled');
+                showLoading();
+                return true;
+            };
+
             const bindOnce = (el, event, key, handler) => {
                 if (!el || el.dataset[key]) return;
                 el.dataset[key] = '1';
@@ -562,6 +591,9 @@
             };
 
             bindOnce(confirmSubmitBtn(), 'click', 'confirmSubmit', () => {
+                if (!lockSubmit()) {
+                    return;
+                }
                 hideConfirm();
                 orderForm()?.requestSubmit();
             });
@@ -602,7 +634,16 @@
 
             bindOnce(submitBtn(), 'click', 'submitClick', (event) => {
                 event.preventDefault();
+                if (submitting) {
+                    return;
+                }
                 showConfirm();
+            });
+
+            orderForm()?.addEventListener('submit', (event) => {
+                if (!lockSubmit()) {
+                    event.preventDefault();
+                }
             });
 
             document.addEventListener('keydown', (event) => {
