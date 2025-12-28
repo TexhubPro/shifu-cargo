@@ -591,11 +591,11 @@
         bind(els.volume);
         if (els.received) {
             els.received.addEventListener('input', () => {
-                receivedDirty = els.received.value !== '';
+                receivedDirty = true;
                 calc();
             });
             els.received.addEventListener('change', () => {
-                receivedDirty = els.received.value !== '';
+                receivedDirty = true;
                 calc();
             });
         }
