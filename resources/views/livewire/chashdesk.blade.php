@@ -434,11 +434,19 @@
                 focusInput('client-input');
             };
 
+            const syncLivewireFields = () => {
+                emitInput(document.getElementById('received-amount-input'));
+                emitInput(document.getElementById('total-amount-input'));
+                emitInput(document.getElementById('discount-total-input'));
+                emitInput(document.getElementById('total-final-input'));
+            };
+
             bindOnce(confirmSubmitBtn(), 'click', 'confirmSubmit', () => {
                 hideConfirm();
                 if (typeof window.__cashdesk_calc === 'function') {
                     window.__cashdesk_calc();
                 }
+                syncLivewireFields();
                 window.__cashdesk_clear_pending = true;
                 orderForm()?.requestSubmit();
             });
@@ -613,7 +621,6 @@
                 window.__cashdesk_autofill_received = true;
                 receivedEl.value = String(totalAmount);
                 window.__cashdesk_last_auto_received = String(totalAmount);
-                emitInput(receivedEl);
             }
             const received = parseNumber(receivedEl?.value);
             let discount = Math.max(0, totalAmount - received);
@@ -634,18 +641,9 @@
             const totalInput = document.getElementById('total-amount-input');
             const discountInput = document.getElementById('discount-total-input');
             const finalInput = document.getElementById('total-final-input');
-            if (totalInput) {
-                totalInput.value = totalAmount;
-                emitInput(totalInput);
-            }
-            if (discountInput) {
-                discountInput.value = discount;
-                emitInput(discountInput);
-            }
-            if (finalInput) {
-                finalInput.value = totalFinal;
-                emitInput(finalInput);
-            }
+            if (totalInput) totalInput.value = totalAmount;
+            if (discountInput) discountInput.value = discount;
+            if (finalInput) finalInput.value = totalFinal;
         };
 
         const bind = (el) => {
