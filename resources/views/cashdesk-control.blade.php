@@ -49,7 +49,7 @@
                                     <path d="M3 9l4 0" />
                                 </svg></span>
                             <div class="flex flex-col leading-tight">
-                                <span class="font-semibold text-white whitespace-break-spaces">Поступление
+                                <span class="font-semibold text-white whitespace-pre">Поступление
                                     доставщика</span>
                             </div>
                         </div>
