@@ -281,7 +281,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
 
         $user = User::where('chat_id', $this->message->from()->id())->first();
 
-        if ($text == '❌ Закрыт чат' || $text == '❌ Пушидани чат') {
+        if ($text == '❌ Закрыт чат' || $text == '❌ Пушидани чат' || $text == "❌ Не хочу оставлять заявку" || $text == "❌ Намехоҳам дархост гузорам") {
             $user->step = null;
             $user->save();
             $chat_sec = Chat::where('user_id', $user->id)->first();
@@ -526,8 +526,12 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 $user->save();
                 if ($this->chat->lang == 'ru') {
                     $this->chat->message("✅ Ваш заказ получен! Мы проверим, и если он уже есть на нашем складе в Душанбе, мы обязательно доставим его вам. 📦")->send();
+                    $this->ru_keys();
+
                 } else {
                     $this->chat->message("✅ Фармоиши шумо қабул шуд! Мо месанҷем ва агар он дар анбори мо дар шаҳри Душанбе бошад, ҳатман онро ба шумо мерасонем. 📦")->send();
+                    $this->tj_keys();
+
                 }
                 return;
             }
@@ -548,9 +552,18 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             $user->step = "apl_phone";
             $user->save();
             if ($this->chat->lang == 'ru') {
-                $this->chat->photo(public_path('assets/delivery_ru.png'))->message("✍️ Напишите свой номер телефона, например: <b>931234567</b>")->send();
+                $this->chat->photo(public_path('assets/delivery_ru.png'))->message("✍️ Напишите свой номер телефона, например: <b>931234567</b>")->replyKeyboard(ReplyKeyboard::make()
+                    ->row([
+                        ReplyButton::make('❌ Не хочу оставлять заявку'),
+                    ])
+                    ->resize())->send();
+                ;
             } else {
-                $this->chat->photo(public_path('assets/delivery_tj.png'))->message("✍️ Рақами телефони худро нависед, масалан: <b>931234567</b>")->send();
+                $this->chat->photo(public_path('assets/delivery_tj.png'))->message("✍️ Рақами телефони худро нависед, масалан: <b>931234567</b>")->replyKeyboard(ReplyKeyboard::make()
+                    ->row([
+                        ReplyButton::make('❌ Намехоҳам дархост гузорам'),
+                    ])
+                    ->resize())->send();
             }
             return;
         }
