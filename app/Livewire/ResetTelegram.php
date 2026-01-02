@@ -2,8 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Jobs\TelegramStart;
 use Livewire\Component;
-use App\Jobs\SendBulkSms;
 use DefStudio\Telegraph\Models\TelegraphChat;
 
 class ResetTelegram extends Component
@@ -12,7 +12,7 @@ class ResetTelegram extends Component
     {
         $users = TelegraphChat::all();
         foreach ($users as $user) {
-            SendBulkSms::dispatch($user->id);
+            TelegramStart::dispatch($user->id);
         }
     }
     public function render()
