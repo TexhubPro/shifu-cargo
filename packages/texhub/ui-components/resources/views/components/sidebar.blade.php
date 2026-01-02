@@ -128,6 +128,20 @@
                 <span>{{ __('Заявки на доставку') }}</span>
             </p>
         </a>
+        <a href="{{ route('admin.deliverers') }}">
+            <p
+                class="{{ Route::is('admin.deliverers') ? 'text-blue-600' : 'text-gray-700 hover:bg-gray-200' }} min-w-full flex gap-3 items-center w-full text-base font-semibold p-3 hover:bg-gray-200 text-start rounded-xl duration-200">
+                <svg class="size-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5" />
+                    <path d="M3 9l4 0" />
+                </svg>
+                <span>{{ __('Доставщики') }}</span>
+            </p>
+        </a>
         @if (Auth::user()->role == 'admin')
             <a href="{{ route('admin.smsbulk') }}">
                 <p
