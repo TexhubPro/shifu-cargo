@@ -119,6 +119,12 @@
                         {{ $order ? number_format($order->delivery_total, 2, '.', ' ') : '—' }} c
                     </p>
                 </div>
+                <div class="rounded-xl bg-emerald-50 p-3 col-span-2">
+                    <p class="text-xs text-emerald-600">Итог с доставкой</p>
+                    <p class="font-semibold text-emerald-900">
+                        {{ $order ? number_format($order->total, 2, '.', ' ') : '—' }} c
+                    </p>
+                </div>
             </div>
         </div>
     </div>

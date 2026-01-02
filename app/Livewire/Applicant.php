@@ -223,7 +223,7 @@ class Applicant extends Component
     {
         $this->total_amounts();
     }
-    public function updatedDelivery_price()
+    public function updatedDeliveryPrice()
     {
         $this->total_amounts();
     }
