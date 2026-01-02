@@ -109,6 +109,9 @@
                                 <flux:button variant="primary" size="sm" color="red"
                                     wire:click="delete({{ $item->id }})" wire:confirm>
                                     Удалить</flux:button>
+                                <flux:button variant="primary" size="sm" color="lime"
+                                    wire:click="activate({{ $item->id }})" wire:confirm>
+                                    Активировать</flux:button>
                             </flux:table.cell>
                         @endif
                     </flux:table.row>

@@ -52,6 +52,12 @@ class Applications extends Component
     {
         Application::find($id)->delete();
     }
+    public function activate($id)
+    {
+        $apl = Application::find($id);
+        $apl->status = "В ожидании";
+        $apl->save();
+    }
     public function cleanInvalid()
     {
         Application::where('status', 'Отменено')->delete();
