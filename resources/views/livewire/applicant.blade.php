@@ -51,13 +51,13 @@
                             <span class="text-neutral-200">#</span>
                         </flux:table.column>
                         <flux:table.column class="max-w-[160px] text-neutral-200"><span
-                                class="text-neutral-200"></span>Имя</span></flux:table.column>
+                                class="text-neutral-200">Имя</span></flux:table.column>
                         <flux:table.column class="max-w-[140px] text-neutral-200"><span
-                                class="text-neutral-200"></span>Телефон</span></flux:table.column>
+                                class="text-neutral-200">Телефон</span></flux:table.column>
                         <flux:table.column class="max-w-[240px] text-neutral-200"><span
-                                class="text-neutral-200"></span>Адрес</span></flux:table.column>
+                                class="text-neutral-200">Адрес</span></flux:table.column>
                         <flux:table.column class="w-48 text-right text-neutral-200"><span
-                                class="text-neutral-200"></span>Действия</span></flux:table.column>
+                                class="text-neutral-200">Действия</span></flux:table.column>
                     </flux:table.columns>
 
                     <flux:table.rows>
