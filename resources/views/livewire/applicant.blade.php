@@ -59,7 +59,7 @@
                         <flux:table.column class="w-48 text-right text-neutral-200"><span
                                 class="text-neutral-200">Действия</span></flux:table.column>
                     </flux:table.columns>
-
+                    {{-- welfr --}}
                     <flux:table.rows>
                         @forelse ($orders as $item)
                             <flux:table.row>
