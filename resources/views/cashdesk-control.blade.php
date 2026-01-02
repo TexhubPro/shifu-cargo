@@ -7,7 +7,7 @@
                     <p class="text-white text-xl font-semibold">Shifu Cargo</p>
                 </div>
                 {{-- adkjf --}}
-                <div class="grid grid-cols-1 lg:grid-cols-6 gap-3 w-full lg:w-auto max-w-7xl">
+                <div class="grid grid-cols-1 lg:grid-cols-6 gap-3 w-full lg:w-auto max-w-6xl">
                     <button id="btn-add-expense" aria-keyshortcuts="Shift+Alt+E" type="button"
                         class="rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all flex items-center gap-3 text-left p-2 text-white">
                         <div class="flex items-center gap-3 text-left">
