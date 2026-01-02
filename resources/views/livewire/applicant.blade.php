@@ -240,40 +240,30 @@
                         required />
                     <flux:input label="Объём груза (м³)" placeholder="Введите примерный объём"
                         wire:model.live="volume" />
-                    <flux:input label="Итоговая сумма (сомони)" placeholder="Введите общую сумму"
-                        wire:model.live="total_amount" type="number" min="0" required />
+                    <div class="col-span-full space-y-2">
+                        <flux:input label="Полученная сумма (сомони)" placeholder="Сколько оплатил клиент"
+                            wire:model.live="received_amount" type="number" min="0" />
+                        <p class="text-xs text-neutral-500">Недостающая сумма автоматически попадёт в скидку.</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="space-y-3">
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                    <flux:label>Скидка</flux:label>
-                    <span class="text-xs text-neutral-400">Укажите значение и тип скидки</span>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                <div class="rounded-xl border border-neutral-800 bg-neutral-950/40 p-3">
+                    <p class="text-neutral-500">Подытог</p>
+                    <p class="text-lg font-semibold text-white">{{ $this->total_amount }} c</p>
                 </div>
-                <div class="flex flex-col sm:flex-row gap-3">
-                    <flux:input placeholder="10" wire:model.live="discount" type="number" min="0" />
-                    <flux:select wire:model.live="discountt" placeholder="Тип скидки">
-                        <flux:select.option>Фиксированная</flux:select.option>
-                        <flux:select.option>Процентная</flux:select.option>
-                    </flux:select>
+                <div class="rounded-xl border border-neutral-800 bg-neutral-950/40 p-3">
+                    <p class="text-neutral-500">Доставка</p>
+                    <p class="text-lg font-semibold text-white">{{ $delivery_price }} c</p>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-                    <div class="rounded-xl border border-neutral-800 bg-neutral-950/40 p-3">
-                        <p class="text-neutral-500">Подытог</p>
-                        <p class="text-lg font-semibold text-white">{{ $this->total_amount }} c</p>
-                    </div>
-                    <div class="rounded-xl border border-neutral-800 bg-neutral-950/40 p-3">
-                        <p class="text-neutral-500">Доставка</p>
-                        <p class="text-lg font-semibold text-white">{{ $delivery_price }} c</p>
-                    </div>
-                    <div class="rounded-xl border border-neutral-800 bg-neutral-950/40 p-3">
-                        <p class="text-neutral-500">Скидка</p>
-                        <p class="text-lg font-semibold text-amber-300">-{{ $this->discount_total }} c</p>
-                    </div>
-                    <div class="rounded-xl border border-emerald-600/50 bg-emerald-500/10 p-3">
-                        <p class="text-neutral-400">Итог к оплате</p>
-                        <p class="text-xl font-semibold text-emerald-300">{{ $total_final }} c</p>
-                    </div>
+                <div class="rounded-xl border border-neutral-800 bg-neutral-950/40 p-3">
+                    <p class="text-neutral-500">Скидка</p>
+                    <p class="text-lg font-semibold text-amber-300">-{{ $this->discount_total }} c</p>
+                </div>
+                <div class="rounded-xl border border-emerald-600/50 bg-emerald-500/10 p-3">
+                    <p class="text-neutral-400">Итог к оплате</p>
+                    <p class="text-xl font-semibold text-emerald-300">{{ $total_final }} c</p>
                 </div>
             </div>
 

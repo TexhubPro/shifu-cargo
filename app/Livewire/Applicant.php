@@ -31,13 +31,12 @@ class Applicant extends Component
     public $weight = 0;
     public $volume = 0;
     public $payment_type;
-    public $discount = 0;
     public $tracks = []; // массив трек-кодов
     public $newTrack;
-    public $discountt;
     public $total_amount = 0;
     public $discount_total = 0;
     public $total_final = 0;
+    public $received_amount;
     public $file;
     public $trackLookupCode;
     public $trackLookupResult;
@@ -215,33 +214,51 @@ class Applicant extends Component
 
         return $hasEnoughLength && $notOnlyDigits;
     }
-    public function updatedDiscount()
-    {
-        $this->total_amounts();
-    }
-    public function updatedDiscountt()
-    {
-        $this->total_amounts();
-    }
     public function updatedWeight()
     {
         $this->total_amounts();
+        $this->received_amount = $this->total_amount;
     }
     public function updatedVolume()
     {
         $this->total_amounts();
+        $this->received_amount = $this->total_amount;
     }
     public function updatedDelivery_price()
     {
         $this->total_amounts();
     }
+    public function updatedReceivedAmount()
+    {
+        $this->total_amounts();
+    }
+    protected function parseNumber($value): float
+    {
+        if ($value === null || $value === '') {
+            return 0.0;
+        }
+
+        if (is_string($value)) {
+            $normalized = str_replace([' ', ','], ['', '.'], $value);
+            if (is_numeric($normalized)) {
+                return (float) $normalized;
+            }
+        }
+
+        return (float) $value;
+    }
+    protected function roundPrice(float $value): float
+    {
+        $fraction = $value - floor($value);
+
+        return $fraction > 0.5 ? ceil($value) : floor($value);
+    }
     public function total_amounts()
     {
-        $weight = (float) ($this->weight ?? 0);
-        $volume = (float) ($this->volume ?? 0);
+        $weight = $this->parseNumber($this->weight);
+        $volume = $this->parseNumber($this->volume);
         $kg_price = (float) $this->getKgPriceTJS();
         $cube_price = (float) $this->getCubePriceTJS();
-        $discount = (float) ($this->discount ?? 0);
 
         // Расчёт стоимости
         if ($weight <= 10) {
@@ -256,18 +273,20 @@ class Applicant extends Component
         $cube_total = $volume * $cube_price;
 
         // Общая сумма без скидки
-        $this->total_amount = $kg_total + $cube_total;
+        $rawTotal = $kg_total + $cube_total;
+        $this->total_amount = max(10, $this->roundPrice($rawTotal));
 
-        // Расчёт скидки
-        $this->discount_total = 0;
-        if ($discount > 0) {
-            if ($this->discountt === 'Процентная' || $this->discountt === 'percent') {
-                $this->discount_total = $this->total_amount * ($discount / 100);
-            } else {
-                $this->discount_total = $discount;
-            }
-        }
-        $this->total_final = max(0, $this->total_amount - $this->discount_total + $this->delivery_price);
+        $receivedAmountInput = $this->received_amount;
+        $receivedAmount = ($receivedAmountInput === null || $receivedAmountInput === '')
+            ? 0
+            : $this->parseNumber($receivedAmountInput);
+
+        // Недостающая сумма = скидка
+        $this->discount_total = max(0, $this->total_amount - $receivedAmount);
+        $this->discount_total = min($this->discount_total, $this->total_amount);
+
+        $final = $this->total_amount - $this->discount_total + $this->parseNumber($this->delivery_price);
+        $this->total_final = $this->roundPrice(max(0, $final));
     }
     private function getKgPriceTJS()
     {

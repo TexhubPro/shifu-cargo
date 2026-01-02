@@ -13,6 +13,7 @@ use App\Models\Notification;
 use Illuminate\Http\Request;
 use DefStudio\Telegraph\Telegraph;
 use Illuminate\Support\Stringable;
+use Illuminate\Support\Str;
 use Illuminate\Notifications\Action;
 use Illuminate\Support\Facades\Storage;
 use DefStudio\Telegraph\Keyboard\Button;
@@ -802,7 +803,13 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         if ($user->chat_id) {
             $chat = TelegraphChat::where('chat_id', $user->chat_id)->first();
             if ($file) {
-                $chat->document("https://shifucargo.texhub.pro$file")->send();
+                $url = $file;
+                if (!Str::startsWith($file, ['http://', 'https://'])) {
+                    $baseUrl = rtrim((string) config('app.url'), '/');
+                    $path = '/' . ltrim($file, '/');
+                    $url = $baseUrl !== '' ? $baseUrl . $path : $path;
+                }
+                $chat->document($url)->send();
             }
             if ($chat->lang == 'ru') {
                 $chat->message("📦 Добрый день, уважаемый клиент!\n\n🚚 Вы успешно оформили доставку.\n⚖️ Вес: $order->weight кг\n📏 Объём: $order->cube м³\n💰 Подытог: $order->subtotal с\n💵 Скидка: $order->discount с\n🚛 Доставка: $order->delivery_total с\n✅ Итог: $order->total с\n\nСпасибо, что вы с нами! 💚")->send();
