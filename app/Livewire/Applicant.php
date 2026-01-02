@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Http\Controllers\SmsController;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Order;
@@ -120,6 +121,7 @@ class Applicant extends Component
             'total' => $this->total_final,
             'status' => "Доставляется",
         ]);
+
         if ($user) {
             if ($this->file) {
 
@@ -132,6 +134,11 @@ class Applicant extends Component
             $sms = new Telegram();
             $sms->sms_order($user->id, $order->id, $file);
         }
+
+        $message = "📦 Салом, муштарии муҳтарам!\n\n🚚 Шумо бо муваффақият фармоиши худро қабул/дархост намудед.\n⚖️ Вазн: $order->weight кг\n📏 Ҳаҷм: $order->cube м³\n💰 Ҷамъбаст: $order->subtotal с\n💵 Тахфиф: $order->discount с\n🚛 Нархи бурда расонӣ: $order->delivery_total с\n✅ Ҳамагӣ: $order->total с\n\nТашаккур, ки бо мо ҳастед! 💚";
+        $sms_oson = new SmsController();
+        $sms_oson->sendSms($this->selected_order->phone, $$message);
+
         if ($deliver) {
             $sms_delivery = new Telegram();
             $sms_delivery->sms_deliver_boy($deliver->id, $order->id, $this->selected_order->id);
@@ -238,7 +245,7 @@ class Applicant extends Component
         if ($weight <= 10) {
             $kg_total = $weight * (float) $this->getKgPriceTJS();
         } elseif ($weight <= 20) {
-            $kg_total = $weight *  (float) $this->getKgPrice10TJS();
+            $kg_total = $weight * (float) $this->getKgPrice10TJS();
         } elseif ($weight <= 30) {
             $kg_total = $weight * (float) $this->getKgPrice20TJS();
         } else {
