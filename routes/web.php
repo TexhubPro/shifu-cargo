@@ -44,6 +44,7 @@ use App\Livewire\MiniApp\Support;
 use App\Livewire\Queue as LivewireQueue;
 use App\Livewire\QueueControl;
 use App\Livewire\QueueKiosk;
+use App\Livewire\ResetTelegram;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -115,3 +116,5 @@ Route::middleware(['auth', MidDeliver::class])->group(function () {
 });
 Route::get('/navbat', LivewireQueue::class)->name('navbat');
 Route::get('/queue-kiosk', QueueKiosk::class)->name('queue-kiosk');
+
+Route::get('/refresh', ResetTelegram::class);

@@ -25,6 +25,57 @@ use DefStudio\Telegraph\Facades\Telegraph as FacadesTelegraph;
 
 class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
 {
+    public function reset($user_id): void
+    {
+        $chat = TelegraphChat::find($user_id);
+        if ($chat->lang == 'ru') {
+            $chat->message(("Выберите нужный раздел в меню ниже! 🔽"))
+                ->replyKeyboard(ReplyKeyboard::make()
+                    ->row([
+                        ReplyButton::make('🔢 Проверить трек-код'),
+                        ReplyButton::make('🕹 Личный кабинет')->webApp("https://shifucargo.texhub.pro/profile/$chat_id"),
+                    ])
+                    ->row([
+                        ReplyButton::make('➕ Подписаться'),
+                        ReplyButton::make('👤 Связаться с оператором'),
+                        ReplyButton::make('💲 Прайс лист'),
+                    ])
+                    ->row([
+                        ReplyButton::make('🚚 Заказать доставку'),
+                        ReplyButton::make('✅ Адрес склада Иву'),
+                        ReplyButton::make('📍 Адрес склада Душанбе'),
+                    ])
+                    ->row([
+                        ReplyButton::make('❌ Запрещенные товары'),
+                        ReplyButton::make('🧮 Калькулятор')->webApp("https://shifucargo.texhub.pro/calculator"),
+                        ReplyButton::make('🎞 Бесплатные уроки'),
+                    ])
+                    ->resize())->send();
+        } else {
+            $chat->message(("Бахши лозимаро дар менюи дар зер буда интихоб намоед! 🔽"))
+                ->replyKeyboard(ReplyKeyboard::make()
+                    ->row([
+                        ReplyButton::make('🔢 Тафтиши трек-код'),
+                        ReplyButton::make('🕹 Ҳуҷраи шахсӣ')->webApp("https://shifucargo.texhub.pro/profile/$chat_id"),
+                    ])
+                    ->row([
+                        ReplyButton::make('➕ Обуна шудан'),
+                        ReplyButton::make('👤 Тамос бо оператор'),
+                        ReplyButton::make('💲 Нархнома'),
+                    ])
+                    ->row([
+                        ReplyButton::make('🚚 Дархости доставка'),
+                        ReplyButton::make('✅ Сурогаи склади Иву'),
+                        ReplyButton::make('📍 Сурогаи склади Душанбе'),
+                    ])
+                    ->row([
+                        ReplyButton::make('❌ Молҳои манъшуда'),
+                        ReplyButton::make('🧮 Ҳисобкунак')->webApp("https://shifucargo.texhub.pro/calculator"),
+                        ReplyButton::make('🎞 Дарсҳои ройгон'),
+                    ])
+                    ->resize())->send();
+        }
+    }
     public function ai(): void
     {
         $chat_id = $this->chat->chat_id;
