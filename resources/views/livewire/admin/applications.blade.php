@@ -69,7 +69,7 @@
                     <flux:table.row>
                         <flux:table.cell>{{ $item->user->code }}</flux:table.cell>
                         <flux:table.cell>{{ $item->phone }}</flux:table.cell>
-                        <flux:table.cell class="max-w-32">{{ $item->address }}</flux:table.cell>
+                        <flux:table.cell class="w-48 truncate">{{ $item->address }}</flux:table.cell>
 
                         <flux:table.cell>
                             @switch($item->status)
