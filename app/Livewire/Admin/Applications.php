@@ -4,9 +4,12 @@ namespace App\Livewire\Admin;
 
 use Livewire\Component;
 use App\Models\Application;
+use App\Exports\ApplicationsExport;
+use Carbon\Carbon;
 use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Computed;
+use Maatwebsite\Excel\Facades\Excel;
 
 #[Layout('components.layouts.admin')]
 class Applications extends Component
@@ -48,6 +51,34 @@ class Applications extends Component
 
         return $query->orderBy($this->getSortField(), $this->getSortDirection())
             ->paginate($this->perPage);
+    }
+
+    #[Computed]
+    public function todayStats(): array
+    {
+        $today = Carbon::today();
+
+        $applicationsToday = Application::whereDate('created_at', $today)->count();
+        $completedToday = Application::whereDate('created_at', $today)
+            ->whereHas('order')
+            ->count();
+
+        $ordersToday = \App\Models\Order::whereDate('created_at', $today)
+            ->whereNotNull('application_id');
+
+        return [
+            'applications' => $applicationsToday,
+            'completed' => $completedToday,
+            'revenue' => (clone $ordersToday)->sum('total'),
+            'delivery' => (clone $ordersToday)->sum('delivery_total'),
+        ];
+    }
+
+    public function downloadReport()
+    {
+        $fileName = 'applications_' . ($this->dateFrom ?? 'all') . '_' . ($this->dateTo ?? 'all') . '.xlsx';
+
+        return Excel::download(new ApplicationsExport($this->dateFrom, $this->dateTo), $fileName);
     }
     public function delete($id)
     {
