@@ -138,14 +138,13 @@
             </div>
             <div class="mt-4">
                 @if ($order && $order->photo_report_path)
-                    <a class="text-blue-600 text-sm underline"
-                        href="{{ asset('public/storage/' . $order->photo_report_path) }}" target="_blank"
-                        rel="noopener">
+                    <a class="text-blue-600 text-sm underline" href="{{ asset($order->photo_report_path) }}"
+                        target="_blank" rel="noopener">
                         Открыть фото-отчёт
                     </a>
                     <div class="mt-3">
                         <img class="w-full max-h-80 object-contain rounded-xl border border-slate-100"
-                            src="{{ asset('public/storage/' . $order->photo_report_path) }}" alt="Фото-отчёт">
+                            src="{{ asset($order->photo_report_path) }}" alt="Фото-отчёт">
                     </div>
                 @else
                     <div class="rounded-xl border border-dashed border-slate-200 p-6 text-sm text-gray-400">
