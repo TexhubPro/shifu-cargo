@@ -112,6 +112,9 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                         Button::make('🇷🇺 Русский')->action('ru'),
                     ])
             )->send();
+        $user = User::where('chat_id', $this->chat->chat_id);
+        $user->step = null;
+        $user->save();
     }
     public function tj(): void
     {
