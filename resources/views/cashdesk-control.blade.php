@@ -48,9 +48,9 @@
                                     <path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5" />
                                     <path d="M3 9l4 0" />
                                 </svg></span>
+
                             <div class="flex flex-col leading-tight">
-                                <span class="font-semibold text-white whitespace-pre">Поступление
-                                    доставщика</span>
+                                <span class="font-semibold text-white whitespace-normal">Поступление доставщика</span>
                             </div>
                         </div>
                     </button>
