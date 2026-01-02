@@ -85,7 +85,7 @@ class CashdeskReports extends Component
             $lines[] = implode(';', [
                 $order->id,
                 optional($order->user)->name ?? '—',
-                optional($order->user)->phone ?? '—',
+                optional($order->user)->phone ?? $order->user,
                 number_format($order->weight, 2, '.', ''),
                 number_format($order->cube, 2, '.', ''),
                 number_format($order->discount, 2, '.', ''),
