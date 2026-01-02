@@ -117,9 +117,9 @@
 
     <flux:modal name="track_lookup" class="w-full max-w-lg">
         <div class="space-y-4">
-            <div class=" text-white">
-                <flux:heading size="lg" class="text-white">Проверка трек-кода</flux:heading>
-                <flux:text class="text-white/80 text-sm">
+            <div class=" ">
+                <flux:heading size="lg" class="">Проверка трек-кода</flux:heading>
+                <flux:text class=" text-sm">
                     Отсканируйте или введите трек. Результат сохранится до следующей проверки.
                 </flux:text>
             </div>
