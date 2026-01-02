@@ -44,6 +44,11 @@
                                     </flux:badge>
                                 @break
 
+                                @case('Заявщик отмениль')
+                                    <flux:badge color="red" size="sm" inset="top bottom">Отменено
+                                    </flux:badge>
+                                @break
+
                                 @default
                                     <flux:badge color="red" size="sm" inset="top bottom">{{ $item->status }}
                                     </flux:badge>
