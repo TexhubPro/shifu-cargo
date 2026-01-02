@@ -133,12 +133,18 @@
                         </flux:table.cell>
                         @if (Auth::user()->role == 'admin')
                             <flux:table.cell>
-                                <flux:button variant="primary" size="sm" color="red"
-                                    wire:click="delete({{ $item->id }})" wire:confirm>
-                                    Удалить</flux:button>
-                                <flux:button variant="primary" size="sm" color="lime"
-                                    wire:click="activate({{ $item->id }})" wire:confirm>
-                                    Активировать</flux:button>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <flux:button variant="primary" size="sm" color="red"
+                                        wire:click="delete({{ $item->id }})" wire:confirm>
+                                        Удалить</flux:button>
+                                    <flux:button variant="primary" size="sm" color="lime"
+                                        wire:click="activate({{ $item->id }})" wire:confirm>
+                                        Активировать</flux:button>
+                                    <flux:button size="sm" variant="outline"
+                                        href="{{ route('admin.applications.show', $item->id) }}">
+                                        Детали
+                                    </flux:button>
+                                </div>
                             </flux:table.cell>
                         @endif
                     </flux:table.row>

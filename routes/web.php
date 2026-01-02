@@ -4,6 +4,7 @@ use App\Http\Middleware\Admin;
 use App\Http\Middleware\Cashier;
 use App\Http\Middleware\Manager as MiddlewareManager;
 use App\Livewire\Admin\Applications;
+use App\Livewire\Admin\ApplicationShow;
 use App\Livewire\Admin\Chats;
 use App\Livewire\Admin\China;
 use App\Livewire\Admin\Customers;
@@ -80,6 +81,7 @@ Route::middleware(['auth', Admin::class])->prefix('admin')->name('admin.')->grou
     Route::get('/trackcodes', Trackcodes::class)->name('trackcodes');
     Route::get('/customers', Customers::class)->name('customers');
     Route::get('/applications', Applications::class)->name('applications');
+    Route::get('/applications/{application}', ApplicationShow::class)->name('applications.show');
     Route::get('/smsbulk', Smsbulk::class)->name('smsbulk');
     Route::get('/chats', Chats::class)->name('chats');
     Route::get('/packages', PAckages::class)->name('packages');
