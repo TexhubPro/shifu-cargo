@@ -3,7 +3,7 @@
     $expensesTotal = $expenses->sum('total');
     $deliveryTotal = $delivery->sum('delivery_total');
     $profitTotal = $netProfit;
-    $maxKpi = max(1, $earningsTotal, $expensesTotal, $deliveryTotal, $profitTotal);
+    $maxKpi = max(1, $earningsTotal, $expensesTotal, $deliveryTotal, $profitTotal, $applicationsTotal, $cashdeskTotal);
 @endphp
 
 <div class="space-y-6">
@@ -142,6 +142,90 @@
                     </div>
                 </div>
             </flux:modal.trigger>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <a href="{{ route('admin.applications') }}"
+                class="group bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100 hover:shadow-md transition-shadow">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Сумма по заявкам</p>
+                        <p class="text-3xl font-semibold text-gray-900 mt-2">
+                            {{ number_format($applicationsTotal, 2, '.', ' ') }} c
+                        </p>
+                        <p class="text-xs text-gray-400 mt-1">За период</p>
+                    </div>
+                    <div
+                        class="h-12 w-12 rounded-2xl bg-emerald-50 text-emerald-600 inline-flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M7 7h10" />
+                            <path d="M7 12h10" />
+                            <path d="M7 17h10" />
+                            <path d="M5 5m0 2a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-4 h-1.5 w-full bg-emerald-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-emerald-500"
+                        style="width: {{ max(8, round(($applicationsTotal / $maxKpi) * 100)) }}%"></div>
+                </div>
+            </a>
+
+            <a href="{{ route('admin.orders') }}"
+                class="group bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100 hover:shadow-md transition-shadow">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Сумма кассы</p>
+                        <p class="text-3xl font-semibold text-gray-900 mt-2">
+                            {{ number_format($cashdeskTotal, 2, '.', ' ') }} c
+                        </p>
+                        <p class="text-xs text-gray-400 mt-1">За период</p>
+                    </div>
+                    <div
+                        class="h-12 w-12 rounded-2xl bg-indigo-50 text-indigo-600 inline-flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2" />
+                            <path d="M14.8 8a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 1 0 4h-2a2 2 0 0 1 -1.8 -1" />
+                            <path d="M12 6v10" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-4 h-1.5 w-full bg-indigo-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-indigo-500"
+                        style="width: {{ max(8, round(($cashdeskTotal / $maxKpi) * 100)) }}%"></div>
+                </div>
+            </a>
+
+            <div class="group bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Сумма доставки</p>
+                        <p class="text-3xl font-semibold text-gray-900 mt-2">
+                            {{ number_format($deliveryOnlyTotal, 2, '.', ' ') }} c
+                        </p>
+                        <p class="text-xs text-gray-400 mt-1">За период</p>
+                    </div>
+                    <div
+                        class="h-12 w-12 rounded-2xl bg-rose-50 text-rose-600 inline-flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                            <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                            <path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5" />
+                            <path d="M3 9l4 0" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-4 h-1.5 w-full bg-rose-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-rose-500"
+                        style="width: {{ max(8, round(($deliveryOnlyTotal / $maxKpi) * 100)) }}%"></div>
+                </div>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">

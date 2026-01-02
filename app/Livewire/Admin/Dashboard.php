@@ -23,6 +23,9 @@ class Dashboard extends Component
     public $earnings;
     public $expenses;
     public $delivery;
+    public $applicationsTotal;
+    public $cashdeskTotal;
+    public $deliveryOnlyTotal;
     public $netProfit;
     public $expensesDushanbe;
     public $expensesIvu;
@@ -49,6 +52,17 @@ class Dashboard extends Component
         $this->earnings = Order::forPeriod($this->start, $this->end);
         $this->expenses = Expences::forPeriodAll($this->start, $this->end);
         $this->delivery = Order::forPeriod($this->start, $this->end);
+        $this->applicationsTotal = Order::query()
+            ->whereNotNull('application_id')
+            ->whereBetween('created_at', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
+            ->sum('total');
+        $this->cashdeskTotal = Order::query()
+            ->whereNull('application_id')
+            ->whereBetween('created_at', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
+            ->sum('total');
+        $this->deliveryOnlyTotal = Order::query()
+            ->whereBetween('created_at', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
+            ->sum('delivery_total');
         $this->netProfit = Order::forPeriod($this->start, $this->end)->sum('total') - $this->expenses->sum('total');
         $this->expensesDushanbe = Expences::forPeriodDushanbe($this->start, $this->end);
         $this->expensesIvu = Expences::forPeriodIvu($this->start, $this->end);

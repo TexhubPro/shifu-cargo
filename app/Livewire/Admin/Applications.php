@@ -71,6 +71,7 @@ class Applications extends Component
             'completed' => $completedToday,
             'revenue' => (clone $ordersToday)->sum('total'),
             'delivery' => (clone $ordersToday)->sum('delivery_total'),
+            'subtotal' => (clone $ordersToday)->sum('subtotal'),
         ];
     }
 
