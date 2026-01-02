@@ -91,6 +91,7 @@ class Chashdesk extends Component
         $user = User::where('phone', $this->client)->first();
         $order = Order::create([
             'user_id' => $user->id ?? $this->client,
+            'application_id' => null,
             'weight' => $weight,
             'cube' => $volume,
             'subtotal' => $subtotal,
@@ -258,6 +259,7 @@ class Chashdesk extends Component
         }
 
         $this->todayOrdersCache = Order::with(['user'])
+            ->whereNull('application_id')
             ->whereDate('created_at', Carbon::today())
             ->orderByDesc('created_at')
             ->get();
@@ -616,8 +618,12 @@ class Chashdesk extends Component
         $today = Carbon::today();
 
         return [
-            'orders_today' => Order::whereDate('created_at', $today)->count(),
-            'revenue_today' => Order::whereDate('created_at', $today)->sum('total'),
+            'orders_today' => Order::whereNull('application_id')
+                ->whereDate('created_at', $today)
+                ->count(),
+            'revenue_today' => Order::whereNull('application_id')
+                ->whereDate('created_at', $today)
+                ->sum('total'),
             'queues_waiting' => Queue::whereDate('created_at', $today)->where('status', 'В очереди')->count(),
             'held_orders' => HeldOrder::count(),
         ];

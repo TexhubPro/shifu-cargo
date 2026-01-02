@@ -17,6 +17,7 @@ class CashdeskReports extends Component
     public function getTodayOrdersProperty()
     {
         return Order::with(['user'])
+            ->whereNull('application_id')
             ->whereDate('created_at', Carbon::today())
             ->orderByDesc('created_at')
             ->get();
@@ -47,8 +48,12 @@ class CashdeskReports extends Component
         $today = Carbon::today();
 
         return [
-            'orders_today' => Order::whereDate('created_at', $today)->count(),
-            'revenue_today' => Order::whereDate('created_at', $today)->sum('total'),
+            'orders_today' => Order::whereNull('application_id')
+                ->whereDate('created_at', $today)
+                ->count(),
+            'revenue_today' => Order::whereNull('application_id')
+                ->whereDate('created_at', $today)
+                ->sum('total'),
             'queues_waiting' => Queue::whereDate('created_at', $today)->where('status', 'В очереди')->count(),
             'held_orders' => HeldOrder::count(),
         ];

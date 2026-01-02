@@ -59,8 +59,6 @@
                 <flux:table.column>Клиент</flux:table.column>
                 <flux:table.column>Номер тел</flux:table.column>
                 <flux:table.column>Адрес</flux:table.column>
-                <flux:table.column>Детали заказа</flux:table.column>
-                <flux:table.column>Фото-отчёт</flux:table.column>
                 <flux:table.column>Статус</flux:table.column>
                 <flux:table.column>Дата</flux:table.column>
                 <flux:table.column></flux:table.column>
@@ -71,32 +69,8 @@
                     <flux:table.row>
                         <flux:table.cell>{{ $item->user->code }}</flux:table.cell>
                         <flux:table.cell>{{ $item->phone }}</flux:table.cell>
-                        <flux:table.cell>{{ $item->address }}</flux:table.cell>
-                        <flux:table.cell>
-                            @if ($item->order)
-                                <div class="text-xs text-gray-600 space-y-1">
-                                    <div>Вес: {{ $item->order->weight ?? '—' }} кг</div>
-                                    <div>Куб: {{ $item->order->cube ?? '—' }} м³</div>
-                                    <div>Подытог: {{ $item->order->subtotal ?? '—' }} c</div>
-                                    <div>Скидка: {{ $item->order->discount ?? '—' }} c</div>
-                                    <div>Доставка: {{ $item->order->delivery_total ?? '—' }} c</div>
-                                    <div>Итог: {{ $item->order->total ?? '—' }} c</div>
-                                </div>
-                            @else
-                                <span class="text-xs text-gray-400">Нет заказа</span>
-                            @endif
-                        </flux:table.cell>
-                        <flux:table.cell>
-                            @if ($item->order && $item->order->photo_report_path)
-                                <a class="text-blue-600 text-xs underline"
-                                    href="{{ asset('storage/' . $item->order->photo_report_path) }}"
-                                    target="_blank" rel="noopener">
-                                    Открыть
-                                </a>
-                            @else
-                                <span class="text-xs text-gray-400">Нет фото</span>
-                            @endif
-                        </flux:table.cell>
+                        <flux:table.cell class="max-w-32">{{ $item->address }}</flux:table.cell>
+
                         <flux:table.cell>
                             @switch($item->status)
                                 @case('В ожидании')
@@ -133,7 +107,7 @@
                         </flux:table.cell>
                         @if (Auth::user()->role == 'admin')
                             <flux:table.cell>
-                                <div class="grid grid-cols-2 gap-2">
+                                <div class="grid grid-cols-3 gap-2">
                                     <flux:button variant="primary" size="sm" color="red"
                                         wire:click="delete({{ $item->id }})" wire:confirm>
                                         Удалить</flux:button>
