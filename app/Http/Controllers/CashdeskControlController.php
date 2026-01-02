@@ -118,7 +118,7 @@ class CashdeskControlController extends Controller
         $orderId = $order->id;
         $message = "📦 Салом, муштарии муҳтарам!\n\n🚚 Шумо бо муваффақият фармоиши худро қабул/дархост намудед.\n⚖️ Вазн: $order->weight кг\n📏 Ҳаҷм: $order->cube м³\n💰 Ҷамъбаст: $order->subtotal с\n💵 Тахфиф: $order->discount с\n🚛 Нархи бурда расонӣ: $order->delivery_total с\n✅ Ҳамагӣ: $order->total с\n\nТашаккур, ки бо мо ҳастед! 💚";
         $sms_oson = new SmsController();
-        $sms_oson->sendSms($data['client'], $$message);
+        $sms_oson->sendSms($data['client'], $message);
         dispatch(function () use ($userId, $orderId, $trackCodes, $clientValue) {
             try {
                 if ($userId) {
