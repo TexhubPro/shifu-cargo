@@ -123,7 +123,7 @@ class Applicant extends Component
 
         if ($this->file) {
             $photoPath = $this->file->store('fotootchet', 'public');
-            $photoUrl = '/storage/' . $photoPath;
+            $photoUrl = asset('public/storage/' . $photoPath);
         }
         $order = Order::create([
             'user_id' => $user->id,

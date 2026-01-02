@@ -58,7 +58,8 @@
                     </p>
                     <p class="text-sm text-gray-500 mt-1">{{ $order->status ?? '—' }}</p>
                 </div>
-                <div class="h-12 w-12 rounded-2xl bg-emerald-50 text-emerald-600 inline-flex items-center justify-center">
+                <div
+                    class="h-12 w-12 rounded-2xl bg-emerald-50 text-emerald-600 inline-flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -138,12 +139,13 @@
             <div class="mt-4">
                 @if ($order && $order->photo_report_path)
                     <a class="text-blue-600 text-sm underline"
-                        href="{{ asset('storage/' . $order->photo_report_path) }}" target="_blank" rel="noopener">
+                        href="{{ asset('public/storage/' . $order->photo_report_path) }}" target="_blank"
+                        rel="noopener">
                         Открыть фото-отчёт
                     </a>
                     <div class="mt-3">
                         <img class="w-full max-h-80 object-contain rounded-xl border border-slate-100"
-                            src="{{ asset('storage/' . $order->photo_report_path) }}" alt="Фото-отчёт">
+                            src="{{ asset('public/storage/' . $order->photo_report_path) }}" alt="Фото-отчёт">
                     </div>
                 @else
                     <div class="rounded-xl border border-dashed border-slate-200 p-6 text-sm text-gray-400">
