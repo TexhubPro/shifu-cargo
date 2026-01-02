@@ -110,8 +110,16 @@ class Applicant extends Component
         }
         $user = User::find($this->selected_order->user_id);
         $deliver = User::where('name', str($this->deliver_boy))->first();
+        $photoPath = null;
+        $photoUrl = null;
+
+        if ($this->file) {
+            $photoPath = $this->file->store('fotootchet', 'public');
+            $photoUrl = '/storage/' . $photoPath;
+        }
         $order = Order::create([
             'user_id' => $user->id,
+            'application_id' => $apl->id ?? null,
             'weight' => $this->weight,
             'cube' => $this->volume,
             'subtotal' => $this->total_amount,
@@ -120,24 +128,17 @@ class Applicant extends Component
             'discount' => $this->discount_total,
             'total' => $this->total_final,
             'status' => "Доставляется",
+            'photo_report_path' => $photoPath,
         ]);
 
         if ($user) {
-            if ($this->file) {
-
-                $path = $this->file->store('fotootchet', 'public');
-
-                $url = asset('storage/' . $path);
-            }
-            $file = $url;
-            // dd($file);
             $sms = new Telegram();
-            $sms->sms_order($user->id, $order->id, $file);
+            $sms->sms_order($user->id, $order->id, $photoUrl);
         }
 
         $message = "📦 Салом, муштарии муҳтарам!\n\n🚚 Шумо бо муваффақият фармоиши худро қабул/дархост намудед.\n⚖️ Вазн: $order->weight кг\n📏 Ҳаҷм: $order->cube м³\n💰 Ҷамъбаст: $order->subtotal с\n💵 Тахфиф: $order->discount с\n🚛 Нархи бурда расонӣ: $order->delivery_total с\n✅ Ҳамагӣ: $order->total с\n\nТашаккур, ки бо мо ҳастед! 💚";
         $sms_oson = new SmsController();
-        $sms_oson->sendSms($this->selected_order->phone, $$message);
+        $sms_oson->sendSms($this->selected_order->phone, $message);
 
         if ($deliver) {
             $sms_delivery = new Telegram();
@@ -146,6 +147,7 @@ class Applicant extends Component
         $this->updateTrackStatuses($user->id, $order->id);
 
         return redirect()->route('applicant');
+        //$$
     }
     public function updateTrackStatuses($user_id, $order_id)
     {

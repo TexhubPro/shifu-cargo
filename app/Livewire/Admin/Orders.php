@@ -22,6 +22,7 @@ class Orders extends Component
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
     public $perPage = 25;
+    public $onlyApplicationsWithPhoto = false;
     #[Computed]
     public function orders()
     {
@@ -55,6 +56,12 @@ class Orders extends Component
 
         if (!empty($this->maxTotal)) {
             $query->where('total', '<=', $this->maxTotal);
+        }
+
+        if ($this->onlyApplicationsWithPhoto) {
+            $query->whereNotNull('application_id')
+                ->whereNotNull('photo_report_path')
+                ->where('photo_report_path', '!=', '');
         }
 
         return $query->orderBy($this->getSortField(), $this->getSortDirection())
@@ -140,6 +147,10 @@ class Orders extends Component
     }
 
     public function updatedPerPage(): void
+    {
+        $this->resetPage();
+    }
+    public function updatedOnlyApplicationsWithPhoto(): void
     {
         $this->resetPage();
     }

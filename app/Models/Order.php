@@ -8,6 +8,7 @@ class Order extends Model
 {
     protected $fillable = [
         'user_id',
+        'application_id',
         'weight',
         'cube',
         'subtotal',
@@ -15,6 +16,8 @@ class Order extends Model
         'deliver_id',
         'discount',
         'total',
+        'status',
+        'photo_report_path',
     ];
 
     public function user()
@@ -24,6 +27,10 @@ class Order extends Model
     public function deliver()
     {
         return $this->belongsTo(User::class, 'deliver_id');
+    }
+    public function application()
+    {
+        return $this->belongsTo(Application::class);
     }
     public static function forPeriod($start, $end)
     {
