@@ -103,6 +103,14 @@ class Applicant extends Component
     }
     public function order_place()
     {
+        $this->validate([
+            'file' => ['required', 'file', 'image', 'max:5120'],
+        ], [
+            'file.required' => 'Фото-отчёт обязателен.',
+            'file.image' => 'Фото-отчёт должен быть изображением.',
+            'file.max' => 'Фото-отчёт не должен превышать 5MB.',
+        ]);
+
         if ($this->selected_order) {
             $apl = $this->selected_order;
             $apl->status = "Доставляется";
