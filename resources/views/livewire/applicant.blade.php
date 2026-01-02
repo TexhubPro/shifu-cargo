@@ -117,9 +117,9 @@
 
     <flux:modal name="track_lookup" class="w-full max-w-lg">
         <div class="space-y-4">
-            <div class=" ">
-                <flux:heading size="lg" class="">Проверка трек-кода</flux:heading>
-                <flux:text class=" text-sm">
+            <div class=" text-white">
+                <flux:heading size="lg" class="text-white">Проверка трек-кода</flux:heading>
+                <flux:text class="text-white/80 text-sm">
                     Отсканируйте или введите трек. Результат сохранится до следующей проверки.
                 </flux:text>
             </div>
@@ -188,25 +188,25 @@
 
     <flux:modal name="order_place" class="w-full max-w-2xl">
         <form wire:submit="order_place" class="space-y-2">
-            <div class="text-white space-y-2">
+            <div class="text-black space-y-2">
                 <div class="flex items-center justify-between gap-4">
                     <div>
-                        <p class="text-xs uppercase tracking-wide text-white/70">Оформление заявки</p>
-                        <flux:heading size="lg" class="text-white">Подтвердите выдачу заказа</flux:heading>
+                        <p class="text-xs uppercase tracking-wide text-black/70">Оформление заявки</p>
+                        <flux:heading size="lg" class="text-black">Подтвердите выдачу заказа</flux:heading>
                     </div>
                 </div>
                 @if ($selected_order)
-                    <div class="grid gap-2 md:grid-cols-3 text-sm text-white/90">
+                    <div class="grid gap-2 md:grid-cols-3 text-sm text-black/90">
                         <div>
-                            <p class="text-white/70">Клиент</p>
+                            <p class="text-black/70">Клиент</p>
                             <p class="font-semibold">{{ $selected_order->user->name ?? '—' }}</p>
                         </div>
                         <div>
-                            <p class="text-white/70">Телефон</p>
+                            <p class="text-black/70">Телефон</p>
                             <p class="font-semibold">{{ $selected_order->phone ?? '—' }}</p>
                         </div>
                         <div class="">
-                            <p class="text-white/70">Адрес</p>
+                            <p class="text-black/70">Адрес</p>
                             <p class="font-semibold truncate whitespace-normal">{{ $selected_order->address ?? '—' }}
                             </p>
                         </div>
