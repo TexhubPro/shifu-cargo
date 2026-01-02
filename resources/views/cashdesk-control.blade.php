@@ -535,7 +535,10 @@
                     kgPrice = priceData.kg30 || 0;
                 }
 
-                const kgTotal = weightValue * (kgPrice * course);
+                let kgTotal = weightValue * (kgPrice * course);
+                if (weightValue > 0 && kgTotal < 10) {
+                    kgTotal = 10;
+                }
                 const cubeTotal = volumeValue * cubePrice;
                 const totalAmount = roundPrice(kgTotal + cubeTotal);
                 const receivedValue = parseNumber(received);

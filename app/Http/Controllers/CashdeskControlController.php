@@ -398,6 +398,10 @@ class CashdeskControlController extends Controller
             $kgTotal = $weightValue * (($prices['kg_30'] ?? 0) * $course);
         }
 
+        if ($weightValue > 0 && $kgTotal < 10) {
+            $kgTotal = 10;
+        }
+
         $cubeTotal = $volumeValue * $cubePrice;
         $totalAmount = $this->roundPrice($kgTotal + $cubeTotal);
 
