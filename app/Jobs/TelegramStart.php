@@ -24,6 +24,6 @@ class TelegramStart implements ShouldQueue
     public function handle(): void
     {
         $sms = new Telegram();
-        $sms->reset($this->user_id);
+        $sms->refresh($this->user_id);
     }
 }

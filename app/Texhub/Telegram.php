@@ -25,7 +25,7 @@ use DefStudio\Telegraph\Facades\Telegraph as FacadesTelegraph;
 
 class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
 {
-    public function reset($user_id)
+    public function refresh($user_id)
     {
         $chat = TelegraphChat::find($user_id);
         if ($chat->lang == 'ru') {
