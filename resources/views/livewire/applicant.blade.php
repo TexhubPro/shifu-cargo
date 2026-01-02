@@ -14,7 +14,7 @@
                         Проверка трек-кода
                     </flux:button>
                 </flux:modal.trigger>
-                <flux:button color="lime" wire:click="restart">Обновить</flux:button>
+                <flux:button color="blue" wire:click="restart">Обновить</flux:button>
                 <flux:button variant="danger" color="red" wire:click="logout" wire:confirm>Выйти</flux:button>
             </div>
         </div>
