@@ -21,7 +21,7 @@ class Orders extends Component
     public $maxTotal;
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
-    public $perPage = 25;
+    public $perPage = 100;
     public $onlyApplicationsWithPhoto = false;
     #[Computed]
     public function orders()

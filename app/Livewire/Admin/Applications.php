@@ -23,7 +23,8 @@ class Applications extends Component
     #[Computed]
     public function orders()
     {
-        $query = Application::query();
+        $query = Application::query()
+            ->with(['user:id,code', 'order:id,application_id,weight,cube,subtotal,discount,delivery_total,total,photo_report_path']);
 
         if (!empty($this->searchName)) {
             $query->where('name', 'like', '%' . $this->searchName . '%');

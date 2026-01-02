@@ -78,11 +78,6 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <flux:checkbox wire:model.live="onlyApplicationsWithPhoto" label="Только заказы по заявке с фото-отчётом"
                 description="Показывает записи, созданные из заявок и с прикреплённым файлом." />
-            <flux:select label="На странице" wire:model.live="perPage" class="w-full sm:w-48">
-                <flux:select.option value="25">25</flux:select.option>
-                <flux:select.option value="50">50</flux:select.option>
-                <flux:select.option value="100">100</flux:select.option>
-            </flux:select>
             <span class="text-xs text-gray-500 bg-slate-50 px-3 py-2 rounded-xl">
                 Всего: {{ $this->orders->total() }}
             </span>
