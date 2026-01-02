@@ -47,11 +47,11 @@
             <div class="overflow-x-auto p-2">
                 <flux:table>
                     <flux:table.columns>
-                        <flux:table.column class="w-20">#</flux:table.column>
-                        <flux:table.column class="max-w-[160px]">Имя</flux:table.column>
-                        <flux:table.column class="max-w-[140px]">Телефон</flux:table.column>
-                        <flux:table.column class="max-w-[240px]">Адрес</flux:table.column>
-                        <flux:table.column class="w-48 text-right">Действия</flux:table.column>
+                        <flux:table.column class="w-20 text-neutral-200">#</flux:table.column>
+                        <flux:table.column class="max-w-[160px] text-neutral-200">Имя</flux:table.column>
+                        <flux:table.column class="max-w-[140px] text-neutral-200">Телефон</flux:table.column>
+                        <flux:table.column class="max-w-[240px] text-neutral-200">Адрес</flux:table.column>
+                        <flux:table.column class="w-48 text-right text-neutral-200">Действия</flux:table.column>
                     </flux:table.columns>
 
                     <flux:table.rows>
@@ -69,12 +69,14 @@
                                     </span>
                                 </flux:table.cell>
                                 <flux:table.cell variant="strong">
-                                    <span class="block max-w-[140px] truncate" title="{{ $item->phone }}">
+                                    <span class="block max-w-[140px] truncate text-neutral-200"
+                                        title="{{ $item->phone }}">
                                         {{ $item->phone }}
                                     </span>
                                 </flux:table.cell>
                                 <flux:table.cell variant="strong">
-                                    <span class="block max-w-[240px] truncate" title="{{ $item->address }}">
+                                    <span class="block max-w-[240px] truncate text-neutral-200"
+                                        title="{{ $item->address }}">
                                         {{ $item->address }}
                                     </span>
                                 </flux:table.cell>
