@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4">
         <div class="bg-white rounded-2xl p-4 shadow-sm ring-1 ring-gray-100">
             <p class="text-xs text-gray-500">Заявки сегодня</p>
             <p class="text-2xl font-semibold text-gray-900 mt-2">{{ $this->todayStats['applications'] }}</p>
@@ -36,6 +36,12 @@
             <p class="text-xs text-gray-500">Сумма доставки сегодня</p>
             <p class="text-2xl font-semibold text-gray-900 mt-2">
                 {{ number_format($this->todayStats['delivery'], 2, '.', ' ') }} c
+            </p>
+        </div>
+        <div class="bg-white rounded-2xl p-4 shadow-sm ring-1 ring-gray-100">
+            <p class="text-xs text-gray-500">Поступления доставщиков</p>
+            <p class="text-2xl font-semibold text-gray-900 mt-2">
+                {{ number_format($this->todayStats['deliverer_payments'], 2, '.', ' ') }} c
             </p>
         </div>
         <div class="bg-white rounded-2xl p-4 shadow-sm ring-1 ring-gray-100">

@@ -6,7 +6,7 @@
                     <p class="text-white/80 text-sm uppercase tracking-wider">Панель действий</p>
                     <p class="text-white text-xl font-semibold">Shifu Cargo</p>
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-5 gap-3 w-full lg:w-auto max-w-4xl">
+                <div class="grid grid-cols-1 lg:grid-cols-6 gap-3 w-full lg:w-auto max-w-4xl">
                     <button id="btn-add-expense" aria-keyshortcuts="Shift+Alt+E" type="button"
                         class="rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all flex items-center gap-3 text-left p-2 text-white">
                         <div class="flex items-center gap-3 text-left">
@@ -30,6 +30,25 @@
                                 </svg></span>
                             <div class="flex flex-col leading-tight">
                                 <span class="font-semibold text-white whitespace-break-spaces">Добавить расходы</span>
+                            </div>
+                        </div>
+                    </button>
+                    <button id="btn-deliverer-payment" aria-keyshortcuts="Shift+Alt+D" type="button"
+                        class="rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all flex items-center gap-3 text-left p-2 text-white">
+                        <div class="flex items-center gap-3 text-left">
+                            <span class=" text-white p-2 bg-white/20 rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-truck-delivery">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                                    <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                                    <path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5" />
+                                    <path d="M3 9l4 0" />
+                                </svg></span>
+                            <div class="flex flex-col leading-tight">
+                                <span class="font-semibold text-white whitespace-break-spaces">Поступление доставщика</span>
                             </div>
                         </div>
                     </button>
@@ -318,6 +337,86 @@
                         <button type="submit"
                             class="flex-1 rounded-xl bg-lime-600 text-white px-4 py-2 text-sm font-semibold shadow-sm hover:bg-lime-700 transition">
                             Сохранить расход
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="modal-deliverer-payment"
+            class="fixed inset-0 bg-black/40 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+            <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-4 space-y-4 border border-neutral-200">
+                <form method="POST" action="{{ route('cashier.deliverer-payment') }}" class="space-y-4">
+                    @csrf
+                    <div class="bg-gradient-to-r from-rose-500 to-orange-500 rounded-xl p-2 text-white shadow-md">
+                        <p class="text-lg font-semibold">Поступление от доставщика</p>
+                        <p class="mt-1 text-white/80 text-sm">
+                            Отметьте сумму, полученную от доставщика.
+                        </p>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-neutral-700" for="deliverer-id-input">
+                                Доставщик
+                            </label>
+                            <select id="deliverer-id-input" name="deliverer_id" required
+                                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-400/60">
+                                <option value="">Выберите доставщика</option>
+                                @foreach ($deliverers as $deliverer)
+                                    <option value="{{ $deliverer->id }}">{{ $deliverer->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-neutral-700" for="deliverer-amount-input">
+                                Сумма (сомони)
+                            </label>
+                            <input id="deliverer-amount-input" name="amount" type="number" min="0.01"
+                                step="0.01" placeholder="Например, 120" required
+                                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-400/60">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-neutral-700" for="deliverer-note-input">
+                                Примечание
+                            </label>
+                            <textarea id="deliverer-note-input" name="note" rows="2" placeholder="Комментарий"
+                                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-rose-400/60"></textarea>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-neutral-700">Сегодняшние поступления</label>
+                        <div class="max-h-56 overflow-y-auto space-y-2 pr-1">
+                            @forelse ($todayDelivererPayments as $payment)
+                                <div
+                                    class="bg-neutral-100 border border-neutral-200 rounded-xl p-3 flex justify-between items-start text-sm">
+                                    <div>
+                                        <p class="font-semibold text-lg text-rose-700">
+                                            {{ number_format($payment->amount, 2, '.', ' ') }} c
+                                        </p>
+                                        <p class="text-neutral-600">{{ $payment->deliverer?->name ?? '—' }}</p>
+                                        @if ($payment->note)
+                                            <p class="text-neutral-500 text-xs">{{ $payment->note }}</p>
+                                        @endif
+                                    </div>
+                                    <span class="text-xs text-neutral-500">
+                                        {{ optional($payment->created_at)->format('H:i') }}
+                                    </span>
+                                </div>
+                            @empty
+                                <div
+                                    class="bg-white border border-dashed border-neutral-300 rounded-xl p-3 text-xs text-neutral-500 text-center">
+                                    Сегодня поступлений ещё нет.
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="button" data-modal-close="modal-deliverer-payment"
+                            class="flex-1 rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold shadow-sm hover:bg-neutral-50 transition">
+                            Отмена
+                        </button>
+                        <button type="submit"
+                            class="flex-1 rounded-xl bg-rose-600 text-white px-4 py-2 text-sm font-semibold shadow-sm hover:bg-rose-700 transition">
+                            Сохранить
                         </button>
                     </div>
                 </form>
@@ -792,6 +891,7 @@
 
             const modalMap = {
                 'btn-add-expense': 'modal-add-expense',
+                'btn-deliverer-payment': 'modal-deliverer-payment',
                 'btn-open-queue': 'modal-select-queue',
                 'btn-currency-modal': 'modal-currency-info',
             };
@@ -820,8 +920,9 @@
                 button.addEventListener('click', () => hideModal(button.dataset.modalClose));
             });
 
-            document.querySelectorAll('#modal-add-expense, #modal-select-queue, #modal-currency-info').forEach((
-                modal) => {
+            document.querySelectorAll(
+                '#modal-add-expense, #modal-deliverer-payment, #modal-select-queue, #modal-currency-info'
+            ).forEach((modal) => {
                 modal.addEventListener('click', (event) => {
                     if (event.target === modal) {
                         hideModal(modal.id);
@@ -833,6 +934,10 @@
                 if (event.shiftKey && event.altKey && event.key.toLowerCase() === 'e') {
                     event.preventDefault();
                     showModal('modal-add-expense');
+                }
+                if (event.shiftKey && event.altKey && event.key.toLowerCase() === 'd') {
+                    event.preventDefault();
+                    showModal('modal-deliverer-payment');
                 }
                 if (event.shiftKey && event.altKey && event.key.toLowerCase() === 'q') {
                     event.preventDefault();

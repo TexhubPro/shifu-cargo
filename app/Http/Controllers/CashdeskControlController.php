@@ -10,6 +10,7 @@ use App\Models\Queue;
 use App\Models\Setting;
 use App\Models\Trackcode;
 use App\Models\User;
+use App\Models\DelivererPayment;
 use App\Texhub\Telegram;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -31,9 +32,14 @@ class CashdeskControlController extends Controller
         $todayExpenses = Expences::whereDate('created_at', Carbon::today())
             ->latest()
             ->get();
+        $todayDelivererPayments = DelivererPayment::with('deliverer:id,name')
+            ->whereDate('created_at', Carbon::today())
+            ->latest()
+            ->get();
 
         $currencyInfo = $this->getCurrencyInfo();
         $priceSettings = $this->getPriceSettings();
+        $deliverers = User::where('role', 'deliver')->get(['id', 'name']);
 
         $defaultForm = [
             'client' => null,
@@ -67,8 +73,10 @@ class CashdeskControlController extends Controller
             'users' => $users,
             'heldOrders' => $heldOrders,
             'todayExpenses' => $todayExpenses,
+            'todayDelivererPayments' => $todayDelivererPayments,
             'currencyInfo' => $currencyInfo,
             'priceSettings' => $priceSettings,
+            'deliverers' => $deliverers,
             'form' => $form,
             'totals' => $totals,
         ]);
@@ -278,6 +286,24 @@ class CashdeskControlController extends Controller
             ['name' => 'course_dollar'],
             ['content' => $data['course_dollar']]
         );
+
+        return redirect()->route('cashier');
+    }
+
+    public function addDelivererPayment(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'deliverer_id' => ['required', 'exists:users,id'],
+            'amount' => ['required', 'numeric', 'min:0.01'],
+            'note' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        DelivererPayment::create([
+            'deliverer_id' => $data['deliverer_id'],
+            'cashier_id' => Auth::id(),
+            'amount' => $data['amount'],
+            'note' => $data['note'] ?? null,
+        ]);
 
         return redirect()->route('cashier');
     }

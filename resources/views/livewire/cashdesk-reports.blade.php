@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
         <div class="rounded-xl p-3 bg-gradient-to-r from-emerald-100 to-emerald-50 border border-emerald-200">
             <div class="flex items-center gap-2 text-emerald-700 font-semibold">
                 <span>📦</span> <span>Заказы сегодня</span>
@@ -39,6 +39,14 @@
                 <span>🧊</span> <span>Удержанные</span>
             </div>
             <p class="text-2xl font-bold text-rose-800 mt-1">{{ $this->reportStats['held_orders'] }}</p>
+        </div>
+        <div class="rounded-xl p-3 bg-gradient-to-r from-orange-100 to-orange-50 border border-orange-200">
+            <div class="flex items-center gap-2 text-orange-700 font-semibold">
+                <span>🚚</span> <span>От доставщиков</span>
+            </div>
+            <p class="text-2xl font-bold text-orange-800 mt-1">
+                {{ number_format($this->reportStats['deliverer_payments'], 2, '.', ' ') }} c
+            </p>
         </div>
     </div>
 
@@ -113,6 +121,36 @@
                         <p class="text-rose-600 text-sm">Скидка: {{ number_format($order->discount, 2, '.', ' ') }} c</p>
                     </div>
                 @endforeach
+            </div>
+        </div>
+    </div>
+
+    <div class="space-y-2">
+        <flux:label>Поступления от доставщиков</flux:label>
+        <div class="bg-white border border-neutral-200 rounded-xl p-3 shadow-sm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                @forelse ($this->todayDelivererPayments as $payment)
+                    <div class="border border-neutral-200 rounded-lg p-3 bg-neutral-50 shadow-sm space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-neutral-500">#{{ $payment->id }}</span>
+                            <span class="text-xs text-neutral-500">
+                                {{ optional($payment->created_at)->format('H:i') }}
+                            </span>
+                        </div>
+                        <p class="font-semibold">{{ $payment->deliverer?->name ?? '—' }}</p>
+                        <p class="text-emerald-700 font-semibold text-sm">
+                            Сумма: {{ number_format($payment->amount, 2, '.', ' ') }} c
+                        </p>
+                        @if ($payment->note)
+                            <p class="text-neutral-600 text-sm">{{ $payment->note }}</p>
+                        @endif
+                    </div>
+                @empty
+                    <div
+                        class="bg-white border border-dashed border-neutral-300 rounded-xl p-4 text-xs text-neutral-500 text-center">
+                        Сегодня поступлений нет.
+                    </div>
+                @endforelse
             </div>
         </div>
     </div>

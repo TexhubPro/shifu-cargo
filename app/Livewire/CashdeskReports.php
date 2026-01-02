@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Expences;
 use App\Models\HeldOrder;
+use App\Models\DelivererPayment;
 use App\Models\Order;
 use App\Models\Queue;
 use Carbon\Carbon;
@@ -43,6 +44,14 @@ class CashdeskReports extends Component
             ->get();
     }
 
+    public function getTodayDelivererPaymentsProperty()
+    {
+        return DelivererPayment::with('deliverer:id,name')
+            ->whereDate('created_at', Carbon::today())
+            ->latest()
+            ->get();
+    }
+
     public function getReportStatsProperty(): array
     {
         $today = Carbon::today();
@@ -56,6 +65,7 @@ class CashdeskReports extends Component
                 ->sum('total'),
             'queues_waiting' => Queue::whereDate('created_at', $today)->where('status', 'В очереди')->count(),
             'held_orders' => HeldOrder::count(),
+            'deliverer_payments' => DelivererPayment::whereDate('created_at', $today)->sum('amount'),
         ];
     }
 
@@ -68,6 +78,7 @@ class CashdeskReports extends Component
     {
         $orders = $this->todayOrders;
         $expenses = $this->todayExpenses;
+        $delivererPayments = $this->todayDelivererPayments;
         if ($orders->isEmpty()) {
             $this->dispatch('alert', 'Сегодня ещё нет заказов для отчёта.');
             return;
@@ -124,6 +135,22 @@ class CashdeskReports extends Component
                 ]);
             }
             $lines[] = 'ИТОГО РАСХОДОВ;' . number_format($expenses->sum('total'), 2, '.', '');
+        }
+
+        if ($delivererPayments->isNotEmpty()) {
+            $lines[] = '';
+            $lines[] = 'ПОСТУПЛЕНИЯ ОТ ДОСТАВЩИКОВ;';
+            $lines[] = implode(';', ['ID', 'Доставщик', 'Сумма', 'Примечание', 'Добавлено']);
+            foreach ($delivererPayments as $payment) {
+                $lines[] = implode(';', [
+                    $payment->id,
+                    $payment->deliverer?->name ?? '—',
+                    number_format($payment->amount, 2, '.', ''),
+                    str_replace(["\n", "\r", ';'], ' ', $payment->note ?? ''),
+                    optional($payment->created_at)->format('Y-m-d H:i'),
+                ]);
+            }
+            $lines[] = 'ИТОГО ОТ ДОСТАВЩИКОВ;' . number_format($delivererPayments->sum('amount'), 2, '.', '');
         }
 
         $csv = implode("\n", $lines);

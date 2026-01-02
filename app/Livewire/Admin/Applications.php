@@ -10,6 +10,7 @@ use Livewire\WithPagination;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Computed;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\DelivererPayment;
 
 #[Layout('components.layouts.admin')]
 class Applications extends Component
@@ -72,6 +73,7 @@ class Applications extends Component
             'revenue' => (clone $ordersToday)->sum('total'),
             'delivery' => (clone $ordersToday)->sum('delivery_total'),
             'subtotal' => (clone $ordersToday)->sum('subtotal'),
+            'deliverer_payments' => DelivererPayment::whereDate('created_at', $today)->sum('amount'),
         ];
     }
 

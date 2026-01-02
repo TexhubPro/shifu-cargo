@@ -107,6 +107,7 @@ Route::middleware(['auth', Cashier::class])->group(function () {
     Route::delete('/cashier/held/{heldOrder}', [CashdeskControlController::class, 'deleteHeldOrder'])->name('cashier.held.delete');
     Route::post('/cashier/queue/{queue}', [CashdeskControlController::class, 'selectQueue'])->name('cashier.queue.select');
     Route::post('/cashier/expense', [CashdeskControlController::class, 'addExpense'])->name('cashier.expense');
+    Route::post('/cashier/deliverer-payment', [CashdeskControlController::class, 'addDelivererPayment'])->name('cashier.deliverer-payment');
     Route::post('/cashier/currency', [CashdeskControlController::class, 'saveCurrency'])->name('cashier.currency');
 });
 Route::middleware(['auth', MiddlewareManager::class])->group(function () {

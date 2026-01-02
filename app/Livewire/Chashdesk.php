@@ -12,6 +12,7 @@ use App\Models\Order;
 use App\Models\Queue;
 use App\Models\Trackcode;
 use App\Models\HeldOrder;
+use App\Models\DelivererPayment;
 use App\Texhub\Telegram;
 use Carbon\Carbon;
 use Livewire\Attributes\Layout;
@@ -24,6 +25,7 @@ class Chashdesk extends Component
     public $user;
     public $queues;
     public $users;
+    public $deliverers;
     public $order_no;
     public $weight = 0;
     public $volume = 0;
@@ -43,6 +45,9 @@ class Chashdesk extends Component
     public $selected_queue;
     public $heldOrders = [];
     public $activeHeldOrderId;
+    public $deliverer_id;
+    public $deliverer_amount;
+    public $deliverer_note;
     public $currencyForm = [];
     private array $priceCache = [];
     private ?array $currencyCache = null;
@@ -59,6 +64,7 @@ class Chashdesk extends Component
     {
         $this->queues = Queue::where('status', 'В очереди')->whereDate('created_at', Carbon::today())->get();
         $this->users = User::where('role', 'customer')->get();
+        $this->deliverers = User::where('role', 'deliver')->get();
         $this->refreshHeldOrders();
         $this->loadCurrencyForm();
         $this->loadPriceCache();
@@ -291,12 +297,21 @@ class Chashdesk extends Component
             ->get();
     }
 
+    public function getTodayDelivererPaymentsProperty()
+    {
+        return DelivererPayment::with('deliverer:id,name')
+            ->whereDate('created_at', Carbon::today())
+            ->latest()
+            ->get();
+    }
+
     public function downloadTodayReport()
     {
         $this->todayOrdersCache = null;
         $this->todayOrdersSummaryCache = null;
         $orders = $this->todayOrders;
         $expenses = $this->todayExpenses;
+        $delivererPayments = $this->todayDelivererPayments;
         if ($orders->isEmpty()) {
             $this->dispatch('alert', 'Сегодня ещё нет заказов для отчёта.');
             return;
@@ -355,6 +370,22 @@ class Chashdesk extends Component
                 ]);
             }
             $lines[] = 'ИТОГО РАСХОДОВ;' . number_format($expenses->sum('total'), 2, '.', '');
+        }
+
+        if ($delivererPayments->isNotEmpty()) {
+            $lines[] = '';
+            $lines[] = 'ПОСТУПЛЕНИЯ ОТ ДОСТАВЩИКОВ;';
+            $lines[] = implode(';', ['ID', 'Доставщик', 'Сумма', 'Примечание', 'Добавлено']);
+            foreach ($delivererPayments as $payment) {
+                $lines[] = implode(';', [
+                    $payment->id,
+                    $payment->deliverer?->name ?? '—',
+                    number_format($payment->amount, 2, '.', ''),
+                    str_replace(["\n", "\r", ';'], ' ', $payment->note ?? ''),
+                    optional($payment->created_at)->format('Y-m-d H:i'),
+                ]);
+            }
+            $lines[] = 'ИТОГО ОТ ДОСТАВЩИКОВ;' . number_format($delivererPayments->sum('amount'), 2, '.', '');
         }
 
         $csv = implode("\n", $lines);
@@ -553,6 +584,32 @@ class Chashdesk extends Component
         $this->reset(['amount', 'description']);
         Flux::modals()->close();
         $this->dispatch('alert', 'Затраты успешно добавлены!');
+    }
+
+    public function addDelivererPayment()
+    {
+        $this->validate([
+            'deliverer_id' => 'required|exists:users,id',
+            'deliverer_amount' => 'required|numeric|min:0.01',
+            'deliverer_note' => 'nullable|string|max:255',
+        ], [
+            'deliverer_id.required' => 'Выберите доставщика.',
+            'deliverer_id.exists' => 'Доставщик не найден.',
+            'deliverer_amount.required' => 'Введите сумму.',
+            'deliverer_amount.numeric' => 'Сумма должна быть числом.',
+            'deliverer_amount.min' => 'Сумма должна быть больше 0.',
+        ]);
+
+        DelivererPayment::create([
+            'deliverer_id' => $this->deliverer_id,
+            'cashier_id' => Auth::id(),
+            'amount' => $this->parseNumber($this->deliverer_amount),
+            'note' => $this->deliverer_note,
+        ]);
+
+        $this->reset(['deliverer_id', 'deliverer_amount', 'deliverer_note']);
+        Flux::modals()->close();
+        $this->dispatch('alert', 'Поступление от доставщика добавлено.');
     }
     private function getKgPriceTJS()
     {
