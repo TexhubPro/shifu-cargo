@@ -241,9 +241,15 @@
                     <flux:input label="Объём груза (м³)" placeholder="Введите примерный объём"
                         wire:model.live="volume" />
                     <div class="col-span-full space-y-2">
-                        <flux:input label="Полученная сумма (сомони)" placeholder="Сколько оплатил клиент"
-                            wire:model.live="received_amount" type="number" min="0" />
-                        <p class="text-xs text-neutral-500">Недостающая сумма автоматически попадёт в скидку.</p>
+                        <flux:label>Скидка</flux:label>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <flux:input placeholder="10" wire:model.live="discount" type="number" min="0" />
+                            <flux:select wire:model.live="discountt" placeholder="Тип скидки">
+                                <flux:select.option>Фиксированная</flux:select.option>
+                                <flux:select.option>Процентная</flux:select.option>
+                            </flux:select>
+                        </div>
+                        <p class="text-xs text-neutral-500">Укажите сумму или процент скидки.</p>
                     </div>
                 </div>
             </div>

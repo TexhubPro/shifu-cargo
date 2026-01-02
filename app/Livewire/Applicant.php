@@ -31,12 +31,13 @@ class Applicant extends Component
     public $weight = 0;
     public $volume = 0;
     public $payment_type;
+    public $discount = 0;
+    public $discountt = 'Фиксированная';
     public $tracks = []; // массив трек-кодов
     public $newTrack;
     public $total_amount = 0;
     public $discount_total = 0;
     public $total_final = 0;
-    public $received_amount;
     public $file;
     public $trackLookupCode;
     public $trackLookupResult;
@@ -217,18 +218,20 @@ class Applicant extends Component
     public function updatedWeight()
     {
         $this->total_amounts();
-        $this->received_amount = $this->total_amount;
     }
     public function updatedVolume()
     {
         $this->total_amounts();
-        $this->received_amount = $this->total_amount;
     }
     public function updatedDelivery_price()
     {
         $this->total_amounts();
     }
-    public function updatedReceivedAmount()
+    public function updatedDiscount()
+    {
+        $this->total_amounts();
+    }
+    public function updatedDiscountt()
     {
         $this->total_amounts();
     }
@@ -276,13 +279,13 @@ class Applicant extends Component
         $rawTotal = $kg_total + $cube_total;
         $this->total_amount = max(10, $this->roundPrice($rawTotal));
 
-        $receivedAmountInput = $this->received_amount;
-        $receivedAmount = ($receivedAmountInput === null || $receivedAmountInput === '')
-            ? 0
-            : $this->parseNumber($receivedAmountInput);
-
-        // Недостающая сумма = скидка
-        $this->discount_total = max(0, $this->total_amount - $receivedAmount);
+        $discount = $this->parseNumber($this->discount);
+        $this->discount_total = 0;
+        if ($discount > 0) {
+            $this->discount_total = $this->discountt === 'Процентная' || $this->discountt === 'percent'
+                ? $this->total_amount * ($discount / 100)
+                : $discount;
+        }
         $this->discount_total = min($this->discount_total, $this->total_amount);
 
         $final = $this->total_amount - $this->discount_total + $this->parseNumber($this->delivery_price);

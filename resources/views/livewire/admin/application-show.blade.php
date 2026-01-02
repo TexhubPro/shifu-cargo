@@ -79,6 +79,12 @@
                     <span class="font-medium text-gray-900">{{ $deliver->phone ?? '—' }}</span>
                 </div>
                 <div class="flex items-center justify-between">
+                    <span>Цена доставки</span>
+                    <span class="font-medium text-gray-900">
+                        {{ $order ? number_format($order->delivery_total, 2, '.', ' ') : '—' }} c
+                    </span>
+                </div>
+                <div class="flex items-center justify-between">
                     <span>Вес</span>
                     <span class="font-medium text-gray-900">{{ $order->weight ?? '—' }} кг</span>
                 </div>
