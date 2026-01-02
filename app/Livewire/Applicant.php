@@ -306,7 +306,7 @@ class Applicant extends Component
             return;
         }
 
-        $application->status = "Отменено";
+        $application->status = "Заявщик отмениль";
         $application->save();
 
         $remaining = Application::where('status', 'В ожидании')->count();
