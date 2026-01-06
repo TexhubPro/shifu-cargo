@@ -1,0 +1,20 @@
+Options -Indexes
+
+# Отключить выполнение PHP/скриптов в этой папке
+php_flag engine off
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .phar
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .phar
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Если запрошен реальный файл и он НЕ jpg/jpeg/png — запретить
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteCond %{REQUEST_URI} !\.(png|jpe?g|webp)$ [NC]
+    RewriteRule ^ - [F,L]
+</IfModule>
+
+# Явно закрыть особо опасные расширения (даже если где-то обойдут rewrite)
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|phar|cgi|pl|py|sh|bat|cmd|exe)$">
+    Require all denied
+</FilesMatch>

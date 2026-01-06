@@ -197,7 +197,7 @@
                     </div>
                 </div>
                 @if ($selected_order)
-                    <div class="grid gap-2 md:grid-cols-3 text-sm text-black/90">
+                    <div class="grid gap-2 md:grid-cols-2 text-sm text-black/90">
                         <div>
                             <p class="text-black/70">Клиент</p>
                             <p class="font-semibold">{{ $selected_order->user->name ?? '—' }}</p>
@@ -206,7 +206,7 @@
                             <p class="text-black/70">Телефон</p>
                             <p class="font-semibold">{{ $selected_order->phone ?? '—' }}</p>
                         </div>
-                        <div class="">
+                        <div class="col-span-full">
                             <p class="text-black/70">Адрес</p>
                             <p class="font-semibold truncate whitespace-normal">{{ $selected_order->address ?? '—' }}
                             </p>
@@ -227,12 +227,6 @@
                         @foreach ($delivers as $deliver)
                             <flux:select.option>{{ $deliver->name }}</flux:select.option>
                         @endforeach
-                    </flux:select>
-                    <flux:select wire:model.live="payment_type" placeholder="Выберите тип оплаты" label="Тип оплаты"
-                        required>
-                        <flux:select.option>Алиф Моби</flux:select.option>
-                        <flux:select.option>Душанбе Сити</flux:select.option>
-                        <flux:select.option>Наличными</flux:select.option>
                     </flux:select>
                     <flux:input label="Цена доставки (сомони)" placeholder="Введите стоимость доставки"
                         wire:model.live="delivery_price" type="number" min="0" />
@@ -263,14 +257,14 @@
                     <p class="text-neutral-500">Доставка</p>
                     <p class="text-lg font-semibold text-white">{{ $delivery_price }} c</p>
                 </div>
-                <div class="rounded-xl border border-neutral-800 bg-neutral-950/40 p-3">
+                {{-- <div class="rounded-xl border border-neutral-800 bg-neutral-950/40 p-3">
                     <p class="text-neutral-500">Скидка</p>
                     <p class="text-lg font-semibold text-amber-300">-{{ $this->discount_total }} c</p>
                 </div>
                 <div class="rounded-xl border border-emerald-600/50 bg-emerald-500/10 p-3">
                     <p class="text-neutral-400">Итог к оплате</p>
                     <p class="text-xl font-semibold text-emerald-300">{{ $total_final }} c</p>
-                </div>
+                </div> --}}
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3 mt-5">
