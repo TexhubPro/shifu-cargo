@@ -191,10 +191,6 @@
         <form wire:submit="order_place" class="space-y-2">
             <div class="text-black space-y-2">
                 <div class="flex items-center justify-between gap-4">
-                    <div>
-                        <p class="text-xs uppercase tracking-wide text-black/70">Оформление заявки</p>
-                        <flux:heading size="lg" class="text-black">Подтвердите выдачу заказа</flux:heading>
-                    </div>
                 </div>
                 @if ($selected_order)
                     <div class="grid gap-2 md:grid-cols-2 text-sm text-black/90">
