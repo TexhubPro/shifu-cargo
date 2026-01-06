@@ -217,10 +217,12 @@
 
             <div class="">
                 <div class="space-y-2 grid md:grid-cols-2 gap-2">
-                    <flux:input type="file" wire:model="file" class="col-span-full" label="Фото-отчёт"
-                        required />
-                    <div wire:loading wire:target="file" class="text-amber-300 text-sm">
-                        ⏳ Файл загружается... пожалуйста, подождите
+                    <div class="col-span-full">
+                        <flux:input type="file" wire:model="file" class="col-span-full" label="Фото-отчёт"
+                            required />
+                        <div wire:loading wire:target="file" class="text-amber-300 text-sm">
+                            ⏳ Файл загружается... пожалуйста, подождите
+                        </div>
                     </div>
                     <flux:select wire:model="deliver_boy" label="Доставщик" required
                         placeholder="Выберите доставщика">
@@ -234,7 +236,7 @@
                         required />
                     <flux:input label="Объём груза (м³)" placeholder="Введите примерный объём"
                         wire:model.live="volume" />
-                    <div class="col-span-full space-y-2">
+                    {{-- <div class="col-span-full space-y-2">
                         <flux:label>Скидка</flux:label>
                         <div class="flex flex-col sm:flex-row gap-3">
                             <flux:input placeholder="10" wire:model.live="discount" type="number" min="0" />
@@ -244,7 +246,7 @@
                             </flux:select>
                         </div>
                         <p class="text-xs text-neutral-500">Укажите сумму или процент скидки.</p>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
 
@@ -256,6 +258,14 @@
                 <div class="rounded-xl border border-neutral-800 bg-neutral-950/40 p-3">
                     <p class="text-neutral-500">Доставка</p>
                     <p class="text-lg font-semibold text-white">{{ $delivery_price }} c</p>
+                </div>
+                <div class="rounded-xl border border-neutral-800 bg-neutral-950/40 p-3">
+                    <p class="text-neutral-500">Скидка</p>
+                    <p class="text-lg font-semibold text-amber-300">-{{ $this->discount_total }} c</p>
+                </div>
+                <div class="rounded-xl border border-emerald-600/50 bg-emerald-500/10 p-3">
+                    <p class="text-neutral-400">Итог к оплате</p>
+                    <p class="text-xl font-semibold text-emerald-300">{{ $total_final }} c</p>
                 </div>
             </div>
 
