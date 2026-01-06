@@ -16,14 +16,37 @@ class Manager
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::user()->role == 'manager') {
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if ($user->status == false) {
             Auth::logout();
             return redirect()->route('login');
         }
-        if (Auth::user()->status == false) {
+
+        if ($user->role === 'manager') {
+            return $next($request);
+        }
+
+        return $this->redirectByRole($user->role);
+    }
+
+    protected function redirectByRole(?string $role): Response
+    {
+        if ($role === 'customer') {
             Auth::logout();
             return redirect()->route('login');
         }
-        return $next($request);
+
+        return match ($role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'cashier' => redirect()->route('cashier'),
+            'deliver' => redirect()->route('deliver.orders'),
+            'applicant' => redirect()->route('applicant'),
+            default => redirect()->route('login'),
+        };
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class Admin
+class DeliverPanel
 {
     /**
      * Handle an incoming request.
@@ -27,7 +27,7 @@ class Admin
             return redirect()->route('login');
         }
 
-        if ($user->role === 'admin') {
+        if ($user->role === 'deliver') {
             return $next($request);
         }
 
@@ -42,9 +42,9 @@ class Admin
         }
 
         return match ($role) {
+            'admin' => redirect()->route('admin.dashboard'),
             'manager' => redirect()->route('manager'),
             'cashier' => redirect()->route('cashier'),
-            'deliver' => redirect()->route('deliver.orders'),
             'applicant' => redirect()->route('applicant'),
             default => redirect()->route('login'),
         };

@@ -223,7 +223,7 @@
                     <flux:select wire:model="deliver_boy" label="Доставщик" required
                         placeholder="Выберите доставщика">
                         @foreach ($delivers as $deliver)
-                            <flux:select.option>{{ $deliver->name }}</flux:select.option>
+                            <flux:select.option value="{{ $deliver->id }}">{{ $deliver->name }}</flux:select.option>
                         @endforeach
                     </flux:select>
                     <flux:input label="Цена доставки (сомони)" placeholder="Введите стоимость доставки"

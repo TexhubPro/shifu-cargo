@@ -26,7 +26,7 @@ class Applicant extends Component
     protected $paginationTheme = 'tailwind';
     public $selected_order;
     public $delivers;
-    public $deliver_boy = 'Shod';
+    public $deliver_boy = null;
     public $delivery_price = 0;
     public $weight = 0;
     public $volume = 0;
@@ -117,7 +117,7 @@ class Applicant extends Component
             $apl->save();
         }
         $user = User::find($this->selected_order->user_id);
-        $deliver = User::where('name', str($this->deliver_boy))->first();
+        $deliver = User::find($this->deliver_boy);
         $photoPath = null;
         $photoUrl = null;
 
@@ -132,7 +132,7 @@ class Applicant extends Component
             'cube' => $this->volume,
             'subtotal' => $this->total_amount,
             'delivery_total' => $this->delivery_price,
-            'deliver_id' => $deliver->id ?? $this->deliver_boy,
+            'deliver_id' => $deliver?->id,
             'discount' => $this->discount_total,
             'total' => $this->total_final,
             'status' => "Доставляется",
@@ -187,6 +187,9 @@ class Applicant extends Component
     {
         $this->cleanupIncompleteApplications();
         $this->delivers = User::where('role', 'deliver')->get();
+        if (!$this->deliver_boy && $this->delivers->isNotEmpty()) {
+            $this->deliver_boy = $this->delivers->first()->id;
+        }
     }
     protected function cleanupIncompleteApplications(): void
     {

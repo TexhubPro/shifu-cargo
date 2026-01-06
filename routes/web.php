@@ -3,6 +3,8 @@
 use App\Http\Middleware\Admin;
 use App\Http\Middleware\Cashier;
 use App\Http\Middleware\Manager as MiddlewareManager;
+use App\Http\Middleware\ApplicantPanel as MidApplicantPanel;
+use App\Http\Middleware\DeliverPanel as MidDeliverPanel;
 use App\Livewire\Admin\Applications;
 use App\Livewire\Admin\ApplicationShow;
 use App\Livewire\Admin\Chats;
@@ -19,8 +21,9 @@ use App\Livewire\Admin\Smsbulk;
 use App\Livewire\Admin\Trackcodes;
 use App\Livewire\Chashdesk;
 use App\Livewire\Components\SendNotification;
-use App\Livewire\Deliver;
-use App\Http\Middleware\Deliver as MidDeliver;
+use App\Livewire\Deliver\Archive as DeliverArchive;
+use App\Livewire\Deliver\Dashboard as DeliverDashboard;
+use App\Livewire\Deliver\Orders as DeliverOrders;
 use App\Http\Controllers\CashdeskControlController;
 use App\Livewire\Admin\Analitic;
 use App\Livewire\Admin\Faqs as AdminFaqs;
@@ -113,10 +116,15 @@ Route::middleware(['auth', Cashier::class])->group(function () {
 Route::middleware(['auth', MiddlewareManager::class])->group(function () {
     Route::get('/manager', Manager::class)->name('manager');
 });
-Route::middleware(['auth', MidDeliver::class])->group(function () {
-    Route::get('/deliver', Deliver::class)->name('deliver');
+Route::middleware(['auth', MidDeliverPanel::class])->group(function () {
+    Route::get('/deliver', function () {
+        return redirect()->route('deliver.orders');
+    })->name('deliver');
+    Route::get('/deliver/dashboard', DeliverDashboard::class)->name('deliver.dashboard');
+    Route::get('/deliver/orders', DeliverOrders::class)->name('deliver.orders');
+    Route::get('/deliver/archive', DeliverArchive::class)->name('deliver.archive');
 });
-Route::middleware(['auth', MidDeliver::class])->group(function () {
+Route::middleware(['auth', MidApplicantPanel::class])->group(function () {
     Route::get('/applicant', Applicant::class)->name('applicant');
 });
 Route::get('/navbat', LivewireQueue::class)->name('navbat');

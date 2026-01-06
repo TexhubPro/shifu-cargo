@@ -15,6 +15,13 @@ class Login extends Component
     public $password;
     public $remember = false;
 
+    public function mount()
+    {
+        if (Auth::check()) {
+            return $this->redirectByRole(Auth::user()?->role);
+        }
+    }
+
     public function login()
     {
         $this->validate([
@@ -29,23 +36,7 @@ class Login extends Component
                 'alert',
                 'Вы успешно вошли в систему!'
             );
-            if ($user->role === 'admin') {
-                return redirect()->route('admin.dashboard');
-            }
-            if ($user->role === 'deliver') {
-                return redirect()->route('deliver');
-            }
-            if ($user->role === 'applicant') {
-                return redirect()->route('applicant');
-            }
-            if ($user->role === 'manager') {
-                return redirect()->route('admin.dashboard');
-            }
-            if ($user->role === 'cashier') {
-                return redirect()->route('cashier');
-            }
-
-            return redirect()->route('cashier');
+            return $this->redirectByRole($user->role);
         }
 
         $this->dispatch(
@@ -57,5 +48,17 @@ class Login extends Component
     public function render()
     {
         return view('livewire.login');
+    }
+
+    protected function redirectByRole(?string $role)
+    {
+        return match ($role) {
+            'admin' => redirect()->route('admin.dashboard'),
+            'deliver' => redirect()->route('deliver.orders'),
+            'applicant' => redirect()->route('applicant'),
+            'manager' => redirect()->route('manager'),
+            'cashier' => redirect()->route('cashier'),
+            default => redirect()->route('cashier'),
+        };
     }
 }
