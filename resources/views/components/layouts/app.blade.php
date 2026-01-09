@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('logo/favicon_color.svg') }}">
     <link rel="stylesheet" href="{{ asset('obfuscated.min.css') }}">
     <title>{{ $title ?? 'Page Title' }}</title>
     @vite('resources/css/app.css')
