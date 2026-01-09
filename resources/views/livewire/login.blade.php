@@ -9,11 +9,11 @@
         </flux:text>
 
         <form wire:submit="login" class="w-full mt-5 space-y-3">
-            <div>
+            <div class="space-y-2">
                 <flux:label class="text-white">Номер телефона</flux:label>
                 <flux:input type="number" required wire:model="phone" placeholder="Введите номер телефона" />
             </div>
-            <div>
+            <div class="space-y-2">
                 <flux:label class="text-white">Пароль</flux:label>
                 <flux:input type="password" required wire:model="password" placeholder="Введите пароль" />
             </div>
