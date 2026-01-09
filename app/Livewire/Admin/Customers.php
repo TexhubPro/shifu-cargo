@@ -70,7 +70,6 @@ class Customers extends Component
     public function customers()
     {
         $query = User::query()
-            ->where('role', 'customer')
             ->select(['id', 'code', 'name', 'phone', 'sex', 'created_at'])
             ->withCount('trackcodes')
             ->withSum('orders as orders_sum_total', 'total');
@@ -103,7 +102,9 @@ class Customers extends Component
             ->simplePaginate($this->perPage);
     }
 
-    public function check_user() {}
+    public function check_user()
+    {
+    }
     public function delete($id)
     {
         User::find($id)->delete();
