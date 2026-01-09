@@ -235,7 +235,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+            <div class="grid grid-cols-3 md:grid-cols-3 gap-3 text-sm">
                 <div class="rounded-xl border border-gray-200 bg-white p-3">
                     <p class="text-gray-500">Подытог</p>
                     <p class="text-lg font-semibold text-gray-900">{{ $this->total_amount }} c</p>
@@ -244,10 +244,10 @@
                     <p class="text-gray-500">Доставка</p>
                     <p class="text-lg font-semibold text-gray-900">{{ $delivery_price }} c</p>
                 </div>
-                <div class="rounded-xl border border-gray-200 bg-white p-3">
+                {{-- <div class="rounded-xl border border-gray-200 bg-white p-3">
                     <p class="text-gray-500">Скидка</p>
                     <p class="text-lg font-semibold text-amber-600">-{{ $this->discount_total }} c</p>
-                </div>
+                </div> --}}
                 <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-3">
                     <p class="text-gray-500">Итог к оплате</p>
                     <p class="text-xl font-semibold text-emerald-600">{{ $total_final }} c</p>

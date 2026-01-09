@@ -54,30 +54,25 @@
 
         <div class="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
             <div class="flex items-center justify-between mb-4">
-                <flux:heading size="lg">Свежие чаты</flux:heading>
+                <flux:heading size="lg">Активность чатов</flux:heading>
                 <a href="{{ route('applicant.chats') }}" class="text-xs text-blue-600 hover:text-blue-700">
                     Открыть
                 </a>
             </div>
-            <div class="space-y-3">
-                @forelse ($recentChats as $chat)
-                    <div class="flex items-center justify-between gap-3 rounded-xl border border-gray-200 p-3">
-                        <div>
-                            <p class="text-sm font-semibold text-gray-900">
-                                {{ $chat->user->name ?? 'Клиент' }}
-                            </p>
-                            <p class="text-xs text-gray-500">Чат #{{ $chat->id }}</p>
+            <div class="flex items-end gap-2 h-44">
+                @foreach ($messagesByDay as $item)
+                    @php
+                        $height = (int) round(($item['value'] / $maxMessages) * 100);
+                    @endphp
+                    <div class="flex-1 flex flex-col items-center gap-2">
+                        <div class="w-full bg-indigo-100 rounded-xl overflow-hidden">
+                            <div class="bg-indigo-600 rounded-xl transition-all"
+                                style="height: {{ max(8, $height) }}px"></div>
                         </div>
-                        <div class="text-right">
-                            <p class="text-xs text-gray-500">Непрочитано</p>
-                            <p class="text-lg font-semibold text-rose-600">{{ $chat->unread_messages_count }}</p>
-                        </div>
+                        <span class="text-xs text-gray-500">{{ $item['label'] }}</span>
+                        <span class="text-xs font-semibold text-gray-700">{{ $item['value'] }}</span>
                     </div>
-                @empty
-                    <div class="rounded-xl border border-dashed border-gray-200 p-4 text-sm text-gray-500">
-                        Новых чатов пока нет.
-                    </div>
-                @endforelse
+                @endforeach
             </div>
         </div>
     </div>

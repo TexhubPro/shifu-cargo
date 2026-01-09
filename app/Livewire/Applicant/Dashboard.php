@@ -47,6 +47,14 @@ class Dashboard extends Component
         $maxApplications = max(1, (int) $applicationsByDay->max('value'));
         $maxOrders = max(1, (int) $ordersByDay->max('value'));
 
+        $messagesByDay = $days->map(function ($day) {
+            return [
+                'label' => $day->format('d.m'),
+                'value' => Message::whereDate('created_at', $day->toDateString())->count(),
+            ];
+        });
+        $maxMessages = max(1, (int) $messagesByDay->max('value'));
+
         $recentApplications = Application::with('user')
             ->latest()
             ->limit(5)
@@ -68,6 +76,8 @@ class Dashboard extends Component
             'ordersByDay' => $ordersByDay,
             'maxApplications' => $maxApplications,
             'maxOrders' => $maxOrders,
+            'messagesByDay' => $messagesByDay,
+            'maxMessages' => $maxMessages,
             'recentApplications' => $recentApplications,
             'recentChats' => $recentChats,
         ]);
