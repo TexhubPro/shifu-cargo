@@ -35,8 +35,6 @@
                     <flux:select.option value="created_at">По дате</flux:select.option>
                     <flux:select.option value="name">По имени</flux:select.option>
                     <flux:select.option value="code">По коду</flux:select.option>
-                    <flux:select.option value="trackcodes_count">По кол-ву кодов</flux:select.option>
-                    <flux:select.option value="orders_sum_total">По сумме заказов</flux:select.option>
                 </flux:select>
                 <flux:select label="Направление" wire:model.live="sortDirection">
                     <flux:select.option value="desc">Сначала новые</flux:select.option>
@@ -61,8 +59,6 @@
                 <flux:table.column>Имя</flux:table.column>
                 <flux:table.column>Номер тел</flux:table.column>
                 <flux:table.column>Пол</flux:table.column>
-                <flux:table.column>Все заказы</flux:table.column>
-                <flux:table.column>Сумма заказов</flux:table.column>
                 <flux:table.column>Дата присоеденения</flux:table.column>
                 <flux:table.column></flux:table.column>
             </flux:table.columns>
@@ -74,9 +70,6 @@
                         <flux:table.cell>{{ $item->name }}</flux:table.cell>
                         <flux:table.cell>{{ $item->phone }}</flux:table.cell>
                         <flux:table.cell>{{ $item->sex == 'z' ? 'Женский' : 'Мужской' }}</flux:table.cell>
-                        <flux:table.cell>{{ $item->trackcodes_count }}</flux:table.cell>
-                        <flux:table.cell>{{ number_format($item->orders_sum_total ?? 0, 2, '.', ' ') }}c
-                        </flux:table.cell>
                         <flux:table.cell variant="strong">{{ $item->created_at->format('H:i | d.m.Y') }}
                         </flux:table.cell>
                         @if (Auth::user()->role == 'admin')

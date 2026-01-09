@@ -70,9 +70,7 @@ class Customers extends Component
     public function customers()
     {
         $query = User::query()
-            ->select(['id', 'code', 'name', 'phone', 'sex', 'created_at'])
-            ->withCount('trackcodes')
-            ->withSum('orders as orders_sum_total', 'total');
+            ->select(['id', 'code', 'name', 'phone', 'sex', 'created_at']);
 
         if (!empty($this->nameSearch)) {
             $query->where('name', 'like', '%' . $this->nameSearch . '%');
@@ -112,7 +110,7 @@ class Customers extends Component
 
     protected function getSortField(): string
     {
-        $allowed = ['created_at', 'name', 'code', 'trackcodes_count', 'orders_sum_total'];
+        $allowed = ['created_at', 'name', 'code'];
         return in_array($this->sortField, $allowed, true) ? $this->sortField : 'created_at';
     }
 
