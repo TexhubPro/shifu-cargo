@@ -9,9 +9,14 @@
         </flux:text>
 
         <form wire:submit="login" class="w-full mt-5 space-y-3">
-            <flux:input type="number" required wire:model="phone" label="Номер телефона"
-                placeholder="Введите номер телефона" />
-            <flux:input type="password" required wire:model="password" label="Пароль" placeholder="Введите пароль" />
+            <div>
+                <flux:label class="text-white">Номер телефона</flux:label>
+                <flux:input type="number" required wire:model="phone" placeholder="Введите номер телефона" />
+            </div>
+            <div>
+                <flux:label class="text-white">Пароль</flux:label>
+                <flux:input type="password" required wire:model="password" placeholder="Введите пароль" />
+            </div>
             <flux:field variant="inline">
                 <flux:checkbox wire:model="remember" />
                 <flux:label class="text-white">Запомнить меня</flux:label>
