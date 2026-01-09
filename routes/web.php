@@ -32,6 +32,13 @@ use App\Livewire\Admin\OrderShow;
 use App\Livewire\Admin\RegisterPack;
 use App\Livewire\Admin\Profile as AdminProfile;
 use App\Livewire\Applicant;
+use App\Livewire\Applicant\Dashboard as ApplicantDashboard;
+use App\Livewire\Applicant\Chats as ApplicantChats;
+use App\Livewire\Applicant\China as ApplicantChina;
+use App\Livewire\Applicant\Customers as ApplicantCustomers;
+use App\Livewire\Applicant\Dushanbe as ApplicantDushanbe;
+use App\Livewire\Applicant\Smsbulk as ApplicantSmsbulk;
+use App\Livewire\Applicant\Trackcodes as ApplicantTrackcodes;
 use App\Livewire\Login;
 use App\Livewire\Manager;
 use App\Livewire\MiniApp\AddOrder;
@@ -125,7 +132,14 @@ Route::middleware(['auth', MidDeliverPanel::class])->group(function () {
     Route::get('/deliver/archive', DeliverArchive::class)->name('deliver.archive');
 });
 Route::middleware(['auth', MidApplicantPanel::class])->group(function () {
+    Route::get('/applicant/dashboard', ApplicantDashboard::class)->name('applicant.dashboard');
     Route::get('/applicant', Applicant::class)->name('applicant');
+    Route::get('/applicant/chats', ApplicantChats::class)->name('applicant.chats');
+    Route::get('/applicant/trackcodes', ApplicantTrackcodes::class)->name('applicant.trackcodes');
+    Route::get('/applicant/customers', ApplicantCustomers::class)->name('applicant.customers');
+    Route::get('/applicant/china', ApplicantChina::class)->name('applicant.china');
+    Route::get('/applicant/dushanbe', ApplicantDushanbe::class)->name('applicant.dushanbe');
+    Route::get('/applicant/smsbulk', ApplicantSmsbulk::class)->name('applicant.smsbulk');
 });
 Route::get('/navbat', LivewireQueue::class)->name('navbat');
 Route::get('/queue-kiosk', QueueKiosk::class)->name('queue-kiosk');

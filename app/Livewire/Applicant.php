@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
 
 
-#[Layout('components.layouts.empty')]
+#[Layout('components.layouts.applicant')]
 class Applicant extends Component
 {
     use WithFileUploads;
@@ -357,19 +357,20 @@ class Applicant extends Component
     public function render()
     {
         $pendingCount = Application::where('status', 'В ожидании')->count();
-        $readyCount = Application::where('status', 'В ожидании')
-            ->whereNotNull('phone')->where('phone', '!=', '')
-            ->whereNotNull('address')->where('address', '!=', '')
+        $ordersToday = Order::whereDate('created_at', Carbon::today())->count();
+        $cancelledToday = Application::whereDate('updated_at', Carbon::today())
+            ->where('status', 'менеджер отменил')
             ->count();
 
         $orders = Application::where('status', 'В ожидании')
             ->orderBy('created_at', 'asc')
             ->paginate($this->perPage);
 
-        return view('livewire.applicant', [
+        return view('livewire.applicant.index', [
             'orders' => $orders,
             'pendingCount' => $pendingCount,
-            'readyCount' => $readyCount,
+            'ordersToday' => $ordersToday,
+            'cancelledToday' => $cancelledToday,
         ]);
     }
 }
