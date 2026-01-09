@@ -14,7 +14,7 @@
             <flux:input type="password" required wire:model="password" label="Пароль" placeholder="Введите пароль" />
             <flux:field variant="inline">
                 <flux:checkbox wire:model="remember" />
-                <flux:label>Запомнить меня</flux:label>
+                <flux:label class="text-white">Запомнить меня</flux:label>
             </flux:field>
             <flux:button type="submit" variant="primary" color="lime" class="w-full mt-3">Войти</flux:button>
         </form>
