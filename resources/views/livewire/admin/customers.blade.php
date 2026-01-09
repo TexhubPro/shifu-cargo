@@ -44,8 +44,8 @@
                     <flux:select.option value="25">25</flux:select.option>
                     <flux:select.option value="50">50</flux:select.option>
                     <flux:select.option value="100">100</flux:select.option>
-                    <flux:select.option value="100">500</flux:select.option>
-                    <flux:select.option value="100">1000</flux:select.option>
+                    <flux:select.option value="500">500</flux:select.option>
+                    <flux:select.option value="1000">1000</flux:select.option>
                 </flux:select>
                 <div class="flex items-end">
                     <span class="text-xs text-gray-500 bg-slate-50 px-3 py-2 rounded-xl">
