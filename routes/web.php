@@ -57,10 +57,11 @@ use App\Livewire\Queue as LivewireQueue;
 use App\Livewire\QueueControl;
 use App\Livewire\QueueKiosk;
 use App\Livewire\ResetTelegram;
+use App\Http\Middleware\RedirectIfAuthenticatedByRole;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('guest')->group(function () {
+Route::middleware(RedirectIfAuthenticatedByRole::class)->group(function () {
     Route::get('/register/{id?}', Register::class)->name('register');
     Route::get('/login', Login::class)->name('login');
 });
