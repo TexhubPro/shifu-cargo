@@ -21,7 +21,7 @@ class Customers extends Component
     public $dateTo;
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
-    public $perPage = 25;
+    public $perPage = 100;
     public function updatedNameSearch(): void
     {
         $this->resetPage();

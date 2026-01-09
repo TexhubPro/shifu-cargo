@@ -44,6 +44,8 @@
                     <flux:select.option value="25">25</flux:select.option>
                     <flux:select.option value="50">50</flux:select.option>
                     <flux:select.option value="100">100</flux:select.option>
+                    <flux:select.option value="100">500</flux:select.option>
+                    <flux:select.option value="100">1000</flux:select.option>
                 </flux:select>
                 <div class="flex items-end">
                     <span class="text-xs text-gray-500 bg-slate-50 px-3 py-2 rounded-xl">
@@ -74,9 +76,15 @@
                         </flux:table.cell>
                         @if (Auth::user()->role == 'admin')
                             <flux:table.cell>
-                                <flux:button variant="primary" size="sm" color="red"
-                                    wire:click="delete({{ $item->id }})" wire:confirm>
-                                    Удалить</flux:button>
+                                <div class="flex items-center gap-2 justify-end">
+                                    <a href="{{ route('admin.customers.show', $item->id) }}"
+                                        class="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-100">
+                                        Детали
+                                    </a>
+                                    <flux:button variant="primary" size="sm" color="red"
+                                        wire:click="delete({{ $item->id }})" wire:confirm>
+                                        Удалить</flux:button>
+                                </div>
                             </flux:table.cell>
                         @endif
                     </flux:table.row>

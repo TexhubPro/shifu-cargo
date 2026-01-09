@@ -9,6 +9,7 @@ use App\Livewire\Admin\Applications;
 use App\Livewire\Admin\ApplicationShow;
 use App\Livewire\Admin\Chats;
 use App\Livewire\Admin\China;
+use App\Livewire\Admin\CustomerShow;
 use App\Livewire\Admin\Customers;
 use App\Livewire\Admin\Deliverers;
 use App\Livewire\Admin\Dashboard;
@@ -92,6 +93,7 @@ Route::middleware(['auth', Admin::class])->prefix('admin')->name('admin.')->grou
     Route::get('/dushanbe', Dushanbe::class)->name('dushanbe');
     Route::get('/trackcodes', Trackcodes::class)->name('trackcodes');
     Route::get('/customers', Customers::class)->name('customers');
+    Route::get('/customers/{user}', CustomerShow::class)->name('customers.show');
     Route::get('/deliverers', Deliverers::class)->name('deliverers');
     Route::get('/applications', Applications::class)->name('applications');
     Route::get('/applications/{application}', ApplicationShow::class)->name('applications.show');
