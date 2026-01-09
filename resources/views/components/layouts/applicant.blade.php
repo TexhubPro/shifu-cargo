@@ -30,8 +30,7 @@
     <div class="min-h-screen">
         <nav class="sticky top-0 z-30 border-b border-gray-200 bg-white/80 backdrop-blur">
             <div class="max-w-6xl mx-auto px-4 py-3 space-y-3">
-                <div
-                    class="flex items-center justify-between gap-3 rounded-2xl bg-teal-500 px-3 py-2 shadow-sm">
+                <div class="flex items-center justify-between gap-3 rounded-2xl bg-teal-500 px-3 py-2 shadow-sm">
                     <div class="flex items-center gap-3">
                         <a href="{{ route('applicant') }}" class="inline-flex items-center gap-2">
                             <span
@@ -41,7 +40,7 @@
                             <span class="text-lg font-semibold text-white">ShifuCargo</span>
                         </a>
                         <span
-                            class="text-xs uppercase tracking-wide text-white/80 bg-white/10 border border-white/20 px-2 py-1 rounded-full">
+                            class="hidden lg:block text-xs uppercase tracking-wide text-white/80 bg-white/10 border border-white/20 px-2 py-1 rounded-full">
                             Панель заявщика
                         </span>
                     </div>
