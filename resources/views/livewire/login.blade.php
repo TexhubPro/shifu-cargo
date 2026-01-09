@@ -3,7 +3,7 @@
         class="w-full bg-neutral-800 rounded-xl border border-neutral-700 mt-32 p-4 flex justify-center flex-col items-center">
         <img src="{{ asset('logo/white_logo.svg') }}" class="h-12 mb-5" alt="Логотип">
 
-        <flux:heading class="text-xl">Вход в аккаунт</flux:heading>
+        <flux:heading class="text-xl text-white">Вход в аккаунт</flux:heading>
         <flux:text class="mt-2 text-center max-w-60">
             Введите номер телефона и пароль, чтобы войти в свой аккаунт.
         </flux:text>
