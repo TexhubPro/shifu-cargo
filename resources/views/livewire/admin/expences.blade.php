@@ -227,16 +227,6 @@
                 <flux:select.option value="Кубатура Душанбе">Кубатура Душанбе</flux:select.option>
             </flux:select>
 
-            <!-- Сумма -->
-            <flux:input type="number" label="{{ $hidden ? 'Сумма (USD)' : 'Сумма' }}"
-                placeholder="Введите сумму" required wire:model="amount" />
-            @if ($hidden == true)
-                <flux:input type="text" inputmode="decimal" label="Курс доллара" placeholder="Введите курс"
-                    required wire:model.lazy="dollarRate" />
-                <flux:text class="text-xs text-gray-500">
-                    Сумма в USD будет автоматически пересчитана в сомони по указанному курсу.
-                </flux:text>
-            @endif
             @if ($hidden == false)
                 @if ($warehouse === 'Склад Иву')
                     <flux:select label="Статья затрат" placeholder="Выберите статью" required
@@ -277,6 +267,18 @@
                         wire:model.live="employeeName" />
                 @endif
             @endif
+
+            @if ($hidden == true)
+                <flux:input type="text" inputmode="decimal" label="Курс доллара" placeholder="Введите курс"
+                    required wire:model.lazy="dollarRate" />
+                <flux:text class="text-xs text-gray-500">
+                    Сумма в USD будет автоматически пересчитана в сомони по указанному курсу.
+                </flux:text>
+            @endif
+
+            <!-- Сумма -->
+            <flux:input type="number" label="{{ $hidden ? 'Сумма (USD)' : 'Сумма' }}"
+                placeholder="Введите сумму" required wire:model="amount" />
 
             <div class="flex">
                 <flux:spacer />
