@@ -12,6 +12,133 @@
     </div>
 
     <div class="bg-white rounded-2xl p-4 lg:p-6 shadow-sm ring-1 ring-gray-100 space-y-4">
+        @php
+            $summary = $this->expensesSummary;
+            $daily = $this->expensesDaily;
+            $categories = $this->expensesByCategory['items'] ?? [];
+            $dailyTotals = $daily['totals'] ?? [];
+            $dailyLabels = $daily['labels'] ?? [];
+            $maxDaily = max(1, $daily['max'] ?? 0);
+            $categoryMax = 0;
+            foreach ($categories as $item) {
+                $categoryMax = max($categoryMax, $item['total'] ?? 0);
+            }
+            $categoryMax = max(1, $categoryMax);
+        @endphp
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-700">Общий обзор затрат</p>
+                        <p class="text-xs text-slate-400">Текущий период</p>
+                    </div>
+                    <span class="text-[11px] text-slate-500 bg-white px-3 py-1 rounded-full">аналитика</span>
+                </div>
+                <div class="mt-4 grid grid-cols-2 gap-3">
+                    <div class="rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+                        <div class="text-xs text-slate-400">Итого</div>
+                        <div class="mt-2 text-lg font-semibold text-slate-900">
+                            {{ number_format($summary['total'] ?? 0, 0, '.', ' ') }} с
+                        </div>
+                    </div>
+                    <div class="rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+                        <div class="text-xs text-slate-400">Средняя запись</div>
+                        <div class="mt-2 text-lg font-semibold text-slate-900">
+                            {{ number_format($summary['average'] ?? 0, 0, '.', ' ') }} с
+                        </div>
+                    </div>
+                    <div class="rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+                        <div class="text-xs text-slate-400">Максимум</div>
+                        <div class="mt-2 text-lg font-semibold text-slate-900">
+                            {{ number_format($summary['max'] ?? 0, 0, '.', ' ') }} с
+                        </div>
+                    </div>
+                    <div class="rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+                        <div class="text-xs text-slate-400">Записей</div>
+                        <div class="mt-2 text-lg font-semibold text-slate-900">{{ $summary['count'] ?? 0 }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-700">Динамика затрат</p>
+                        <p class="text-xs text-gray-400">По дням</p>
+                    </div>
+                    <span class="text-xs text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+                        {{ number_format(array_sum($dailyTotals), 0, '.', ' ') }} с
+                    </span>
+                </div>
+                <div class="mt-4">
+                    @php
+                        $width = 480;
+                        $height = 180;
+                        $padding = 16;
+                        $count = count($dailyTotals);
+                        $gap = 6;
+                        $barWidth = $count > 0
+                            ? max(2, ($width - 2 * $padding - ($count - 1) * $gap) / $count)
+                            : 0;
+                    @endphp
+                    <svg viewBox="0 0 {{ $width }} {{ $height }}" class="w-full h-44">
+                        <defs>
+                            <linearGradient id="expenseBars" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.9" />
+                                <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.25" />
+                            </linearGradient>
+                        </defs>
+                        <g>
+                            @for ($i = 0; $i < $count; $i++)
+                                @php
+                                    $value = (float) ($dailyTotals[$i] ?? 0);
+                                    $barHeight = ($value / $maxDaily) * ($height - 2 * $padding);
+                                    $x = $padding + $i * ($barWidth + $gap);
+                                    $y = $height - $padding - $barHeight;
+                                @endphp
+                                <rect x="{{ $x }}" y="{{ $y }}" width="{{ $barWidth }}"
+                                    height="{{ $barHeight }}" rx="6" fill="url(#expenseBars)" />
+                            @endfor
+                        </g>
+                    </svg>
+                </div>
+                <div class="mt-2 text-xs text-gray-400 flex justify-between">
+                    <span>{{ $dailyLabels[0] ?? '' }}</span>
+                    <span>{{ \Illuminate\Support\Arr::last($dailyLabels) ?? '' }}</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-700">Категории затрат</p>
+                        <p class="text-xs text-gray-400">Топ по сумме</p>
+                    </div>
+                    <span class="text-xs text-slate-500 bg-slate-50 px-3 py-1 rounded-full">топ 6</span>
+                </div>
+                <div class="mt-4 space-y-3">
+                    @forelse ($categories as $item)
+                        @php
+                            $label = $item['label'] ?? '-';
+                            $value = $item['total'] ?? 0;
+                            $width = max(6, round(($value / $categoryMax) * 100));
+                        @endphp
+                        <div>
+                            <div class="flex items-center justify-between text-xs text-slate-500">
+                                <span class="truncate">{{ $label }}</span>
+                                <span>{{ number_format($value, 0, '.', ' ') }} с</span>
+                            </div>
+                            <div class="mt-2 h-2 rounded-full bg-slate-100 overflow-hidden">
+                                <div class="h-full rounded-full bg-amber-500" style="width: {{ $width }}%"></div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-sm text-gray-400">Нет данных для анализа.</div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+
         <div class="flex flex-col gap-1">
             <flux:heading>Фильтры и сортировка</flux:heading>
             <flux:text>Используйте фильтры для быстрого поиска нужных затрат.</flux:text>
@@ -101,10 +228,54 @@
             </flux:select>
 
             <!-- Сумма -->
-            <flux:input type="number" label="Сумма" placeholder="Введите сумму" required wire:model="amount" />
+            <flux:input type="number" label="{{ $hidden ? 'Сумма (USD)' : 'Сумма' }}"
+                placeholder="Введите сумму" required wire:model="amount" />
+            @if ($hidden == true)
+                <flux:input type="number" label="Курс доллара" placeholder="Введите курс" required
+                    wire:model="dollarRate" />
+                <flux:text class="text-xs text-gray-500">
+                    Сумма в USD будет автоматически пересчитана в сомони по указанному курсу.
+                </flux:text>
+            @endif
             @if ($hidden == false)
-                <!-- Описание -->
-                <flux:textarea label="Описание" placeholder="Введите описание затрат" wire:model="description" />
+                @if ($warehouse === 'Склад Иву')
+                    <flux:select label="Статья затрат" placeholder="Выберите статью" required
+                        wire:model="expenseCategory">
+                        <flux:select.option value="Сумма доставки Иву–Кашкар">Сумма доставки Иву–Кашкар
+                        </flux:select.option>
+                        <flux:select.option value="Сумма доставки Иву–Урумчи">Сумма доставки Иву–Урумчи
+                        </flux:select.option>
+                        <flux:select.option value="Сумма скотча Иву">Сумма скотча Иву</flux:select.option>
+                        <flux:select.option value="Сумма коробок склад Иву">Сумма коробок склад Иву
+                        </flux:select.option>
+                        <flux:select.option value="Сумма зарплаты склад Иву">Сумма зарплаты склад Иву
+                        </flux:select.option>
+                        <flux:select.option value="Сумма допрасходов Иву">Сумма допрасходов Иву
+                        </flux:select.option>
+                    </flux:select>
+                @elseif ($warehouse === 'Склад Душанбе')
+                    <flux:select label="Статья затрат" placeholder="Выберите статью" required
+                        wire:model="expenseCategory">
+                        <flux:select.option value="Склад Душанбе — налог">Склад Душанбе — налог</flux:select.option>
+                        <flux:select.option value="Склад Душанбе — зарплата">Склад Душанбе — зарплата
+                        </flux:select.option>
+                        <flux:select.option value="Склад Душанбе — обед/ужин">Склад Душанбе — обед/ужин
+                        </flux:select.option>
+                        <flux:select.option value="Склад Душанбе — возврат груза">Склад Душанбе — возврат груза
+                        </flux:select.option>
+                        <flux:select.option value="Склад Душанбе — участковый">Склад Душанбе — участковый
+                        </flux:select.option>
+                        <flux:select.option value="Склад Душанбе — допрасходы">Склад Душанбе — допрасходы
+                        </flux:select.option>
+                    </flux:select>
+                @else
+                    <flux:textarea label="Описание" placeholder="Введите описание затрат" wire:model="description" />
+                @endif
+
+                @if ($expenseCategory === 'Сумма зарплаты склад Иву' || $expenseCategory === 'Склад Душанбе — зарплата')
+                    <flux:input label="Имя сотрудника" placeholder="Введите имя (необязательно)"
+                        wire:model="employeeName" />
+                @endif
             @endif
 
             <div class="flex">
