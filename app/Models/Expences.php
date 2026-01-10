@@ -10,7 +10,8 @@ class Expences extends Model
         'sklad',
         'total',
         'content',
-        'data'
+        'data',
+        'user_id',
     ];
 
     public static function forPeriodAll($start, $end)

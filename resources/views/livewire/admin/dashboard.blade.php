@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             <flux:modal.trigger name="newclients">
                 <div
                     class="group bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100 hover:shadow-md transition-shadow">
@@ -143,35 +143,9 @@
                 </div>
             </flux:modal.trigger>
 
-            <div
-                class="group bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100 hover:shadow-md transition-shadow">
-                <div class="flex items-start justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-500">Чистая прибыль</p>
-                        <p
-                            class="text-3xl font-semibold mt-2 {{ $profitTotal >= 0 ? 'text-emerald-700' : 'text-rose-600' }}">
-                            {{ number_format($profitTotal, 1, '.', ' ') }} с
-                        </p>
-                        <p class="text-xs text-gray-400 mt-1">Выручка − затраты</p>
-                    </div>
-                    <div
-                        class="h-12 w-12 rounded-2xl bg-emerald-50 text-emerald-600 inline-flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M4 4v16h16" />
-                            <path d="M7 14l4 -4l3 3l5 -5" />
-                        </svg>
-                    </div>
-                </div>
-                <div class="mt-4 h-1.5 w-full bg-emerald-100 rounded-full overflow-hidden">
-                    <div class="h-full {{ $profitTotal >= 0 ? 'bg-emerald-500' : 'bg-rose-500' }}"
-                        style="width: {{ max(8, round((abs($profitTotal) / $maxKpi) * 100)) }}%"></div>
-                </div>
-            </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             <a href="{{ route('admin.applications') }}"
                 class="group bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100 hover:shadow-md transition-shadow">
                 <div class="flex items-start justify-between">
@@ -251,6 +225,33 @@
                 <div class="mt-4 h-1.5 w-full bg-rose-100 rounded-full overflow-hidden">
                     <div class="h-full bg-rose-500"
                         style="width: {{ max(8, round(($deliveryOnlyTotal / $maxKpi) * 100)) }}%"></div>
+                </div>
+            </div>
+
+            <div
+                class="group bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100 hover:shadow-md transition-shadow">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Чистая прибыль</p>
+                        <p
+                            class="text-3xl font-semibold mt-2 {{ $profitTotal >= 0 ? 'text-emerald-700' : 'text-rose-600' }}">
+                            {{ number_format($profitTotal, 1, '.', ' ') }} с
+                        </p>
+                        <p class="text-xs text-gray-400 mt-1">Выручка − затраты</p>
+                    </div>
+                    <div
+                        class="h-12 w-12 rounded-2xl bg-emerald-50 text-emerald-600 inline-flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M4 4v16h16" />
+                            <path d="M7 14l4 -4l3 3l5 -5" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="mt-4 h-1.5 w-full bg-emerald-100 rounded-full overflow-hidden">
+                    <div class="h-full {{ $profitTotal >= 0 ? 'bg-emerald-500' : 'bg-rose-500' }}"
+                        style="width: {{ max(8, round((abs($profitTotal) / $maxKpi) * 100)) }}%"></div>
                 </div>
             </div>
         </div>

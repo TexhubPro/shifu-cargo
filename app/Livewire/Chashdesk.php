@@ -293,6 +293,7 @@ class Chashdesk extends Component
     public function getTodayExpensesProperty()
     {
         return Expences::whereDate('created_at', Carbon::today())
+            ->where('user_id', Auth::id())
             ->latest()
             ->get();
     }
@@ -579,6 +580,7 @@ class Chashdesk extends Component
             'total' => $this->amount,
             'content' => $this->description,
             'data' => Carbon::now(),
+            'user_id' => Auth::id(),
         ]);
 
         $this->reset(['amount', 'description']);

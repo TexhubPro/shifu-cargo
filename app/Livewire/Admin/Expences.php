@@ -101,7 +101,8 @@ class Expences extends Component
             'sklad' => $this->warehouse,
             'total' => $total,
             'content' => $content,
-            'data' => $this->data
+            'data' => $this->data,
+            'user_id' => auth()->id(),
         ]);
 
         // Сброс полей после добавления

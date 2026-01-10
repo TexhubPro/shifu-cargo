@@ -30,6 +30,7 @@ class CashdeskControlController extends Controller
         $users = User::where('role', 'customer')->get();
         $heldOrders = HeldOrder::latest()->get();
         $todayExpenses = Expences::whereDate('created_at', Carbon::today())
+            ->where('user_id', Auth::id())
             ->latest()
             ->get();
         $todayDelivererPayments = DelivererPayment::with('deliverer:id,name')
@@ -271,6 +272,7 @@ class CashdeskControlController extends Controller
             'total' => $data['amount'],
             'content' => $data['description'] ?? null,
             'data' => Carbon::now(),
+            'user_id' => Auth::id(),
         ]);
 
         return redirect()->route('cashier');

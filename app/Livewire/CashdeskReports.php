@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Queue;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
@@ -40,6 +41,7 @@ class CashdeskReports extends Component
     public function getTodayExpensesProperty()
     {
         return Expences::whereDate('created_at', Carbon::today())
+            ->where('user_id', Auth::id())
             ->latest()
             ->get();
     }
