@@ -44,7 +44,7 @@ class Manager
         return match ($role) {
             'admin' => redirect()->route('admin.dashboard'),
             'cashier' => redirect()->route('cashier'),
-            'deliver' => redirect()->route('deliver.orders'),
+            'deliver' => redirect()->route('deliver'),
             'applicant' => redirect()->route('applicant'),
             default => redirect()->route('login'),
         };

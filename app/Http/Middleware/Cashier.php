@@ -44,7 +44,7 @@ class Cashier
         return match ($role) {
             'admin' => redirect()->route('admin.dashboard'),
             'manager' => redirect()->route('manager'),
-            'deliver' => redirect()->route('deliver.orders'),
+            'deliver' => redirect()->route('deliver'),
             'applicant' => redirect()->route('applicant'),
             default => redirect()->route('login'),
         };

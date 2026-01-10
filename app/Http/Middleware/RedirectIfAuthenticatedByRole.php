@@ -16,7 +16,7 @@ class RedirectIfAuthenticatedByRole
 
             return match ($role) {
                 'admin' => redirect()->route('admin.dashboard'),
-                'deliver' => redirect()->route('deliver.orders'),
+                'deliver' => redirect()->route('deliver'),
                 'applicant' => redirect()->route('applicant'),
                 'manager' => redirect()->route('manager'),
                 'cashier' => redirect()->route('cashier'),

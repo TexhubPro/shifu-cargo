@@ -45,7 +45,7 @@ class ApplicantPanel
             'admin' => redirect()->route('admin.dashboard'),
             'manager' => redirect()->route('manager'),
             'cashier' => redirect()->route('cashier'),
-            'deliver' => redirect()->route('deliver.orders'),
+            'deliver' => redirect()->route('deliver'),
             'applicant' => redirect()->route('applicant'),
             default => redirect()->route('login'),
         };
