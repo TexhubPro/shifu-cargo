@@ -11,6 +11,7 @@ use App\Models\Setting;
 use Flux\Flux;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 #[Layout('components.layouts.admin')]
 class Expences extends Component
@@ -72,6 +73,7 @@ class Expences extends Component
     // Метод добавления затрат
     public function addExpense()
     {
+        $this->dollarRate = $this->normalizeDecimal($this->dollarRate);
         $rules = $this->rules;
         if ($this->isCubatureWarehouse()) {
             $rules['dollarRate'] = 'required|numeric|min:0.01';
@@ -221,8 +223,9 @@ class Expences extends Component
 
     protected function isSalaryCategory(): bool
     {
-        return $this->expenseCategory === 'Сумма зарплаты склад Иву'
-            || $this->expenseCategory === 'Склад Душанбе — зарплата';
+        return $this->expenseCategory
+            ? Str::contains($this->expenseCategory, 'зарплата')
+            : false;
     }
 
     public function updatedSearch(): void
@@ -265,6 +268,11 @@ class Expences extends Component
         if (!$this->isSalaryCategory()) {
             $this->employeeName = null;
         }
+    }
+
+    public function updatedDollarRate(): void
+    {
+        $this->dollarRate = $this->normalizeDecimal($this->dollarRate);
     }
 
     protected function baseQuery(bool $withDate = true)
@@ -318,5 +326,18 @@ class Expences extends Component
         $end = Carbon::today()->endOfDay();
         $start = $end->copy()->subDays(13)->startOfDay();
         return [$start, $end];
+    }
+
+    protected function normalizeDecimal($value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if (is_string($value)) {
+            $value = str_replace(',', '.', $value);
+        }
+
+        return (string) $value;
     }
 }

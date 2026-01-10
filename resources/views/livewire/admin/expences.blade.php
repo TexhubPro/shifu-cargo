@@ -231,8 +231,8 @@
             <flux:input type="number" label="{{ $hidden ? 'Сумма (USD)' : 'Сумма' }}"
                 placeholder="Введите сумму" required wire:model="amount" />
             @if ($hidden == true)
-                <flux:input type="number" label="Курс доллара" placeholder="Введите курс" required
-                    wire:model="dollarRate" />
+                <flux:input type="text" inputmode="decimal" label="Курс доллара" placeholder="Введите курс"
+                    required wire:model.lazy="dollarRate" />
                 <flux:text class="text-xs text-gray-500">
                     Сумма в USD будет автоматически пересчитана в сомони по указанному курсу.
                 </flux:text>
@@ -272,7 +272,7 @@
                     <flux:textarea label="Описание" placeholder="Введите описание затрат" wire:model="description" />
                 @endif
 
-                @if ($expenseCategory === 'Сумма зарплаты склад Иву' || $expenseCategory === 'Склад Душанбе — зарплата')
+                @if (\Illuminate\Support\Str::contains($expenseCategory, 'зарплата'))
                     <flux:input label="Имя сотрудника" placeholder="Введите имя (необязательно)"
                         wire:model="employeeName" />
                 @endif
