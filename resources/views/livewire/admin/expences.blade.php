@@ -240,7 +240,7 @@
             @if ($hidden == false)
                 @if ($warehouse === 'Склад Иву')
                     <flux:select label="Статья затрат" placeholder="Выберите статью" required
-                        wire:model="expenseCategory">
+                        wire:model.live="expenseCategory">
                         <flux:select.option value="Сумма доставки Иву–Кашкар">Сумма доставки Иву–Кашкар
                         </flux:select.option>
                         <flux:select.option value="Сумма доставки Иву–Урумчи">Сумма доставки Иву–Урумчи
@@ -255,7 +255,7 @@
                     </flux:select>
                 @elseif ($warehouse === 'Склад Душанбе')
                     <flux:select label="Статья затрат" placeholder="Выберите статью" required
-                        wire:model="expenseCategory">
+                        wire:model.live="expenseCategory">
                         <flux:select.option value="Склад Душанбе — налог">Склад Душанбе — налог</flux:select.option>
                         <flux:select.option value="Склад Душанбе — зарплата">Склад Душанбе — зарплата
                         </flux:select.option>
@@ -274,7 +274,7 @@
 
                 @if (\Illuminate\Support\Str::contains($expenseCategory, 'зарплата'))
                     <flux:input label="Имя сотрудника" placeholder="Введите имя (необязательно)"
-                        wire:model="employeeName" />
+                        wire:model.live="employeeName" />
                 @endif
             @endif
 
