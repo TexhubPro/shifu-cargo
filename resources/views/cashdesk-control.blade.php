@@ -674,7 +674,11 @@
             volumeInput?.addEventListener('input', () => updateTotals(true));
             receivedInput?.addEventListener('input', () => updateTotals(false));
 
-            updateTotals(false);
+            const hasInitialReceived = Boolean(receivedInput && String(receivedInput.value).trim() !== '');
+            updateTotals(!hasInitialReceived);
+
+            // Browser can restore input values after this script runs (autofill/bfcache).
+            window.addEventListener('pageshow', () => updateTotals(false));
 
             const triggerClick = (id) => {
                 const el = document.getElementById(id);
