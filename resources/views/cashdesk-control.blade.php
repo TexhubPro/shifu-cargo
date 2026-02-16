@@ -655,9 +655,10 @@
             };
 
             const updateTotals = (syncReceived) => {
-                const totals = calculateTotals(weightInput?.value, volumeInput?.value, receivedInput?.value);
+                let totals = calculateTotals(weightInput?.value, volumeInput?.value, receivedInput?.value);
                 if (syncReceived && receivedInput) {
                     receivedInput.value = totals.totalAmount || 0;
+                    totals = calculateTotals(weightInput?.value, volumeInput?.value, receivedInput?.value);
                 }
                 if (totalAmountEl) {
                     totalAmountEl.textContent = totals.totalAmount;
