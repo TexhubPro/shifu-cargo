@@ -802,13 +802,13 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         $this->chat->deleteMessage($this->messageId)->send();
 
         if ($wh == "vadanasos") {
-            // $this->chat->location(38.617451, 68.780144)->send();
+            $this->chat->location(38.617451, 68.780144)->send();
             $dushanbe = Setting::where('name', 'address_dushanbe')->first();
             if ($this->chat->lang == 'ru') {
-                $this->chat->location(38.617451, 68.780144)
+                $this->chat->photo(public_path('assets/dushanbe_ru.png'))
                     ->message("$dushanbe->content")->send();
             } else {
-                $this->chat->location(38.617451, 68.780144)
+                $this->chat->photo(public_path('assets/dushanbe_tj.png'))
                     ->message("$dushanbe->content")->send();
             }
         }
