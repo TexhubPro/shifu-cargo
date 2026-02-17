@@ -833,8 +833,8 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
 
         $user = User::where('chat_id', $chat_id)->first();
 
-        $locations_vadanasos = "SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼2单元shifu仓库-SF$user->code-$user->name-$user->phone";
-        $locations_46mkr = "SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼5单元shifu仓库-SF$user->code-$user->name-$user->phone";
+        $locations_vadanasos = "联系人：SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼2单元shifu仓库-SF$user->code-$user->name-$user->phone";
+        $locations_46mkr = "联系人：SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼5单元shifu仓库-SF$user->code-$user->name-$user->phone";
 
         if ($wh == "vadanasos") {
 
