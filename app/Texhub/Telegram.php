@@ -166,7 +166,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 ])
                 ->row([
                     ReplyButton::make('🚚 Дархости доставка'),
-                    ReplyButton::make('✅ Сурогаи склади Иву'),
+                    ReplyButton::make('✅ Склад в Китай'),
                     ReplyButton::make('📍 Сурогаи склади Душанбе'),
                 ])
                 ->row([
@@ -194,7 +194,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 ])
                 ->row([
                     ReplyButton::make('🚚 Заказать доставку'),
-                    ReplyButton::make('✅ Адрес склада Иву'),
+                    ReplyButton::make('✅ Склад дар Хитой'),
                     ReplyButton::make('📍 Адрес склада Душанбе'),
                 ])
                 ->row([
@@ -683,7 +683,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             }
             return;
         }
-        if ($text == '✅ Сурогаи склади Иву' || $text == '✅ Адрес склада Иву') {
+        if ($text == '✅ Склад дар Хитой' || $text == '✅ Склад в Китай') {
             $location = Setting::where('name', 'address_ivu')->first();
             if (!$user) {
                 if ($this->chat->lang == 'ru') {
@@ -834,7 +834,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         $user = User::where('chat_id', $chat_id)->first();
 
         $locations_vadanasos = "联系人：SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼2单元shifu仓库-SF$user->code-$user->name-$user->phone";
-        $locations_46mkr = "联系人：SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼5单元shifu2仓库-SF$user->code-$user->name-$user->phone";
+        $locations_46mkr = "联系人：SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼5单元shifu1仓库-SF$user->code-$user->name-$user->phone";
 
         if ($wh == "vadanasos") {
 
