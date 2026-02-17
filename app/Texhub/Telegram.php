@@ -758,6 +758,33 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         }
         return;
     }
+    public function selec_warehouse($id)
+    {
+        $this->chat->deleteMessage($this->messageId)->send();
+
+        $user = User::where('chat_id', $this->message->from()->id())->first();
+
+        $locations_vadanasos = "联系人：Shifu-$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼2单元shifu仓库-$user->code-$user->name-$user->phone";
+        $locations_46mkr = "联系人：Shifu1-$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼5单元shifu1仓库-$user->code-$user->name-$user->phone";
+
+        if ($id == "") {
+
+            if ($this->chat->lang == 'ru') {
+                $this->chat->photo(public_path('assets/ivu_ru.png'))->message($locations)
+                    ->keyboard(function (Keyboard $keyboard) use ($locations) {
+                        return $keyboard
+                            ->button('📋 Скопировать адрес')->copyText($locations);
+                    })->send();
+            } else {
+                $this->chat->photo(public_path('assets/ivu_tj.png'))->message($locations)
+                    ->keyboard(function (Keyboard $keyboard) use ($locations) {
+                        return $keyboard
+                            ->button('📋 Нусха бардоштани суроға')->copyText($locations);
+                    })->send();
+            }
+        }
+        return;
+    }
     public function sms_send_dushanbe($user_id, $trackcode)
     {
         $user = User::find($user_id);
