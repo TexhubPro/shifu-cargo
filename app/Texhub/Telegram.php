@@ -572,13 +572,36 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             return;
         }
         if ($text == '📍 Сурогаи склади Душанбе' || $text == '📍 Адрес склада Душанбе') {
-            // $this->chat->location(38.56834699185991, 68.73575168818122)->send();
             $dushanbe = Setting::where('name', 'address_dushanbe')->first();
+
             if ($this->chat->lang == 'ru') {
-                $this->chat->photo(public_path('assets/dushanbe_ru.png'))->message("$dushanbe->content")->send();
+                $this->chat->photo(public_path('assets/dushanbe_ru.png'))
+                    ->message("Выберите склад в Душанбе:\n\n$dushanbe->content")
+                    ->keyboard(Keyboard::make()->buttons([
+                        Button::make('Водонасос (Гулдаст)')
+                            ->action('selec_wareh')
+                            ->param('wh', 'vadanasos'),
+
+                        Button::make('Мост 46мкр (Саховат)')
+                            ->action('selec_wareh')
+                            ->param('wh', '46mkr'),
+                    ]))
+                    ->send();
             } else {
-                $this->chat->photo(public_path('assets/dushanbe_tj.png'))->message("$dushanbe->content")->send();
+                $this->chat->photo(public_path('assets/dushanbe_tj.png'))
+                    ->message("Анбори Душанбе-ро интихоб кунед:\n\n$dushanbe->content")
+                    ->keyboard(Keyboard::make()->buttons([
+                        Button::make('Водонасос (Гулдаст)')
+                            ->action('selec_wareh')
+                            ->param('wh', 'vadanasos'),
+
+                        Button::make('Пули 46мкр (Саховат)')
+                            ->action('selec_wareh')
+                            ->param('wh', '46mkr'),
+                    ]))
+                    ->send();
             }
+
             return;
         }
         if ($text == '👤 Тамос бо оператор' || $text == '👤 Связаться с оператором') {
@@ -774,6 +797,36 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         }
         return;
     }
+    public function selec_wareh($wh)
+    {
+        $this->chat->deleteMessage($this->messageId)->send();
+
+        if ($wh == "vadanasos") {
+            // $this->chat->location(38.617451, 68.780144)->send();
+            $dushanbe = Setting::where('name', 'address_dushanbe')->first();
+            if ($this->chat->lang == 'ru') {
+                $this->chat->location(38.617451, 68.780144)
+                    ->message("$dushanbe->content")->send();
+            } else {
+                $this->chat->location(38.617451, 68.780144)
+                    ->message("$dushanbe->content")->send();
+            }
+        }
+        if ($wh == "46mkr") {
+            // $this->chat->location(38.56834699185991, 68.73575168818122)->send();
+            $dushanbe = Setting::where('name', 'address_dushanbe')->first();
+            if ($this->chat->lang == 'ru') {
+                $this->chat->video(public_path('46.mp4'))
+                    ->message("Мост 46мкр (Саховат)")->send();
+            } else {
+                $this->chat->video(public_path('46.mp4'))
+                    ->message("Мост 46мкр (Саховат)")->send();
+            }
+        }
+        return;
+
+    }
+
     public function selec_warehouse($wh, $chat_id)
     {
         $this->chat->deleteMessage($this->messageId)->send();
