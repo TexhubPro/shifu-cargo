@@ -676,15 +676,31 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             if ($this->chat->lang == 'ru') {
                 $this->chat->photo(public_path('assets/ivu_ru.png'))->message("Выберите, в каком складе в Душанбе хотите получить свои товары:")
                     ->keyboard(Keyboard::make()->buttons([
-                        Button::make('Водонасос (Гулдаст)')->action('selec_warehouse')->param('id', 'vadanasos')->param('address', $locations_vadanasos),
-                        Button::make('Мост 46мкр (Саховат)')->action('selec_warehouse')->param('id', '46mkr')->param('address', $locations_46mkr),
-                    ]))->send();
+                        Button::make('Водонасос (Гулдаст)')
+                            ->action('selec_warehouse')
+                            ->param('wh', 'vadanasos')
+                            ->param('chat_id', (string) $this->chat->chat_id),
+
+                        Button::make('Мост 46мкр (Саховат)')
+                            ->action('selec_warehouse')
+                            ->param('wh', '46mkr')
+                            ->param('chat_id', (string) $this->chat->chat_id),
+                    ]))
+                    ->send();
             } else {
                 $this->chat->photo(public_path('assets/ivu_ru.png'))->message("Интихоб кунед, ки дар кадом анбори Душанбе мехоҳед молатонро гиред:")
                     ->keyboard(Keyboard::make()->buttons([
-                        Button::make('Водонасос (Гулдаст)')->action('selec_warehouse')->param('id', 'vadanasos')->param('address', $locations_vadanasos),
-                        Button::make('Мост 46мкр (Саховат)')->action('selec_warehouse')->param('id', '46mkr')->param('address', $locations_46mkr),
-                    ]))->send();
+                        Button::make('Водонасос (Гулдаст)')
+                            ->action('selec_warehouse')
+                            ->param('wh', 'vadanasos')
+                            ->param('chat_id', (string) $this->chat->chat_id),
+
+                        Button::make('Мост 46мкр (Саховат)')
+                            ->action('selec_warehouse')
+                            ->param('wh', '46mkr')
+                            ->param('chat_id', (string) $this->chat->chat_id),
+                    ]))
+                    ->send();
             }
             // if ($this->chat->lang == 'ru') {
             //     $this->chat->photo(public_path('assets/ivu_ru.png'))->message($locations)
@@ -758,17 +774,16 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         }
         return;
     }
-    public function selec_warehouse($id, $address)
+    public function selec_warehouse($wh, $chat_id)
     {
         $this->chat->deleteMessage($this->messageId)->send();
 
-        // $user = User::where('chat_id', $this->message->from()->id())->first();
+        $user = User::where('chat_id', $chat_id)->first();
 
-        // $locations_vadanasos = "联系人：Shifu-$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼2单元shifu仓库-$user->code-$user->name-$user->phone";
-        $locations_vadanasos = $address;
-        // $locations_46mkr = "联系人：Shifu1-$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼5单元shifu1仓库-$user->code-$user->name-$user->phone";
+        $locations_vadanasos = "联系人：Shifu-$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼2单元shifu仓库-$user->code-$user->name-$user->phone";
+        $locations_46mkr = "联系人：Shifu1-$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼5单元shifu1仓库-$user->code-$user->name-$user->phone";
 
-        if ($id == "vadanasos") {
+        if ($wh == "vadanasos") {
 
             if ($this->chat->lang == 'ru') {
                 $this->chat->photo(public_path('assets/ivu_ru.png'))->message($locations_vadanasos)
