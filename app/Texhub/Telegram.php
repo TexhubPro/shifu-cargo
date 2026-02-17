@@ -670,29 +670,36 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 }
                 return;
             }
-
             $locations_vadanasos = "联系人：Shifu-$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼2单元shifu仓库-$user->code-$user->name-$user->phone";
-
             $locations_46mkr = "联系人：Shifu1-$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼5单元shifu1仓库-$user->code-$user->name-$user->phone";
 
-            // 👉 тут теперь НЕ отправляем $locations сразу, а показываем выбор склада
             if ($this->chat->lang == 'ru') {
-                $this->chat->message("Выберите, на каком складе в Душанбе хотите получить свои товары:")
-                    ->keyboard(function (Keyboard $keyboard) {
-                        return $keyboard
-                            ->button('Водонасос (Гулдаст)')->action('dushanbeVadanasos')
-                            ->button('Мост 46мкр (Саховат)')->action('dushanbe46mkr');
-                    })
-                    ->send();
+                $this->chat->photo(public_path('assets/ivu_ru.png'))->message("Выберите, в каком складе в Душанбе хотите получить свои товары:")
+                    ->keyboard(Keyboard::make()->buttons([
+                        Button::make('Водонасос (Гулдаст)')->action('selec_warehouse')->param('id', 'vadanasos'),
+                        Button::make('Мост 46мкр (Саховат)')->action('selec_warehouse')->param('id', '46mkr'),
+                    ]))->send();
             } else {
-                $this->chat->message("Интихоб кунед, ки дар кадом анбори Душанбе мехоҳед молатонро гиред:")
-                    ->keyboard(function (Keyboard $keyboard) {
-                        return $keyboard
-                            ->button('Водонасос (Гулдаст)')->action('dushanbeVadanasos')
-                            ->button('Пули 46мкр (Саховат)')->action('dushanbe46mkr');
-                    })
-                    ->send();
+                $this->chat->photo(public_path('assets/ivu_ru.png'))->message("Интихоб кунед, ки дар кадом анбори Душанбе мехоҳед молатонро гиред:")
+                    ->keyboard(Keyboard::make()->buttons([
+                        Button::make('Водонасос (Гулдаст)')->action('selec_warehouse')->param('id', 'vadanasos'),
+                        Button::make('Мост 46мкр (Саховат)')->action('selec_warehouse')->param('id', '46mkr'),
+                    ]))->send();
             }
+            // if ($this->chat->lang == 'ru') {
+            //     $this->chat->photo(public_path('assets/ivu_ru.png'))->message($locations)
+            //         ->keyboard(function (Keyboard $keyboard) use ($locations) {
+            //             return $keyboard
+            //                 ->button('📋 Скопировать адрес')->copyText($locations);
+            //         })->send();
+            // } else {
+            //     $this->chat->photo(public_path('assets/ivu_tj.png'))->message($locations)
+            //         ->keyboard(function (Keyboard $keyboard) use ($locations) {
+            //             return $keyboard
+            //                 ->button('📋 Нусха бардоштани суроға')->copyText($locations);
+            //         })->send();
+            // }
+
 
             return;
         }
@@ -749,54 +756,6 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                     ->send();
             }
         }
-        return;
-    }
-    public function dushanbe46mkr()
-    {
-        $user = User::where('chat_id', $this->message->from()->id())->first();
-
-        $locations_46mkr = "联系人：Shifu1-$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼5单元shifu1仓库-$user->code-$user->name-$user->phone";
-
-        $locations = $locations_46mkr;
-
-        if ($this->chat->lang == 'ru') {
-            $this->chat->photo(public_path('assets/ivu_ru.png'))->message($locations)
-                ->keyboard(function (Keyboard $keyboard) use ($locations) {
-                    return $keyboard
-                        ->button('📋 Скопировать адрес')->copyText($locations);
-                })->send();
-        } else {
-            $this->chat->photo(public_path('assets/ivu_tj.png'))->message($locations)
-                ->keyboard(function (Keyboard $keyboard) use ($locations) {
-                    return $keyboard
-                        ->button('📋 Нусха бардоштани суроға')->copyText($locations);
-                })->send();
-        }
-
-        return;
-    }
-    public function dushanbeVadanasos()
-    {
-        $user = User::where('chat_id', $this->message->from()->id())->first();
-
-        $locations_vadanasos = "联系人：Shifu-$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼2单元shifu仓库-$user->code-$user->name-$user->phone";
-
-        $locations = $locations_vadanasos;
-
-        if ($this->chat->lang == 'ru') {
-            $this->chat->photo(public_path('assets/ivu_ru.png'))->message($locations)
-                ->keyboard(function (Keyboard $keyboard) use ($locations) {
-                    return $keyboard
-                        ->button('📋 Скопировать адрес')->copyText($locations);
-                })->send();
-        } else {
-            $this->chat->photo(public_path('assets/ivu_tj.png'))->message($locations)
-                ->keyboard(function (Keyboard $keyboard) use ($locations) {
-                    return $keyboard
-                        ->button('📋 Нусха бардоштани суроға')->copyText($locations);
-                })->send();
-        }
-
         return;
     }
     public function sms_send_dushanbe($user_id, $trackcode)
