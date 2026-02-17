@@ -799,6 +799,22 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                     })->send();
             }
         }
+        if ($wh == "46mkr") {
+
+            if ($this->chat->lang == 'ru') {
+                $this->chat->photo(public_path('assets/ivu_ru.png'))->message($locations_46mkr)
+                    ->keyboard(function (Keyboard $keyboard) use ($locations_46mkr) {
+                        return $keyboard
+                            ->button('📋 Скопировать адрес')->copyText($locations_46mkr);
+                    })->send();
+            } else {
+                $this->chat->photo(public_path('assets/ivu_tj.png'))->message($locations_46mkr)
+                    ->keyboard(function (Keyboard $keyboard) use ($locations_46mkr) {
+                        return $keyboard
+                            ->button('📋 Нусха бардоштани суроға')->copyText($locations_46mkr);
+                    })->send();
+            }
+        }
         return;
     }
     public function sms_send_dushanbe($user_id, $trackcode)
