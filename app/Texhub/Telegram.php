@@ -104,7 +104,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     {
         $this->chat->message($this->message->from()->id())->send();
     }
-    public function sms_bulk(): void
+    public function sms_bulk_preview(): void
     {
         // $chats = TelegraphChat::all();
         // foreach ($chats as $chat) {
@@ -139,6 +139,9 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         //     }
         // }
         $chat = TelegraphChat::find(3);
+        if (!$chat) {
+            return;
+        }
         if ($chat->lang == 'ru') {
             $chat->photo(public_path('assets/ivu_ru.png'))->message("Выберите, в каком складе в Душанбе хотите получить свои товары:")
                 ->keyboard(Keyboard::make()->buttons([
@@ -349,7 +352,11 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     }
     public function handleChatMessage(Stringable $text): void
     {
+        $video = $this->message->video();
 
+        if ($video !== null) {
+            $this->chat->video($video->id())->send(); // отправляем видео обратно
+        }
         $user = User::where('chat_id', $this->message->from()->id())->first();
 
         if ($text == '❌ Закрыт чат' || $text == '❌ Пушидани чат' || $text == "❌ Не хочу оставлять заявку" || $text == "❌ Намехоҳам дархост гузорам") {
