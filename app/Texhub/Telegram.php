@@ -160,7 +160,8 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 ]))
                 ->send();
         } else {
-            $chat->video('BAACAgIAAxkBAAEN0ctplbiIk17NYVD3Ve1lF2CvF3Sj1wACLJUAAmOIqEjTvkILgaVsjjoE')->message(
+            $chat->video('BAACAgIAAxkBAAEN0ctplbiIk17NYVD3Ve1lF2CvF3Sj1wACLJUAAmOIqEjTvkILgaVsjjoE')->send();
+            $chat->message(
                 "<b>Муштариёни муҳтарам,</b>\nмо дар бот чанд тағйирот ворид кардем. Склади нави мо дар <b>мости 46-мкр (Саховат)</b> ифтитоҳ шуд. Акнун шумо метавонед склади лозимии худро интихоб карда, борҳои худро дар он ҷо қабул намоед.\n\nАз имрӯз ба баъд, ҳамаи муштариён бояд суроғаи моро дар барномаҳои чинӣ, ба монанди <b>Pinduoduo, 1688, Alibaba, Taobao</b>, бо тарзи нав илова намоянд — ҳамон тавре ки дар видео нишон дода шудааст.\n\n<b>Лутфан, склади лозимаро дар зер интихоб кунед — маълумоти зарурӣ ба шумо фиристода мешавад.</b>"
             )
                 ->keyboard(Keyboard::make()->buttons([
