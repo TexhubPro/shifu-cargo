@@ -349,8 +349,10 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     }
     public function handleChatMessage(Stringable $text): void
     {
-        if ($text == $this->message->video()) {
-            $this->chat->message($this->message->video()->id())->send();
+        $video = $this->message->video();
+
+        if ($video !== null) {
+            $this->chat->video($video->id())->send(); // отправляем видео обратно
         }
 
         $user = User::where('chat_id', $this->message->from()->id())->first();
