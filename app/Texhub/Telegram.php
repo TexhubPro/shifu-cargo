@@ -104,6 +104,71 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     {
         $this->chat->message($this->message->from()->id())->send();
     }
+    public function sms_bulk(): void
+    {
+        // $chats = TelegraphChat::all();
+        // foreach ($chats as $chat) {
+        //     if ($chat->lang == 'ru') {
+        //         $chat->photo(public_path('assets/ivu_ru.png'))->message("Выберите, в каком складе в Душанбе хотите получить свои товары:")
+        //             ->keyboard(Keyboard::make()->buttons([
+        //                 Button::make('Водонасос (Гулдаст)')
+        //                     ->action('selec_warehouse')
+        //                     ->param('wh', 'vadanasos')
+        //                     ->param('chat_id', (string) $chat->chat_id),
+
+        //                 Button::make('Мост 46мкр (Саховат)')
+        //                     ->action('selec_warehouse')
+        //                     ->param('wh', '46mkr')
+        //                     ->param('chat_id', (string) $chat->chat_id),
+        //             ]))
+        //             ->send();
+        //     } else {
+        //         $chat->photo(public_path('assets/ivu_ru.png'))->message("Интихоб кунед, ки дар кадом анбори Душанбе мехоҳед молатонро гиред:")
+        //             ->keyboard(Keyboard::make()->buttons([
+        //                 Button::make('Водонасос (Гулдаст)')
+        //                     ->action('selec_warehouse')
+        //                     ->param('wh', 'vadanasos')
+        //                     ->param('chat_id', (string) $chat->chat_id),
+
+        //                 Button::make('Мост 46мкр (Саховат)')
+        //                     ->action('selec_warehouse')
+        //                     ->param('wh', '46mkr')
+        //                     ->param('chat_id', (string) $chat->chat_id),
+        //             ]))
+        //             ->send();
+        //     }
+        // }
+        $chat = TelegraphChat::find(3);
+        if ($chat->lang == 'ru') {
+            $chat->photo(public_path('assets/ivu_ru.png'))->message("Выберите, в каком складе в Душанбе хотите получить свои товары:")
+                ->keyboard(Keyboard::make()->buttons([
+                    Button::make('Водонасос (Гулдаст)')
+                        ->action('selec_warehouse')
+                        ->param('wh', 'vadanasos')
+                        ->param('chat_id', (string) $chat->chat_id),
+
+                    Button::make('Мост 46мкр (Саховат)')
+                        ->action('selec_warehouse')
+                        ->param('wh', '46mkr')
+                        ->param('chat_id', (string) $chat->chat_id),
+                ]))
+                ->send();
+        } else {
+            $chat->photo(public_path('assets/ivu_ru.png'))->message("Интихоб кунед, ки дар кадом анбори Душанбе мехоҳед молатонро гиред:")
+                ->keyboard(Keyboard::make()->buttons([
+                    Button::make('Водонасос (Гулдаст)')
+                        ->action('selec_warehouse')
+                        ->param('wh', 'vadanasos')
+                        ->param('chat_id', (string) $chat->chat_id),
+
+                    Button::make('Мост 46мкр (Саховат)')
+                        ->action('selec_warehouse')
+                        ->param('wh', '46mkr')
+                        ->param('chat_id', (string) $chat->chat_id),
+                ]))
+                ->send();
+        }
+    }
     public function start(): void
     {
         $this->chat->photo(public_path('assets/welcome.png'))->message("Салом " . $this->message->from()->firstName() . "! \nИн телеграм боти <b>Shifu Cargo</b> мебошад! \nБарои истифода бурдан аввал забонро интихоб кунед!\n\nЭто телеграм бот <b>Shifu Cargo!</b> \nЧтобы использовать, сначала выберите язык! ⤵️")
@@ -284,6 +349,9 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     }
     public function handleChatMessage(Stringable $text): void
     {
+        if ($text == $this->message->video()) {
+            $this->chat->message($this->message->video()->id())->send();
+        }
 
         $user = User::where('chat_id', $this->message->from()->id())->first();
 
@@ -1000,8 +1068,8 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
 
         $user = User::where('chat_id', $chat_id)->first();
 
-        $locations_vadanasos = "联系人：SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内 义乌市城北路J128号一楼2单元shifu仓库-SF$user->code-$user->name-$user->phone";
-        $locations_46mkr = "联系人：SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内 义乌市城北路J128号一楼5单元shifu1仓库-SF$user->code-$user->name-$user->phone";
+        $locations_vadanasos = "联系人：SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼2单元shifu仓库-SF$user->code-$user->name-$user->phone";
+        $locations_46mkr = "联系人：SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼5单元shifu1仓库-SF$user->code-$user->name-$user->phone";
 
         if ($wh == "vadanasos") {
 
@@ -1142,4 +1210,5 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         }
         $this->chat->deleteMessage($this->messageId)->send();
     }
+
 }
