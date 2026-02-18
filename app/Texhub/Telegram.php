@@ -104,7 +104,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     {
         $this->chat->message($this->message->from()->id())->send();
     }
-    public function sms_bulk_preview(): void
+    public function sms_bulk_preview($user_id)
     {
         // $chats = TelegraphChat::all();
         // foreach ($chats as $chat) {
@@ -138,7 +138,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         //             ->send();
         //     }
         // }
-        $chat = TelegraphChat::find(1);
+        $chat = TelegraphChat::find($user_id);
         if (!$chat) {
             return;
         }
