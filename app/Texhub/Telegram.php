@@ -2,6 +2,7 @@
 
 namespace App\Texhub;
 
+use App\Http\Controllers\SmsController;
 use App\Models\Chat;
 use App\Models\User;
 use App\Models\Order;
@@ -207,12 +208,13 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     public function edit_profile($id): void
     {
         $user = User::find($id);
-        $user->step = 'name';
+        $user->step = 'phone';
+        $user->sub_step = null;
         $user->save();
         if ($this->chat->lang == 'ru') {
-            $this->chat->message("👤 Напишите своё имя с английскими буквами, например: <b>Abdullo</b>")->send();
+            $this->chat->message("📞 Напишите свой номер телефона, например: <b>931234567</b>")->send();
         } else {
-            $this->chat->message("👤 Номи худро бо харфхои англиси нависед, масалан: <b>Abdullo</b>")->send();
+            $this->chat->message("📞 Рақами телефони худро нависед, масалан: <b>931234567</b>")->send();
         }
     }
     public function open_chat(): void
@@ -305,12 +307,23 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             if (!$user) {
                 $user = new User();
                 $user->chat_id = $this->message->from()->id();
-                $user->step = 'name';
+                $user->step = 'phone';
+                $user->sub_step = null;
                 $user->save();
                 if ($this->chat->lang == 'ru') {
-                    $this->chat->message("👤 Напишите своё имя с английскими буквами, например: <b>Abdullo</b>")->send();
+                    $this->chat->message("📞 Напишите свой номер телефона, например: <b>931234567</b>")->send();
                 } else {
-                    $this->chat->message("👤 Номи худро бо харфхои англиси нависед, масалан: <b>Abdullo</b>")->send();
+                    $this->chat->message("📞 Рақами телефони худро нависед, масалан: <b>931234567</b>")->send();
+                }
+            } elseif (!$user->phone || !$user->name || !$user->sex) {
+                $user->step = 'phone';
+                $user->sub_step = null;
+                $user->save();
+
+                if ($this->chat->lang == 'ru') {
+                    $this->chat->message("📞 Продолжим регистрацию. Напишите свой номер телефона, например: <b>931234567</b>")->send();
+                } else {
+                    $this->chat->message("📞 Сабти номро идома медиҳем. Рақами телефони худро нависед, масалан: <b>931234567</b>")->send();
                 }
             } else {
                 if ($this->chat->lang == 'ru') {
@@ -438,52 +451,142 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 if (!$user->code) {
                     $user->code = str_pad($code ? $code->code + 1 : 1, 4, '0', STR_PAD_LEFT);
                 }
-                $user->step = "phone";
+                $user->step = "sex";
                 $user->save();
 
-                if ($this->chat->lang == 'ru') {
-                    $this->chat->message("📞 Напишите свой номер телефона, например: <b>931234567</b>")->send();
-                } else {
-                    $this->chat->message("📞 Рақами телефони худро нависед, масалан: <b>931234567</b>")->send();
-                }
+                $this->sendSexSelectionKeyboard($user);
                 return;
             }
             if ($user->step == 'phone') {
-                $user->phone = $text;
-                $user->step = "sex";
+                $phone = $this->normalizePhoneInput((string) $text);
+                if (!$this->isValidPhone($phone)) {
+                    if ($this->chat->lang == 'ru') {
+                        $this->chat->message("❗️ Пожалуйста, отправьте корректный номер телефона. Допустимы только цифры и, при необходимости, знак «+» (пример: +992900000000).")->send();
+                    } else {
+                        $this->chat->message("❗️ Лутфан рақами дурусти телефонро фиристед. Танҳо рақамҳо ва аломати «+» иҷозат дода мешавад (мисол: +992900000000).")->send();
+                    }
+                    return;
+                }
+
+                $verificationCode = (string) random_int(100000, 999999);
+                $smsMessage = $this->chat->lang == 'ru'
+                    ? "Код подтверждения Shifu Cargo: $verificationCode. Код действует 5 минут."
+                    : "Рамзи тасдиқи Shifu Cargo: $verificationCode. Рамз 5 дақиқа фаъол аст.";
+
+                $smsController = new SmsController();
+                $smsResult = $smsController->sendSms($phone, $smsMessage);
+
+                if (!Str::startsWith((string) $smsResult, 'SMS успешно отправлено')) {
+                    if ($this->chat->lang == 'ru') {
+                        $this->chat->message("⚠️ Не удалось отправить SMS-код подтверждения. Попробуйте еще раз через минуту.")->send();
+                    } else {
+                        $this->chat->message("⚠️ Фиристодани рамзи тасдиқ тавассути SMS муваффақ нашуд. Лутфан пас аз як дақиқа дубора кӯшиш кунед.")->send();
+                    }
+                    return;
+                }
+
+                $user->step = "phone_verify";
+                $user->sub_step = json_encode([
+                    'phone' => $phone,
+                    'code' => $verificationCode,
+                    'expires_at' => now()->addMinutes(5)->timestamp,
+                ], JSON_UNESCAPED_UNICODE);
+                $user->save();
+
+                if ($this->chat->lang == 'ru') {
+                    $this->chat->message("📩 Мы отправили SMS-код на номер <b>$phone</b>. Введите 6-значный код подтверждения.\n\nЕсли код не пришел, отправьте: <b>🔁 Отправить код повторно</b>")->send();
+                } else {
+                    $this->chat->message("📩 Мо рамзи SMS-ро ба рақами <b>$phone</b> фиристодем. Рамзи 6-рақамаро ворид кунед.\n\nАгар рамз нарасид, ин матнро фиристед: <b>🔁 Рамзро дубора фиристед</b>")->send();
+                }
+                return;
+            }
+            if ($user->step == 'phone_verify') {
+                $verification = $this->getPhoneVerificationData($user);
+                if (!$verification) {
+                    $user->step = "phone";
+                    $user->sub_step = null;
+                    $user->save();
+                    if ($this->chat->lang == 'ru') {
+                        $this->chat->message("⚠️ Сессия подтверждения завершилась. Напишите номер телефона еще раз.")->send();
+                    } else {
+                        $this->chat->message("⚠️ Сессияи тасдиқ ба анҷом расид. Лутфан рақами телефонро боз нависед.")->send();
+                    }
+                    return;
+                }
+
+                if ($text == '🔁 Отправить код повторно' || $text == '🔁 Рамзро дубора фиристед') {
+                    $verificationCode = (string) random_int(100000, 999999);
+                    $smsMessage = $this->chat->lang == 'ru'
+                        ? "Код подтверждения Shifu Cargo: $verificationCode. Код действует 5 минут."
+                        : "Рамзи тасдиқи Shifu Cargo: $verificationCode. Рамз 5 дақиқа фаъол аст.";
+
+                    $smsController = new SmsController();
+                    $smsResult = $smsController->sendSms((string) $verification['phone'], $smsMessage);
+
+                    if (!Str::startsWith((string) $smsResult, 'SMS успешно отправлено')) {
+                        if ($this->chat->lang == 'ru') {
+                            $this->chat->message("⚠️ Не удалось отправить SMS-код повторно. Попробуйте еще раз через минуту.")->send();
+                        } else {
+                            $this->chat->message("⚠️ Рамз дубора фиристода нашуд. Лутфан пас аз як дақиқа кӯшиши дигар кунед.")->send();
+                        }
+                        return;
+                    }
+
+                    $user->sub_step = json_encode([
+                        'phone' => $verification['phone'],
+                        'code' => $verificationCode,
+                        'expires_at' => now()->addMinutes(5)->timestamp,
+                    ], JSON_UNESCAPED_UNICODE);
+                    $user->save();
+
+                    if ($this->chat->lang == 'ru') {
+                        $this->chat->message("📩 Новый SMS-код отправлен. Введите 6-значный код подтверждения.")->send();
+                    } else {
+                        $this->chat->message("📩 Рамзи нави SMS фиристода шуд. Рамзи 6-рақамаро ворид кунед.")->send();
+                    }
+                    return;
+                }
+
+                $enteredCode = preg_replace('/\D/', '', (string) $text);
+                if (strlen($enteredCode) !== 6) {
+                    if ($this->chat->lang == 'ru') {
+                        $this->chat->message("❗️ Введите 6-значный код подтверждения из SMS.")->send();
+                    } else {
+                        $this->chat->message("❗️ Рамзи 6-рақамаи тасдиқро аз SMS ворид кунед.")->send();
+                    }
+                    return;
+                }
+
+                if ((int) now()->timestamp > (int) $verification['expires_at']) {
+                    $user->step = "phone";
+                    $user->sub_step = null;
+                    $user->save();
+
+                    if ($this->chat->lang == 'ru') {
+                        $this->chat->message("⌛️ Срок действия кода истек. Напишите номер телефона еще раз, и мы отправим новый код.")->send();
+                    } else {
+                        $this->chat->message("⌛️ Муҳлати рамз ба охир расид. Рақами телефонро боз нависед, мо рамзи нав мефиристем.")->send();
+                    }
+                    return;
+                }
+
+                if (!hash_equals((string) $verification['code'], $enteredCode)) {
+                    if ($this->chat->lang == 'ru') {
+                        $this->chat->message("❌ Неверный код подтверждения. Попробуйте снова или отправьте: <b>🔁 Отправить код повторно</b>")->send();
+                    } else {
+                        $this->chat->message("❌ Рамзи тасдиқ нодуруст аст. Дубора кӯшиш кунед ё ин матнро фиристед: <b>🔁 Рамзро дубора фиристед</b>")->send();
+                    }
+                    return;
+                }
+
+                $user->phone = (string) $verification['phone'];
+                $user->step = "name";
+                $user->sub_step = null;
                 $user->save();
                 if ($this->chat->lang == 'ru') {
-                    $this->chat->message("☑️ Укажите свой пол, например: <b>Мужской</b> или <b>Женский</b>")
-                        ->keyboard(
-                            Keyboard::make()
-                                ->row([
-                                    Button::make('Мужской')
-                                        ->action('sex_radio')
-                                        ->param('id', $user->id)
-                                        ->param('sex', 'm'),
-
-                                    Button::make('Женский')
-                                        ->action('sex_radio')
-                                        ->param('id', $user->id)
-                                        ->param('sex', 'z'),
-                                ])
-                        )->send();
+                    $this->chat->message("👤 Напишите своё имя с английскими буквами, например: <b>Abdullo</b>")->send();
                 } else {
-                    $this->chat->message("☑️ Ҷинси худро нишон диҳед, масалан: <b>Мард</b> ё <b>Зан</b>")
-                        ->keyboard(
-                            Keyboard::make()
-                                ->row([
-                                    Button::make('Мард')
-                                        ->action('sex_radio')
-                                        ->param('id', $user->id)
-                                        ->param('sex', 'm'),
-
-                                    Button::make('Зан')
-                                        ->action('sex_radio')
-                                        ->param('id', $user->id)
-                                        ->param('sex', 'z'),
-                                ])
-                        )->send();
+                    $this->chat->message("👤 Номи худро бо харфхои англиси нависед, масалан: <b>Abdullo</b>")->send();
                 }
                 return;
             }
@@ -797,6 +900,70 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         }
         return;
     }
+    private function normalizePhoneInput(string $rawPhone): string
+    {
+        $phone = trim($rawPhone);
+        $phone = str_replace([' ', '-', '(', ')'], '', $phone);
+
+        if (Str::startsWith($phone, '00')) {
+            $phone = '+' . substr($phone, 2);
+        }
+
+        return $phone;
+    }
+    private function isValidPhone(string $phone): bool
+    {
+        return (bool) preg_match('/^\+?[0-9]{7,15}$/', $phone);
+    }
+    private function getPhoneVerificationData(User $user): ?array
+    {
+        $payload = json_decode((string) $user->sub_step, true);
+        if (!is_array($payload)) {
+            return null;
+        }
+        if (empty($payload['phone']) || empty($payload['code']) || empty($payload['expires_at'])) {
+            return null;
+        }
+
+        return $payload;
+    }
+    private function sendSexSelectionKeyboard(User $user): void
+    {
+        if ($this->chat->lang == 'ru') {
+            $this->chat->message("☑️ Укажите свой пол, например: <b>Мужской</b> или <b>Женский</b>")
+                ->keyboard(
+                    Keyboard::make()
+                        ->row([
+                            Button::make('Мужской')
+                                ->action('sex_radio')
+                                ->param('id', $user->id)
+                                ->param('sex', 'm'),
+
+                            Button::make('Женский')
+                                ->action('sex_radio')
+                                ->param('id', $user->id)
+                                ->param('sex', 'z'),
+                        ])
+                )->send();
+            return;
+        }
+
+        $this->chat->message("☑️ Ҷинси худро нишон диҳед, масалан: <b>Мард</b> ё <b>Зан</b>")
+            ->keyboard(
+                Keyboard::make()
+                    ->row([
+                        Button::make('Мард')
+                            ->action('sex_radio')
+                            ->param('id', $user->id)
+                            ->param('sex', 'm'),
+
+                        Button::make('Зан')
+                            ->action('sex_radio')
+                            ->param('id', $user->id)
+                            ->param('sex', 'z'),
+                    ])
+            )->send();
+    }
     public function selec_wareh($wh)
     {
         $this->chat->deleteMessage($this->messageId)->send();
@@ -833,8 +1000,8 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
 
         $user = User::where('chat_id', $chat_id)->first();
 
-        $locations_vadanasos = "联系人：SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼2单元shifu仓库-SF$user->code-$user->name-$user->phone";
-        $locations_46mkr = "联系人：SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内\n义乌市城北路J128号一楼5单元shifu1仓库-SF$user->code-$user->name-$user->phone";
+        $locations_vadanasos = "联系人：SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内 义乌市城北路J128号一楼2单元shifu仓库-SF$user->code-$user->name-$user->phone";
+        $locations_46mkr = "联系人：SF$user->code\n联系电话：15057921193\n收货地址：浙江省金华市义乌市第二毛纺厂内 义乌市城北路J128号一楼5单元shifu1仓库-SF$user->code-$user->name-$user->phone";
 
         if ($wh == "vadanasos") {
 
