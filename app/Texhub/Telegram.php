@@ -138,7 +138,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         //             ->send();
         //     }
         // }
-        $chat = TelegraphChat::find(3);
+        $chat = TelegraphChat::find(1);
         if (!$chat) {
             return;
         }
