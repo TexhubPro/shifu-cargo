@@ -143,7 +143,9 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             return;
         }
         if ($chat->lang == 'ru') {
-            $chat->video('BAACAgIAAxkBAAEN0ctplbiIk17NYVD3Ve1lF2CvF3Sj1wACLJUAAmOIqEjTvkILgaVsjjoE')->message("Выберите, в каком складе в Душанбе хотите получить свои товары:")
+            $chat->video('BAACAgIAAxkBAAEN0ctplbiIk17NYVD3Ve1lF2CvF3Sj1wACLJUAAmOIqEjTvkILgaVsjjoE')->message(
+                "<b>Уважаемые клиенты,</b>\nмы внесли несколько изменений в бота. Открылся наш новый склад в <b>районе моста 46 мкр (Саховат)</b>. Теперь вы можете выбрать удобный для себя склад и получать свои грузы там.\n\nС сегодняшнего дня всем клиентам необходимо добавить наш адрес склада в китайских приложениях, таких как <b>Pinduoduo, 1688, Alibaba, Taobao</b>, по новому образцу — так, как показано в видео.\n\n<b>Пожалуйста, выберите нужный склад ниже — вся необходимая информация будет отправлена вам.</b>"
+            )
                 ->keyboard(Keyboard::make()->buttons([
                     Button::make('Водонасос (Гулдаст)')
                         ->action('selec_warehouse')
@@ -157,7 +159,9 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 ]))
                 ->send();
         } else {
-            $chat->video('BAACAgIAAxkBAAEN0ctplbiIk17NYVD3Ve1lF2CvF3Sj1wACLJUAAmOIqEjTvkILgaVsjjoE')->message("Интихоб кунед, ки дар кадом анбори Душанбе мехоҳед молатонро гиред:")
+            $chat->video('BAACAgIAAxkBAAEN0ctplbiIk17NYVD3Ve1lF2CvF3Sj1wACLJUAAmOIqEjTvkILgaVsjjoE')->message(
+                "<b>Муштариёни муҳтарам,</b>\nмо дар бот чанд тағйирот ворид кардем. Склади нави мо дар <b>мости 46-мкр (Саховат)</b> ифтитоҳ шуд. Акнун шумо метавонед склади лозимии худро интихоб карда, борҳои худро дар он ҷо қабул намоед.\n\nАз имрӯз ба баъд, ҳамаи муштариён бояд суроғаи моро дар барномаҳои чинӣ, ба монанди <b>Pinduoduo, 1688, Alibaba, Taobao</b>, бо тарзи нав илова намоянд — ҳамон тавре ки дар видео нишон дода шудааст.\n\n<b>Лутфан, склади лозимаро дар зер интихоб кунед — маълумоти зарурӣ ба шумо фиристода мешавад.</b>"
+            )
                 ->keyboard(Keyboard::make()->buttons([
                     Button::make('Водонасос (Гулдаст)')
                         ->action('selec_warehouse')
