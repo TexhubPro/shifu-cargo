@@ -106,38 +106,6 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     }
     public function sms_bulk_preview($user_id)
     {
-        // $chats = TelegraphChat::all();
-        // foreach ($chats as $chat) {
-        //     if ($chat->lang == 'ru') {
-        //         $chat->photo(public_path('assets/ivu_ru.png'))->message("Выберите, в каком складе в Душанбе хотите получить свои товары:")
-        //             ->keyboard(Keyboard::make()->buttons([
-        //                 Button::make('Водонасос (Гулдаст)')
-        //                     ->action('selec_warehouse')
-        //                     ->param('wh', 'vadanasos')
-        //                     ->param('chat_id', (string) $chat->chat_id),
-
-        //                 Button::make('Мост 46мкр (Саховат)')
-        //                     ->action('selec_warehouse')
-        //                     ->param('wh', '46mkr')
-        //                     ->param('chat_id', (string) $chat->chat_id),
-        //             ]))
-        //             ->send();
-        //     } else {
-        //         $chat->photo(public_path('assets/ivu_ru.png'))->message("Интихоб кунед, ки дар кадом анбори Душанбе мехоҳед молатонро гиред:")
-        //             ->keyboard(Keyboard::make()->buttons([
-        //                 Button::make('Водонасос (Гулдаст)')
-        //                     ->action('selec_warehouse')
-        //                     ->param('wh', 'vadanasos')
-        //                     ->param('chat_id', (string) $chat->chat_id),
-
-        //                 Button::make('Мост 46мкр (Саховат)')
-        //                     ->action('selec_warehouse')
-        //                     ->param('wh', '46mkr')
-        //                     ->param('chat_id', (string) $chat->chat_id),
-        //             ]))
-        //             ->send();
-        //     }
-        // }
         $chat = TelegraphChat::find($user_id);
         if (!$chat) {
             return;
@@ -1044,7 +1012,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     }
     public function selec_wareh($wh)
     {
-        $this->chat->deleteMessage($this->messageId)->send();
+        // $this->chat->deleteMessage($this->messageId)->send();
 
         if ($wh == "vadanasos") {
             $this->chat->location(38.617451, 68.780144)->send();
@@ -1074,7 +1042,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
 
     public function selec_warehouse($wh, $chat_id)
     {
-        $this->chat->deleteMessage($this->messageId)->send();
+        // $this->chat->deleteMessage($this->messageId)->send();
 
         $user = User::where('chat_id', $chat_id)->first();
 
