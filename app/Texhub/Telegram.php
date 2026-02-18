@@ -143,7 +143,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
             return;
         }
         if ($chat->lang == 'ru') {
-            $chat->photo(public_path('assets/ivu_ru.png'))->message("Выберите, в каком складе в Душанбе хотите получить свои товары:")
+            $chat->video('BAACAgIAAxkBAAEN0ctplbiIk17NYVD3Ve1lF2CvF3Sj1wACLJUAAmOIqEjTvkILgaVsjjoE')->message("Выберите, в каком складе в Душанбе хотите получить свои товары:")
                 ->keyboard(Keyboard::make()->buttons([
                     Button::make('Водонасос (Гулдаст)')
                         ->action('selec_warehouse')
@@ -157,7 +157,7 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
                 ]))
                 ->send();
         } else {
-            $chat->photo(public_path('assets/ivu_ru.png'))->message("Интихоб кунед, ки дар кадом анбори Душанбе мехоҳед молатонро гиред:")
+            $chat->video('BAACAgIAAxkBAAEN0ctplbiIk17NYVD3Ve1lF2CvF3Sj1wACLJUAAmOIqEjTvkILgaVsjjoE')->message("Интихоб кунед, ки дар кадом анбори Душанбе мехоҳед молатонро гиред:")
                 ->keyboard(Keyboard::make()->buttons([
                     Button::make('Водонасос (Гулдаст)')
                         ->action('selec_warehouse')
@@ -352,11 +352,11 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
     }
     public function handleChatMessage(Stringable $text): void
     {
-        $video = $this->message->video();
+        // $video = $this->message->video();
 
-        if ($video !== null) {
-            $this->chat->message($video->id())->send(); // отправляем видео обратно
-        }
+        // if ($video !== null) {
+        //     $this->chat->message($video->id())->send(); // отправляем видео обратно
+        // }
         $user = User::where('chat_id', $this->message->from()->id())->first();
 
         if ($text == '❌ Закрыт чат' || $text == '❌ Пушидани чат' || $text == "❌ Не хочу оставлять заявку" || $text == "❌ Намехоҳам дархост гузорам") {
