@@ -138,12 +138,13 @@ class Telegram extends \DefStudio\Telegraph\Handlers\WebhookHandler
         //             ->send();
         //     }
         // }
-        $chat = TelegraphChat::find(1);
+        $chat = TelegraphChat::find(3);
         if (!$chat) {
             return;
         }
         if ($chat->lang == 'ru') {
-            $chat->video('BAACAgIAAxkBAAEN0ctplbiIk17NYVD3Ve1lF2CvF3Sj1wACLJUAAmOIqEjTvkILgaVsjjoE')->message(
+            $chat->video('BAACAgIAAxkBAAEN0ctplbiIk17NYVD3Ve1lF2CvF3Sj1wACLJUAAmOIqEjTvkILgaVsjjoE')->send();
+            $chat->message(
                 "<b>Уважаемые клиенты,</b>\nмы внесли несколько изменений в бота. Открылся наш новый склад в <b>районе моста 46 мкр (Саховат)</b>. Теперь вы можете выбрать удобный для себя склад и получать свои грузы там.\n\nС сегодняшнего дня всем клиентам необходимо добавить наш адрес склада в китайских приложениях, таких как <b>Pinduoduo, 1688, Alibaba, Taobao</b>, по новому образцу — так, как показано в видео.\n\n<b>Пожалуйста, выберите нужный склад ниже — вся необходимая информация будет отправлена вам.</b>"
             )
                 ->keyboard(Keyboard::make()->buttons([
