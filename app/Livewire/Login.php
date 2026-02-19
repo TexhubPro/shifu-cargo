@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 #[Layout('components.layouts.empty')]
 class Login extends Component
 {
+    private const WAREHOUSE_REQUIRED_ROLES = ['admin', 'manager', 'cashier'];
+
     public $phone;
     public $password;
     public $remember = false;
@@ -31,7 +33,25 @@ class Login extends Component
         $user = User::where('phone', $this->phone)->first();
 
         if ($user && Hash::check($this->password, $user->password)) {
-            Auth::login($user, true);
+            if (!$user->status) {
+                $this->dispatch(
+                    'alert',
+                    'Учетная запись отключена.'
+                );
+
+                return;
+            }
+
+            if (in_array($user->role, self::WAREHOUSE_REQUIRED_ROLES, true) && !$user->warehouse_id) {
+                $this->dispatch(
+                    'alert',
+                    'Для этой роли требуется назначить склад.'
+                );
+
+                return;
+            }
+
+            Auth::login($user, (bool) $this->remember);
             $this->dispatch(
                 'alert',
                 'Вы успешно вошли в систему!'

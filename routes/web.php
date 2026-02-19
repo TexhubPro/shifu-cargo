@@ -65,6 +65,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(RedirectIfAuthenticatedByRole::class)->group(function () {
     Route::get('/register/{id?}', Register::class)->name('register');
     Route::get('/', Login::class)->name('login');
+    Route::view('/cashdesk/login', 'cashdesk.login')->name('cashdesk.login');
 });
 Route::get('/profile/{id?}', Profile::class)->name('profile');
 Route::middleware('auth')->group(function () {

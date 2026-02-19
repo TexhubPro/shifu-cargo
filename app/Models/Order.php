@@ -8,6 +8,8 @@ class Order extends Model
 {
     protected $fillable = [
         'user_id',
+        'cashier_id',
+        'warehouse_id',
         'application_id',
         'weight',
         'cube',
@@ -17,6 +19,7 @@ class Order extends Model
         'discount',
         'total',
         'status',
+        'payment_type',
         'photo_report_path',
     ];
 
@@ -28,6 +31,17 @@ class Order extends Model
     {
         return $this->belongsTo(User::class, 'deliver_id');
     }
+
+    public function cashier()
+    {
+        return $this->belongsTo(User::class, 'cashier_id');
+    }
+
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
+
     public function application()
     {
         return $this->belongsTo(Application::class);

@@ -6,6 +6,7 @@ use App\Models\Chat;
 use App\Models\Faq;
 use App\Models\Message;
 use App\Models\User;
+use App\Models\Warehouse;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Setting;
 use App\Models\Notification;
@@ -33,12 +34,32 @@ class DatabaseSeeder extends Seeder
             ['name' => 'queue', 'content' => '0053350'],
         ];
         Setting::insert($settings);
-        User::create([
+        $dushanbeWarehouse = Warehouse::firstOrCreate(
+            ['code' => 'DUSH'],
+            [
+                'name' => 'Склад Душанбе',
+                'address' => 'Душанбе',
+                'is_active' => true,
+            ]
+        );
+
+        Warehouse::firstOrCreate(
+            ['code' => 'IVU'],
+            [
+                'name' => 'Склад Иву',
+                'address' => 'Иву',
+                'is_active' => true,
+            ]
+        );
+
+        User::updateOrCreate([
+            'phone' => '005335051',
+        ], [
             'name' => "Shodmehr",
             'code' => "0001",
-            'phone' => '005335051',
             'password' => Hash::make('005335051'),
-            'role' => 'admin'
+            'role' => 'admin',
+            'warehouse_id' => $dushanbeWarehouse->id,
         ]);
 
         $this->call(FakeClientsTracksSeeder::class);

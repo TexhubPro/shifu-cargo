@@ -12,7 +12,24 @@ class Expences extends Model
         'content',
         'data',
         'user_id',
+        'added_by_id',
+        'warehouse_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function addedBy()
+    {
+        return $this->belongsTo(User::class, 'added_by_id');
+    }
+
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
 
     public static function forPeriodAll($start, $end)
     {

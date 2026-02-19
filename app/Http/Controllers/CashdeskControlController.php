@@ -105,12 +105,16 @@ class CashdeskControlController extends Controller
         }
 
         $user = User::where('phone', $data['client'])->first();
+        $paymentType = $this->normalizePaymentType($data['payment_type'] ?? null);
+        $cashier = Auth::user();
+        $warehouseId = $cashier?->warehouse_id;
 
         $prices = $this->getPriceSettings();
         $totals = $this->calculateTotals($data['weight'], $data['volume'], $data['received_amount'], $prices);
 
         $order = Order::create([
             'user_id' => $user->id ?? $data['client'],
+            'warehouse_id' => $warehouseId,
             'weight' => $this->parseNumber($data['weight']),
             'cube' => $this->parseNumber($data['volume']),
             'subtotal' => $totals['total_amount'],
@@ -119,6 +123,7 @@ class CashdeskControlController extends Controller
             'discount' => $totals['discount_total'],
             'total' => $totals['total_final'],
             'status' => 'Оплачено',
+            'payment_type' => $paymentType,
         ]);
 
         $trackCodes = $data['tracks'] ?? [];
@@ -169,9 +174,7 @@ class CashdeskControlController extends Controller
             }
         })->afterResponse();
 
-        if (!empty($data['selected_queue'])) {
-            Queue::find($data['selected_queue'])?->delete();
-        }
+        $this->clearClientFromQueueAfterOrder($user?->id, $data['selected_queue'] ?? null);
 
         if (!empty($data['active_held_order_id'])) {
             HeldOrder::find($data['active_held_order_id'])?->delete();
@@ -190,6 +193,7 @@ class CashdeskControlController extends Controller
         $data = $this->validatedOrderData($request);
 
         $user = User::where('phone', $data['client'])->first();
+        $paymentType = $this->normalizePaymentType($data['payment_type'] ?? null);
         $prices = $this->getPriceSettings();
         $totals = $this->calculateTotals($data['weight'], $data['volume'], $data['received_amount'], $prices);
 
@@ -200,7 +204,7 @@ class CashdeskControlController extends Controller
             'queue_id' => $data['selected_queue'] ?? null,
             'weight' => $this->parseNumber($data['weight']),
             'volume' => $this->parseNumber($data['volume']),
-            'payment_type' => 'Наличными',
+            'payment_type' => $paymentType,
             'total_amount' => $totals['total_amount'],
             'discount' => 0,
             'discount_total' => $totals['discount_total'],
@@ -208,7 +212,7 @@ class CashdeskControlController extends Controller
             'total_final' => $totals['total_final'],
             'tracks' => $data['tracks'] ?? [],
             'meta' => [
-                'payment_type' => 'Наличными',
+                'payment_type' => $paymentType,
                 'discount_type' => 'Фиксированная',
                 'received_amount' => $this->parseNumber($data['received_amount']),
             ],
@@ -267,12 +271,18 @@ class CashdeskControlController extends Controller
             'description' => ['nullable', 'string'],
         ]);
 
+        $cashier = Auth::user();
+        $warehouseId = $cashier?->warehouse_id;
+        $warehouseName = trim((string) ($cashier?->warehouse?->name ?? ''));
+
         Expences::create([
-            'sklad' => 'Склад Душанбе',
+            'sklad' => $warehouseName !== '' ? $warehouseName : 'Склад Душанбе',
             'total' => $data['amount'],
             'content' => $data['description'] ?? null,
             'data' => Carbon::now(),
             'user_id' => Auth::id(),
+            'added_by_id' => Auth::id(),
+            'warehouse_id' => $warehouseId,
         ]);
 
         return redirect()->route('cashier');
@@ -314,6 +324,7 @@ class CashdeskControlController extends Controller
     {
         return $request->validate([
             'client' => ['required', 'string'],
+            'payment_type' => ['nullable', 'string', 'max:50'],
             'weight' => ['nullable'],
             'volume' => ['nullable'],
             'received_amount' => ['nullable'],
@@ -321,6 +332,46 @@ class CashdeskControlController extends Controller
             'selected_queue' => ['nullable'],
             'active_held_order_id' => ['nullable'],
         ]);
+    }
+
+    /**
+     * После оформления заказа удаляет клиента из очереди:
+     * 1) Явно выбранную запись очереди (если передана).
+     * 2) Все сегодняшние записи этого клиента в очереди.
+     */
+    private function clearClientFromQueueAfterOrder(?int $userId, mixed $selectedQueueId): void
+    {
+        $queueId = (int) $selectedQueueId;
+        if ($queueId > 0) {
+            Queue::query()->whereKey($queueId)->delete();
+        }
+
+        if (!$userId) {
+            return;
+        }
+
+        Queue::query()
+            ->where('user_id', $userId)
+            ->whereDate('created_at', Carbon::today())
+            ->delete();
+    }
+
+    private function normalizePaymentType(?string $value): string
+    {
+        $payment = trim((string) $value);
+
+        return in_array($payment, $this->paymentMethods(), true)
+            ? $payment
+            : 'Наличными';
+    }
+
+    private function paymentMethods(): array
+    {
+        return [
+            'Наличными',
+            'Алиф',
+            'Душанбе Сити',
+        ];
     }
 
     private function updateTrackStatuses(?int $userId, int $orderId, array $tracks): void

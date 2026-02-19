@@ -21,6 +21,7 @@
                 <flux:table.column>Имя</flux:table.column>
                 <flux:table.column>Номер тел</flux:table.column>
                 <flux:table.column>Рол</flux:table.column>
+                <flux:table.column>Склад</flux:table.column>
                 <flux:table.column>Статус</flux:table.column>
                 <flux:table.column>Дата</flux:table.column>
                 <flux:table.column>Действия</flux:table.column>
@@ -32,6 +33,7 @@
                         <flux:table.cell>{{ $item->name }}</flux:table.cell>
                         <flux:table.cell>{{ $item->phone }}</flux:table.cell>
                         <flux:table.cell>{{ $item->role }}</flux:table.cell>
+                        <flux:table.cell>{{ $item->warehouse?->name ?? 'Не назначен' }}</flux:table.cell>
                         <flux:table.cell>
                             <flux:field variant="inline">
                                 @if ($item->status == true)
@@ -79,6 +81,11 @@
                 <flux:select.option value="cashier">Кассир</flux:select.option>
                 <flux:select.option value="applicant">Заявщик</flux:select.option>
             </flux:select>
+            <flux:select label="Склад" placeholder="Выберите склад..." wire:model="warehouse_id">
+                @foreach ($this->warehouses as $warehouse)
+                    <flux:select.option value="{{ $warehouse->id }}">{{ $warehouse->name }}</flux:select.option>
+                @endforeach
+            </flux:select>
             <flux:input label="Telegram Chat Id" placeholder="Введите Telegram Chat Id" wire:model.defer="chat_id" />
             <div class="flex">
                 <flux:spacer />
@@ -107,6 +114,11 @@
                 <flux:select.option value="manager">Менеджер</flux:select.option>
                 <flux:select.option value="cashier">Кассир</flux:select.option>
                 <flux:select.option value="applicant">Заявщик</flux:select.option>
+            </flux:select>
+            <flux:select label="Склад" placeholder="Выберите склад..." wire:model="editWarehouseId">
+                @foreach ($this->warehouses as $warehouse)
+                    <flux:select.option value="{{ $warehouse->id }}">{{ $warehouse->name }}</flux:select.option>
+                @endforeach
             </flux:select>
             <flux:input label="Telegram Chat Id" placeholder="Введите Telegram Chat Id" wire:model.defer="editChatId" />
             <div class="flex">
