@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('obfuscated.min.css') }}">
     <title>{{ $title ?? 'Админка' }}</title>
     @livewireStyles
+    @fluxStyles
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
 </head>
