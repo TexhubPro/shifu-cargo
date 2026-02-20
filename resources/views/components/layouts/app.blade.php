@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ asset('obfuscated.min.css') }}">
     <title>{{ $title ?? 'Page Title' }}</title>
     @livewireStyles
+    @fluxAppearance
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
 
@@ -30,6 +31,7 @@
         @livewire('components.alert')
     </div>
     @include('partials.navigation')
+    @include('partials.flux-modal-fallback')
     @livewireScripts
     @fluxScripts
 </body>

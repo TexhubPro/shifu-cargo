@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ asset('obfuscated.min.css') }}">
     <title>{{ $title ?? 'Панель заявщика' }}</title>
     @livewireStyles
+    @fluxAppearance
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     @yield('styles')
