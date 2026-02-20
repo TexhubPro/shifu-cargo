@@ -20,6 +20,7 @@
 
     {{ $slot }}
     @livewire('components.alert')
+    @include('partials.flux-modal-fallback')
     @livewireScripts
     @fluxScripts
 </body>

@@ -69,6 +69,7 @@
         </main>
     </div>
 
+    @include('partials.flux-modal-fallback')
     @livewireScripts
     @fluxScripts
 </body>
