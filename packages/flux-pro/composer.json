@@ -1,7 +1,13 @@
 {
     "name": "livewire/flux-pro",
     "description": "The pro version of Flux, the official UI component library for Livewire.",
-    "keywords": ["flux", "laravel", "livewire", "components", "ui"],
+    "keywords": [
+        "flux",
+        "laravel",
+        "livewire",
+        "components",
+        "ui"
+    ],
     "license": "proprietary",
     "version": "1.0.0",
     "authors": [
@@ -16,7 +22,7 @@
         "illuminate/support": "^10.0|^11.0|^12.0",
         "illuminate/view": "^10.0|^11.0|^12.0",
         "symfony/console": "^6.0|^7.0",
-        "livewire/livewire": "^3.6.2|^4.1",
+        "livewire/livewire": "^3.6.2",
         "laravel/prompts": "^0.1.24|^0.2|^0.3"
     },
     "autoload": {
@@ -37,6 +43,6 @@
             }
         }
     },
-    "minimum-stability" :  "dev" ,
-    "prefer-stable" :  false
+    "minimum-stability": "dev",
+    "prefer-stable": false
 }
