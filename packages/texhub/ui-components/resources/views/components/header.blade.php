@@ -17,7 +17,7 @@
             <div
                 class="h-10 w-10 rounded-xl bg-blue-600 text-white inline-flex items-center justify-center font-bold text-lg">
                 TH</div>
-            <span class="text-lg font-semibold text-gray-900">ShufuCargo</span>
+            <span class="text-lg font-semibold text-gray-900">Shifu Cargo</span>
         </a>
     </div>
     <div class="flex items-center gap-3">

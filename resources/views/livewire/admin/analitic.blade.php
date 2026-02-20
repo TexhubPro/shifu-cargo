@@ -1,21 +1,51 @@
 <div class="space-y-6">
-    <div class="flex flex-col gap-2">
-        <flux:heading class="text-xl">Отчёты и выгрузки</flux:heading>
-        <flux:text class="text-sm" variant="subtle">Выберите период и скачайте нужные Excel‑отчёты.</flux:text>
-    </div>
+    <div class="bg-white rounded-2xl p-3 shadow-sm ring-1 ring-gray-100">
+        <div class="flex items-center justify-between gap-3">
+            <flux:heading class="text-xl">Отчёты и выгрузки</flux:heading>
 
-    <div class="bg-white rounded-2xl p-4 lg:p-6 shadow-sm ring-1 ring-gray-100">
-        <div class="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full lg:w-auto">
-                <flux:date-picker wire:model="from" label="Дата начала" />
-                <flux:date-picker wire:model="to" label="Дата окончания" />
-            </div>
-            <div class="text-xs text-gray-500 bg-slate-50 px-4 py-2 rounded-xl">
-                Период: {{ \Carbon\Carbon::parse($from)->format('d.m.Y') }} —
-                {{ \Carbon\Carbon::parse($to)->format('d.m.Y') }}
-            </div>
+            <flux:modal.trigger name="analitic-filters">
+                <flux:button variant="primary" color="lime" square size="base" class="shrink-0 !text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-adjustments">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path
+                            d="M6 3a1 1 0 0 1 .993 .883l.007 .117v3.171a3.001 3.001 0 0 1 0 5.658v7.171a1 1 0 0 1 -1.993 .117l-.007 -.117v-7.17a3.002 3.002 0 0 1 -1.995 -2.654l-.005 -.176l.005 -.176a3.002 3.002 0 0 1 1.995 -2.654v-3.17a1 1 0 0 1 1 -1z" />
+                        <path
+                            d="M12 3a1 1 0 0 1 .993 .883l.007 .117v9.171a3.001 3.001 0 0 1 0 5.658v1.171a1 1 0 0 1 -1.993 .117l-.007 -.117v-1.17a3.002 3.002 0 0 1 -1.995 -2.654l-.005 -.176l.005 -.176a3.002 3.002 0 0 1 1.995 -2.654v-9.17a1 1 0 0 1 1 -1z" />
+                        <path
+                            d="M18 3a1 1 0 0 1 .993 .883l.007 .117v.171a3.001 3.001 0 0 1 0 5.658v10.171a1 1 0 0 1 -1.993 .117l-.007 -.117v-10.17a3.002 3.002 0 0 1 -1.995 -2.654l-.005 -.176l.005 -.176a3.002 3.002 0 0 1 1.995 -2.654v-.17a1 1 0 0 1 1 -1z" />
+                    </svg>
+                </flux:button>
+            </flux:modal.trigger>
         </div>
     </div>
+
+    <flux:modal name="analitic-filters" flyout position="right" class="md:!min-w-[28rem]">
+        <div class="space-y-5">
+            <flux:heading>Фильтры отчётов</flux:heading>
+
+            <form class="space-y-4 grid" wire:submit.prevent="applyFilters">
+                <flux:date-picker wire:model.defer="from" label="Дата начала" />
+                <flux:date-picker wire:model.defer="to" label="Дата окончания" />
+                <div class="text-xs text-gray-500 bg-slate-50 px-4 py-2 rounded-xl">
+                    Период:
+                    {{ $from ? \Carbon\Carbon::parse($from)->format('d.m.Y') : '—' }}
+                    —
+                    {{ $to ? \Carbon\Carbon::parse($to)->format('d.m.Y') : '—' }}
+                </div>
+
+                <div class="grid grid-cols-1 gap-2 pt-2">
+                    <flux:modal.close>
+                        <flux:button variant="primary" color="lime" class="w-full" type="button"
+                            wire:click="applyFilters">
+                            Применить фильтр
+                        </flux:button>
+                    </flux:modal.close>
+                </div>
+            </form>
+        </div>
+    </flux:modal>
+
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div class="bg-white rounded-2xl p-5 shadow-sm ring-1 ring-gray-100">

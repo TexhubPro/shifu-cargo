@@ -23,7 +23,10 @@ class Applications extends Component
     public $dateTo;
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
-    public $perPage = 25;
+    public $perPage = 200;
+    public $applicationToDelete = null;
+    public $applicationDeleteClient = null;
+    public $applicationDeletePhone = null;
     #[Computed]
     public function orders()
     {
@@ -83,9 +86,39 @@ class Applications extends Component
 
         return Excel::download(new ApplicationsExport($this->dateFrom, $this->dateTo), $fileName);
     }
-    public function delete($id)
+    public function applyFilters(): void
     {
-        Application::find($id)->delete();
+        $this->resetPage();
+    }
+
+    public function confirmDelete(int $id): void
+    {
+        $application = Application::find($id);
+
+        if (! $application) {
+            return;
+        }
+
+        $this->applicationToDelete = $application->id;
+        $this->applicationDeleteClient = $application->name;
+        $this->applicationDeletePhone = $application->phone;
+    }
+
+    public function clearDeleteSelection(): void
+    {
+        $this->applicationToDelete = null;
+        $this->applicationDeleteClient = null;
+        $this->applicationDeletePhone = null;
+    }
+
+    public function deleteSelected(): void
+    {
+        if (! $this->applicationToDelete) {
+            return;
+        }
+
+        Application::whereKey($this->applicationToDelete)->delete();
+        $this->clearDeleteSelection();
     }
     public function activate($id)
     {

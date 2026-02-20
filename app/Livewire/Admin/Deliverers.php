@@ -25,13 +25,21 @@ class Deliverers extends Component
         $this->loadChart();
     }
 
-    public function updatedStart(): void
+    public function applyFilters(): void
     {
-        $this->loadChart();
-    }
+        $start = !empty($this->start)
+            ? Carbon::parse($this->start)->startOfDay()
+            : Carbon::now()->startOfMonth()->startOfDay();
+        $end = !empty($this->end)
+            ? Carbon::parse($this->end)->endOfDay()
+            : Carbon::now()->endOfMonth()->endOfDay();
 
-    public function updatedEnd(): void
-    {
+        if ($start->gt($end)) {
+            [$start, $end] = [$end->copy()->startOfDay(), $start->copy()->endOfDay()];
+        }
+
+        $this->start = $start->toDateString();
+        $this->end = $end->toDateString();
         $this->loadChart();
     }
 
@@ -60,6 +68,12 @@ class Deliverers extends Component
         foreach ($labels as $label) {
             $this->deliveryDaily[] = (float) ($deliveryRaw[$label] ?? 0);
         }
+    }
+
+    #[Computed]
+    public function periodLabel(): string
+    {
+        return Carbon::parse($this->start)->format('d.m.Y') . ' — ' . Carbon::parse($this->end)->format('d.m.Y');
     }
 
     #[Computed]

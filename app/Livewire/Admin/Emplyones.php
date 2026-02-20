@@ -27,6 +27,16 @@ class Emplyones extends Component
     public $editRole = 'manager';
     public $editPassword;
     public $editWarehouseId;
+    public $search = '';
+    public $roleFilter = '';
+    public $warehouseFilter = '';
+    public $statusFilter = '';
+    public $sortField = 'created_at';
+    public $sortDirection = 'desc';
+    public $perPage = 200;
+    public $employeeToDelete = null;
+    public $employeeToDeleteName = null;
+    public $employeeToDeletePhone = null;
 
     public function saveEmployee()
     {
@@ -149,9 +159,27 @@ class Emplyones extends Component
             ->with('warehouse')
             ->where('role', '!=', 'customer');
 
+        if (!empty($this->search)) {
+            $query->where(function ($q) {
+                $q->where('name', 'like', '%' . $this->search . '%')
+                    ->orWhere('phone', 'like', '%' . $this->search . '%');
+            });
+        }
 
-        return $query->orderByDesc('created_at')
-            ->paginate(50);
+        if (!empty($this->roleFilter)) {
+            $query->where('role', $this->roleFilter);
+        }
+
+        if (!empty($this->warehouseFilter)) {
+            $query->where('warehouse_id', $this->warehouseFilter);
+        }
+
+        if ($this->statusFilter !== '') {
+            $query->where('status', (int) $this->statusFilter);
+        }
+
+        return $query->orderBy($this->getSortField(), $this->getSortDirection())
+            ->paginate((int) $this->perPage);
     }
 
     #[Computed]
@@ -162,11 +190,53 @@ class Emplyones extends Component
             ->orderBy('name')
             ->get();
     }
-    public function delete($id)
+    public function confirmDelete(int $id): void
     {
-        $user = User::find($id)->delete();
-        return redirect()->route('admin.emplyones');
+        $user = User::query()
+            ->select(['id', 'name', 'phone'])
+            ->find($id);
+
+        if (!$user) {
+            $this->clearDeleteSelection();
+            return;
+        }
+
+        $this->employeeToDelete = $user->id;
+        $this->employeeToDeleteName = $user->name;
+        $this->employeeToDeletePhone = $user->phone;
     }
+
+    public function deleteSelected(): void
+    {
+        if ($this->employeeToDelete === null) {
+            return;
+        }
+
+        $user = User::find($this->employeeToDelete);
+        if ($user) {
+            $user->delete();
+        }
+
+        $this->clearDeleteSelection();
+        $this->resetPage();
+    }
+
+    public function clearDeleteSelection(): void
+    {
+        $this->employeeToDelete = null;
+        $this->employeeToDeleteName = null;
+        $this->employeeToDeletePhone = null;
+    }
+
+    public function applyFilters(): void
+    {
+        $this->perPage = in_array((int) $this->perPage, [50, 100, 200], true)
+            ? (int) $this->perPage
+            : 200;
+
+        $this->resetPage();
+    }
+
     public function notifications($id)
     {
         $user = User::find($id);
@@ -180,6 +250,17 @@ class Emplyones extends Component
     public function render()
     {
         return view('livewire.admin.emplyones');
+    }
+
+    protected function getSortField(): string
+    {
+        $allowed = ['created_at', 'name', 'phone', 'role', 'status'];
+        return in_array($this->sortField, $allowed, true) ? $this->sortField : 'created_at';
+    }
+
+    protected function getSortDirection(): string
+    {
+        return $this->sortDirection === 'asc' ? 'asc' : 'desc';
     }
 
     private function warehouseIsRequired(?string $role): bool

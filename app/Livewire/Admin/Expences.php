@@ -31,7 +31,10 @@ class Expences extends Component
     public $dateTo;
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
-    public $perPage = 25;
+    public $perPage = 200;
+    public $expenseToDelete = null;
+    public $expenseToDeleteContent = null;
+    public $expenseToDeleteTotal = null;
     // Правила валидации
     protected $rules = [
         'warehouse' => 'required|string',
@@ -41,9 +44,42 @@ class Expences extends Component
         'expenseCategory' => 'nullable|string|max:255',
         'employeeName' => 'nullable|string|max:255',
     ];
-    public function delete($id)
+    public function confirmDelete(int $id): void
     {
-        ModelsExpences::find($id)->delete();
+        $expense = ModelsExpences::query()
+            ->select(['id', 'content', 'total'])
+            ->find($id);
+
+        if (!$expense) {
+            $this->clearDeleteSelection();
+            return;
+        }
+
+        $this->expenseToDelete = $expense->id;
+        $this->expenseToDeleteContent = $expense->content;
+        $this->expenseToDeleteTotal = (float) $expense->total;
+    }
+
+    public function deleteSelected(): void
+    {
+        if ($this->expenseToDelete === null) {
+            return;
+        }
+
+        $expense = ModelsExpences::find($this->expenseToDelete);
+        if ($expense) {
+            $expense->delete();
+        }
+
+        $this->clearDeleteSelection();
+        $this->resetPage();
+    }
+
+    public function clearDeleteSelection(): void
+    {
+        $this->expenseToDelete = null;
+        $this->expenseToDeleteContent = null;
+        $this->expenseToDeleteTotal = null;
     }
     protected $messages = [
         'warehouse.required' => 'Выберите склад.',
@@ -122,8 +158,8 @@ class Expences extends Component
     #[Computed]
     public function expensesSummary(): array
     {
-        [$start, $end] = $this->getStatsDateRange();
-        $query = $this->baseQuery(false)->whereBetween('data', [$start, $end]);
+        $range = $this->statsRange;
+        $query = $this->baseQuery(false)->whereBetween('data', [$range['start'], $range['end']]);
         $total = (float) $query->sum('total');
         $count = (int) $query->count();
 
@@ -138,7 +174,9 @@ class Expences extends Component
     #[Computed]
     public function expensesDaily(): array
     {
-        [$start, $end] = $this->getStatsDateRange();
+        $range = $this->statsRange;
+        $start = $range['start']->copy();
+        $end = $range['end']->copy();
         $days = [];
         $labels = [];
         $cursor = $start->copy();
@@ -175,7 +213,9 @@ class Expences extends Component
     #[Computed]
     public function expensesByCategory(): array
     {
-        [$start, $end] = $this->getStatsDateRange();
+        $range = $this->statsRange;
+        $start = $range['start'];
+        $end = $range['end'];
         $query = $this->baseQuery(false)->whereBetween('data', [$start, $end]);
 
         $items = $query
@@ -196,9 +236,69 @@ class Expences extends Component
             'items' => $items,
         ];
     }
+
+    #[Computed]
+    public function statsRange(): array
+    {
+        $query = $this->baseQuery();
+        $selectedFrom = !empty($this->dateFrom) ? Carbon::parse($this->dateFrom)->startOfDay() : null;
+        $selectedTo = !empty($this->dateTo) ? Carbon::parse($this->dateTo)->endOfDay() : null;
+
+        $start = $selectedFrom;
+        $end = $selectedTo;
+
+        if ($start === null) {
+            $minDate = (clone $query)->min('data');
+            $start = $minDate ? Carbon::parse($minDate)->startOfDay() : null;
+        }
+
+        if ($end === null) {
+            $maxDate = (clone $query)->max('data');
+            $end = $maxDate ? Carbon::parse($maxDate)->endOfDay() : null;
+        }
+
+        if ($start === null || $end === null) {
+            $start = Carbon::today()->startOfDay();
+            $end = Carbon::today()->endOfDay();
+        }
+
+        if ($start->gt($end)) {
+            [$start, $end] = [$end->copy()->startOfDay(), $start->copy()->endOfDay()];
+        }
+
+        if ($selectedFrom && $selectedTo) {
+            $label = 'Период ' . $start->format('d.m.Y') . ' — ' . $end->format('d.m.Y');
+        } elseif ($selectedFrom) {
+            $label = 'С ' . $selectedFrom->format('d.m.Y');
+        } elseif ($selectedTo) {
+            $label = 'До ' . $selectedTo->format('d.m.Y');
+        } else {
+            $label = 'Весь период';
+        }
+
+        return [
+            'start' => $start,
+            'end' => $end,
+            'label' => $label,
+        ];
+    }
     public function render()
     {
         return view('livewire.admin.expences');
+    }
+
+    public function applyFilters(): void
+    {
+        if (!empty($this->dateFrom) && !empty($this->dateTo)) {
+            $from = Carbon::parse($this->dateFrom);
+            $to = Carbon::parse($this->dateTo);
+
+            if ($from->gt($to)) {
+                [$this->dateFrom, $this->dateTo] = [$to->toDateString(), $from->toDateString()];
+            }
+        }
+
+        $this->resetPage();
     }
 
     protected function getSortField(): string
@@ -302,31 +402,6 @@ class Expences extends Component
         }
 
         return $query;
-    }
-
-    protected function getStatsDateRange(): array
-    {
-        if (!empty($this->dateFrom) && !empty($this->dateTo)) {
-            $start = Carbon::parse($this->dateFrom)->startOfDay();
-            $end = Carbon::parse($this->dateTo)->endOfDay();
-            return [$start, $end];
-        }
-
-        if (!empty($this->dateFrom)) {
-            $start = Carbon::parse($this->dateFrom)->startOfDay();
-            $end = $start->copy()->addDays(13)->endOfDay();
-            return [$start, $end];
-        }
-
-        if (!empty($this->dateTo)) {
-            $end = Carbon::parse($this->dateTo)->endOfDay();
-            $start = $end->copy()->subDays(13)->startOfDay();
-            return [$start, $end];
-        }
-
-        $end = Carbon::today()->endOfDay();
-        $start = $end->copy()->subDays(13)->startOfDay();
-        return [$start, $end];
     }
 
     protected function normalizeDecimal($value): ?string

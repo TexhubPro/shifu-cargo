@@ -1,6 +1,7 @@
 @php
     $stats = $this->stats;
     $deliverers = $this->deliverers;
+    $periodLabel = $this->periodLabel;
     $data = $deliveryDaily;
     $width = 520;
     $height = 200;
@@ -37,49 +38,104 @@
 @endphp
 
 <div class="space-y-6">
-    <div class="flex flex-col gap-2">
-        <flux:heading class="text-xl">Доставщики</flux:heading>
-        <flux:text class="text-sm" variant="subtle">
-            Аналитика по доходам доставщиков и динамика доставки.
-        </flux:text>
-    </div>
+    <div class="bg-white rounded-2xl p-3 shadow-sm ring-1 ring-gray-100">
+        <div class="flex items-center justify-between gap-3">
+            <flux:heading class="text-xl">Доставщики</flux:heading>
 
-    <div class="bg-white rounded-2xl p-4 lg:p-6 shadow-sm ring-1 ring-gray-100">
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-3 items-end">
-            <flux:date-picker wire:model.live="start" label="Начальная дата" />
-            <flux:date-picker wire:model.live="end" label="Конечная дата" />
-            <div class="lg:col-span-3 flex flex-col lg:flex-row gap-3 lg:justify-end">
-                <div class="flex items-center gap-3 rounded-xl bg-slate-50 px-4 py-2 text-sm text-slate-600">
-                    <span>Диапазон:</span>
-                    <span class="font-semibold text-slate-900">
-                        {{ \Carbon\Carbon::parse($start)->format('d.m.Y') }} —
-                        {{ \Carbon\Carbon::parse($end)->format('d.m.Y') }}
-                    </span>
-                </div>
-            </div>
+            <flux:modal.trigger name="deliverers-filters">
+                <flux:button variant="primary" color="lime" square size="base" class="shrink-0 !text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-adjustments">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path
+                            d="M6 3a1 1 0 0 1 .993 .883l.007 .117v3.171a3.001 3.001 0 0 1 0 5.658v7.171a1 1 0 0 1 -1.993 .117l-.007 -.117v-7.17a3.002 3.002 0 0 1 -1.995 -2.654l-.005 -.176l.005 -.176a3.002 3.002 0 0 1 1.995 -2.654v-3.17a1 1 0 0 1 1 -1z" />
+                        <path
+                            d="M12 3a1 1 0 0 1 .993 .883l.007 .117v9.171a3.001 3.001 0 0 1 0 5.658v1.171a1 1 0 0 1 -1.993 .117l-.007 -.117v-1.17a3.002 3.002 0 0 1 -1.995 -2.654l-.005 -.176l.005 -.176a3.002 3.002 0 0 1 1.995 -2.654v-9.17a1 1 0 0 1 1 -1z" />
+                        <path
+                            d="M18 3a1 1 0 0 1 .993 .883l.007 .117v.171a3.001 3.001 0 0 1 0 5.658v10.171a1 1 0 0 1 -1.993 .117l-.007 -.117v-10.17a3.002 3.002 0 0 1 -1.995 -2.654l-.005 -.176l.005 -.176a3.002 3.002 0 0 1 1.995 -2.654v-.17a1 1 0 0 1 1 -1z" />
+                    </svg>
+                </flux:button>
+            </flux:modal.trigger>
         </div>
     </div>
+
+    <flux:modal name="deliverers-filters" flyout position="right" class="md:!min-w-[28rem]">
+        <div class="space-y-5">
+            <flux:heading>Фильтры доставщиков</flux:heading>
+
+            <form class="space-y-4 grid" wire:submit.prevent="applyFilters">
+                <flux:date-picker wire:model.defer="start" label="Начальная дата" />
+                <flux:date-picker wire:model.defer="end" label="Конечная дата" />
+
+                <div class="text-xs text-gray-500 bg-slate-50 px-4 py-2 rounded-xl">
+                    Диапазон: {{ $periodLabel }}
+                </div>
+
+                <div class="grid grid-cols-1 gap-2 pt-2">
+                    <flux:modal.close>
+                        <flux:button variant="primary" color="lime" class="w-full" type="button"
+                            wire:click="applyFilters">
+                            Применить фильтр
+                        </flux:button>
+                    </flux:modal.close>
+                </div>
+            </form>
+        </div>
+    </flux:modal>
+
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        <div class="bg-white rounded-2xl p-4 shadow-sm ring-1 ring-gray-100">
-            <p class="text-xs text-gray-500">Заказов в доставке</p>
-            <p class="text-2xl font-semibold text-gray-900 mt-2">{{ $stats['count'] }}</p>
+        <div class="bg-white rounded-2xl p-4 shadow-sm ring-1 ring-gray-100 h-full">
+            <div class="flex h-full flex-col">
+                <div class="flex items-start justify-between gap-3">
+                    <p class="text-xs font-medium text-gray-500">Заказов в доставке</p>
+                    <span
+                        class="inline-flex size-8 aspect-square shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+                        <flux:icon icon="clipboard-document-list" variant="mini" class="h-4 w-4" />
+                    </span>
+                </div>
+                <p class="mt-auto pt-3 text-2xl font-semibold text-gray-900">{{ $stats['count'] }}</p>
+            </div>
         </div>
-        <div class="bg-white rounded-2xl p-4 shadow-sm ring-1 ring-gray-100">
-            <p class="text-xs text-gray-500">Доход по доставке</p>
-            <p class="text-2xl font-semibold text-gray-900 mt-2">
-                {{ number_format($stats['sum'], 2, '.', ' ') }} c
-            </p>
+        <div class="bg-white rounded-2xl p-4 shadow-sm ring-1 ring-gray-100 h-full">
+            <div class="flex h-full flex-col">
+                <div class="flex items-start justify-between gap-3">
+                    <p class="text-xs font-medium text-gray-500">Доход по доставке</p>
+                    <span
+                        class="inline-flex size-8 aspect-square shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 ring-1 ring-emerald-100">
+                        <flux:icon icon="banknotes" variant="mini" class="h-4 w-4" />
+                    </span>
+                </div>
+                <p class="mt-auto pt-3 text-2xl font-semibold text-gray-900">
+                    {{ number_format($stats['sum'], 2, '.', ' ') }} c
+                </p>
+            </div>
         </div>
-        <div class="bg-white rounded-2xl p-4 shadow-sm ring-1 ring-gray-100">
-            <p class="text-xs text-gray-500">Средняя доставка</p>
-            <p class="text-2xl font-semibold text-gray-900 mt-2">
-                {{ number_format($stats['avg'], 2, '.', ' ') }} c
-            </p>
+        <div class="bg-white rounded-2xl p-4 shadow-sm ring-1 ring-gray-100 h-full">
+            <div class="flex h-full flex-col">
+                <div class="flex items-start justify-between gap-3">
+                    <p class="text-xs font-medium text-gray-500">Средняя доставка</p>
+                    <span
+                        class="inline-flex size-8 aspect-square shrink-0 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100">
+                        <flux:icon icon="calculator" variant="mini" class="h-4 w-4" />
+                    </span>
+                </div>
+                <p class="mt-auto pt-3 text-2xl font-semibold text-gray-900">
+                    {{ number_format($stats['avg'], 2, '.', ' ') }} c
+                </p>
+            </div>
         </div>
-        <div class="bg-white rounded-2xl p-4 shadow-sm ring-1 ring-gray-100">
-            <p class="text-xs text-gray-500">Доставщиков в периоде</p>
-            <p class="text-2xl font-semibold text-gray-900 mt-2">{{ count($deliverers) }}</p>
+        <div class="bg-white rounded-2xl p-4 shadow-sm ring-1 ring-gray-100 h-full">
+            <div class="flex h-full flex-col">
+                <div class="flex items-start justify-between gap-3">
+                    <p class="text-xs font-medium text-gray-500">Доставщиков в периоде</p>
+                    <span
+                        class="inline-flex size-8 aspect-square shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600 ring-1 ring-amber-100">
+                        <flux:icon icon="users" variant="mini" class="h-4 w-4" />
+                    </span>
+                </div>
+                <p class="mt-auto pt-3 text-2xl font-semibold text-gray-900">{{ count($deliverers) }}</p>
+            </div>
         </div>
     </div>
 
@@ -97,7 +153,8 @@
             <div class="mt-4">
                 <svg viewBox="0 0 {{ $width }} {{ $height }}" class="w-full h-48">
                     <defs>
-                        <linearGradient id="deliveriesGradient" x1="0" y1="0" x2="0" y2="1">
+                        <linearGradient id="deliveriesGradient" x1="0" y1="0" x2="0"
+                            y2="1">
                             <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.25" />
                             <stop offset="100%" stop-color="#f43f5e" stop-opacity="0" />
                         </linearGradient>
@@ -107,8 +164,8 @@
                             y2="{{ $padding }}" />
                         <line x1="{{ $padding }}" y1="{{ $height / 2 }}" x2="{{ $width - $padding }}"
                             y2="{{ $height / 2 }}" />
-                        <line x1="{{ $padding }}" y1="{{ $height - $padding }}"
-                            x2="{{ $width - $padding }}" y2="{{ $height - $padding }}" />
+                        <line x1="{{ $padding }}" y1="{{ $height - $padding }}" x2="{{ $width - $padding }}"
+                            y2="{{ $height - $padding }}" />
                     </g>
                     @if ($area)
                         <path d="{{ $area }}" fill="url(#deliveriesGradient)" />

@@ -21,7 +21,10 @@ class Customers extends Component
     public $dateTo;
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
-    public $perPage = 100;
+    public $perPage = 200;
+    public $customerToDelete = null;
+    public $customerToDeleteName = null;
+    public $customerToDeleteCode = null;
     public function updatedNameSearch(): void
     {
         $this->resetPage();
@@ -97,15 +100,42 @@ class Customers extends Component
         }
 
         return $query->orderBy($this->getSortField(), $this->getSortDirection())
-            ->simplePaginate($this->perPage);
+            ->paginate($this->perPage);
     }
 
     public function check_user()
     {
+        $this->resetPage();
     }
-    public function delete($id)
+
+    public function confirmDelete(int $id): void
     {
-        User::find($id)->delete();
+        $user = User::select(['id', 'name', 'code'])->find($id);
+
+        if (! $user) {
+            return;
+        }
+
+        $this->customerToDelete = $user->id;
+        $this->customerToDeleteName = $user->name;
+        $this->customerToDeleteCode = $user->code;
+    }
+
+    public function clearDeleteSelection(): void
+    {
+        $this->customerToDelete = null;
+        $this->customerToDeleteName = null;
+        $this->customerToDeleteCode = null;
+    }
+
+    public function deleteSelected(): void
+    {
+        if (! $this->customerToDelete) {
+            return;
+        }
+
+        User::whereKey($this->customerToDelete)->delete();
+        $this->clearDeleteSelection();
     }
 
     protected function getSortField(): string

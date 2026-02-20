@@ -8,9 +8,9 @@ use App\Exports\ExpensesCubatureExport;
 use App\Exports\ExpensesDushanbeExport;
 use App\Exports\ExpensesIvuExport;
 use App\Exports\GeneralExport;
+use Carbon\Carbon;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Computed;
 use App\Exports\OrdersExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -19,6 +19,18 @@ class Analitic extends Component
 {
     public $from;
     public $to;
+
+    public function mount(): void
+    {
+        $this->to = Carbon::today()->toDateString();
+        $this->from = Carbon::today()->subDays(3)->toDateString();
+    }
+
+    public function applyFilters(): void
+    {
+        // The date range is applied via deferred bindings on button click.
+    }
+
     public function downloadReportOrders()
     {
         $fileName = 'orders_' . ($this->from ?? 'all') . '_' . ($this->to ?? 'all') . '.xlsx';

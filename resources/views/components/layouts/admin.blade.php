@@ -41,8 +41,7 @@
                     @include('ui::components.header')
                 </div>
             </header>
-            <main
-                class="flex-1 px-4 mt-5 lg:px-8 py-6 max-w-[calc(100vw-0px)] lg:max-w-[calc(100vw-256px)] overflow-hidden">
+            <main class="flex-1 px-4 lg:px-8 py-6 max-w-[calc(100vw-0px)] lg:max-w-[calc(100vw-256px)] overflow-hidden">
                 {{ $slot }}
                 @livewire('components.alert')
             </main>

@@ -19,6 +19,8 @@ class Trackcodes extends Component
     public $sortField = 'created_at';
     public $sortDirection = 'desc';
     public $user_id = null;
+    public $trackcodeToDelete = null;
+    public $trackcodeToDeleteCode = null;
     #[Computed]
     public function trackcodes()
     {
@@ -91,9 +93,32 @@ class Trackcodes extends Component
             $this->dispatch('alert', 'Пользователь не найден!');
         }
     }
-    public function delete($id)
+    public function confirmDelete(int $id): void
     {
-        Trackcode::find($id)->delete();
+        $trackcode = Trackcode::find($id);
+
+        if (!$trackcode) {
+            return;
+        }
+
+        $this->trackcodeToDelete = $trackcode->id;
+        $this->trackcodeToDeleteCode = $trackcode->code;
+    }
+
+    public function clearDeleteSelection(): void
+    {
+        $this->trackcodeToDelete = null;
+        $this->trackcodeToDeleteCode = null;
+    }
+
+    public function deleteSelected(): void
+    {
+        if (!$this->trackcodeToDelete) {
+            return;
+        }
+
+        Trackcode::whereKey($this->trackcodeToDelete)->delete();
+        $this->clearDeleteSelection();
     }
     public function render()
     {

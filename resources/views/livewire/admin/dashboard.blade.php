@@ -7,30 +7,53 @@
 @endphp
 
 <div class="space-y-6">
-    <div class="flex flex-col gap-2">
-        <flux:heading class="text-xl">Панель управления</flux:heading>
-        <flux:text class="text-sm" variant="subtle">Контроль ключевых метрик, статусов и расходов.</flux:text>
-    </div>
-
     @if (Auth::user()->role == 'admin')
-        <div class="bg-white rounded-2xl p-4 lg:p-6 shadow-sm ring-1 ring-gray-100">
-            <div class="grid grid-cols-1 lg:grid-cols-5 gap-3 items-end">
-                <flux:date-picker wire:model.live="start" label="Начальная дата" />
-                <flux:date-picker wire:model.live="end" label="Конечная дата" />
-                <div class="lg:col-span-3 flex flex-col lg:flex-row gap-3 lg:justify-end">
-                    <flux:button variant="primary" color="lime" wire:click="update">
-                        Применить фильтр
+        <div class="bg-white rounded-2xl p-3 shadow-sm ring-1 ring-gray-100">
+            <div class="flex items-center justify-between gap-3">
+                <flux:heading class="text-xl">Панель управления</flux:heading>
+
+                <flux:modal.trigger name="dashboard-filters">
+                    <flux:button variant="primary" color="lime" square size="base" class="shrink-0 !text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-adjustments">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path
+                                d="M6 3a1 1 0 0 1 .993 .883l.007 .117v3.171a3.001 3.001 0 0 1 0 5.658v7.171a1 1 0 0 1 -1.993 .117l-.007 -.117v-7.17a3.002 3.002 0 0 1 -1.995 -2.654l-.005 -.176l.005 -.176a3.002 3.002 0 0 1 1.995 -2.654v-3.17a1 1 0 0 1 1 -1z" />
+                            <path
+                                d="M12 3a1 1 0 0 1 .993 .883l.007 .117v9.171a3.001 3.001 0 0 1 0 5.658v1.171a1 1 0 0 1 -1.993 .117l-.007 -.117v-1.17a3.002 3.002 0 0 1 -1.995 -2.654l-.005 -.176l.005 -.176a3.002 3.002 0 0 1 1.995 -2.654v-9.17a1 1 0 0 1 1 -1z" />
+                            <path
+                                d="M18 3a1 1 0 0 1 .993 .883l.007 .117v.171a3.001 3.001 0 0 1 0 5.658v10.171a1 1 0 0 1 -1.993 .117l-.007 -.117v-10.17a3.002 3.002 0 0 1 -1.995 -2.654l-.005 -.176l.005 -.176a3.002 3.002 0 0 1 1.995 -2.654v-.17a1 1 0 0 1 1 -1z" />
+                        </svg>
                     </flux:button>
-                    <div class="flex items-center gap-3 rounded-xl bg-slate-50 px-4 py-2 text-sm text-slate-600">
-                        <span>Диапазон:</span>
-                        <span class="font-semibold text-slate-900">
-                            {{ \Carbon\Carbon::parse($start)->format('d.m.Y') }} —
-                            {{ \Carbon\Carbon::parse($end)->format('d.m.Y') }}
-                        </span>
-                    </div>
-                </div>
+                </flux:modal.trigger>
             </div>
         </div>
+
+        <flux:modal name="dashboard-filters" flyout position="right" class="md:!min-w-[28rem]">
+            <div class="space-y-5">
+                <flux:heading>Фильтры панели управления</flux:heading>
+
+                <form class="space-y-4 grid" wire:submit.prevent="update">
+                    <flux:date-picker wire:model.defer="start" label="Начальная дата" />
+                    <flux:date-picker wire:model.defer="end" label="Конечная дата" />
+                    <flux:select wire:model.defer="warehouseId" label="Склад" placeholder="Все склады">
+                        <flux:select.option value="">Все склады</flux:select.option>
+                        @foreach ($this->warehouses as $warehouse)
+                            <flux:select.option value="{{ $warehouse->id }}">{{ $warehouse->name }}</flux:select.option>
+                        @endforeach
+                    </flux:select>
+
+                    <div class="grid grid-cols-1 gap-2 pt-2">
+                        <flux:modal.close>
+                            <flux:button variant="primary" color="lime" class="w-full" type="button"
+                                wire:click="update">
+                                Применить фильтр
+                            </flux:button>
+                        </flux:modal.close>
+                    </div>
+                </form>
+            </div>
+        </flux:modal>
 
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             <flux:modal.trigger name="newclients">

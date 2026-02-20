@@ -23,6 +23,9 @@ class Orders extends Component
     public $sortDirection = 'desc';
     public $perPage = 100;
     public $onlyApplicationsWithPhoto = false;
+    public $orderToDelete = null;
+    public $orderToDeleteClient = null;
+    public $orderToDeleteTotal = null;
     #[Computed]
     public function orders()
     {
@@ -71,11 +74,32 @@ class Orders extends Component
     #[Computed]
     public function monthStats(): array
     {
-        $start = Carbon::now()->startOfMonth();
-        $end = Carbon::now()->endOfMonth();
+        $query = Order::query();
+        $fromDate = null;
+        $toDate = null;
 
-        $query = Order::query()
-            ->whereBetween('created_at', [$start, $end]);
+        if (!empty($this->dateFrom)) {
+            $fromDate = Carbon::parse($this->dateFrom);
+            $query->where('created_at', '>=', $fromDate->copy()->startOfDay());
+        }
+
+        if (!empty($this->dateTo)) {
+            $toDate = Carbon::parse($this->dateTo);
+            $query->where('created_at', '<=', $toDate->copy()->endOfDay());
+        }
+
+        if ($fromDate === null && $toDate === null) {
+            $start = Carbon::now()->startOfMonth();
+            $end = Carbon::now()->endOfMonth();
+            $query->whereBetween('created_at', [$start, $end]);
+            $label = 'Месяц ' . $start->format('m.Y');
+        } elseif ($fromDate !== null && $toDate !== null) {
+            $label = 'Период ' . $fromDate->format('d.m.Y') . ' — ' . $toDate->format('d.m.Y');
+        } elseif ($fromDate !== null) {
+            $label = 'С ' . $fromDate->format('d.m.Y');
+        } else {
+            $label = 'До ' . $toDate->format('d.m.Y');
+        }
 
         $count = (clone $query)->count();
         $sum = (clone $query)->sum('total');
@@ -87,12 +111,51 @@ class Orders extends Component
             'sum' => $sum,
             'avg' => $avg,
             'weight' => $weight,
-            'label' => $start->format('m.Y'),
+            'label' => $label,
         ];
     }
-    public function delete($id)
+    public function confirmDelete(int $id): void
     {
-        Order::find($id)->delete();
+        $order = Order::query()
+            ->with('user:id,code')
+            ->select(['id', 'user_id', 'total'])
+            ->find($id);
+
+        if (!$order) {
+            $this->clearDeleteSelection();
+            return;
+        }
+
+        $this->orderToDelete = $order->id;
+        $this->orderToDeleteClient = $order->user->code ?? (string) $order->user_id;
+        $this->orderToDeleteTotal = (float) $order->total;
+    }
+
+    public function deleteSelected(): void
+    {
+        if ($this->orderToDelete === null) {
+            return;
+        }
+
+        $order = Order::find($this->orderToDelete);
+        if ($order) {
+            $order->delete();
+        }
+
+        $this->clearDeleteSelection();
+        $this->resetPage();
+    }
+
+    public function clearDeleteSelection(): void
+    {
+        $this->orderToDelete = null;
+        $this->orderToDeleteClient = null;
+        $this->orderToDeleteTotal = null;
+    }
+
+    public function applyFilters(): void
+    {
+        $this->resetPage();
     }
 
     protected function getSortField(): string

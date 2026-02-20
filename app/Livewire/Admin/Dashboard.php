@@ -7,9 +7,12 @@ use App\Models\Order;
 use App\Models\Registerpack;
 use App\Models\Trackcode;
 use App\Models\User;
+use App\Models\Warehouse;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 
 #[Layout('components.layouts.admin')]
@@ -38,43 +41,81 @@ class Dashboard extends Component
     public $ordersDaily = [];
     public $expensesDaily = [];
     public $clientsDaily = [];
+    public $warehouseId = '';
 
     public function mount()
     {
-        $this->end = Carbon::now(); // сегодня
-        $this->start = Carbon::now()->subDays(3); // 7 дней назад
+        $this->end = Carbon::today()->toDateString();
+        $this->start = Carbon::today()->subDays(3)->toDateString();
         $this->load();
     }
+
+    #[Computed]
+    public function warehouses()
+    {
+        return Warehouse::query()
+            ->orderBy('name')
+            ->get(['id', 'name']);
+    }
+
     public function load()
     {
-        $this->newClients = User::forPeriod($this->start, $this->end);
-        $this->trackcodes = Trackcode::forPeriod($this->start, $this->end);
-        $this->earnings = Order::forPeriod($this->start, $this->end);
-        $this->expenses = Expences::forPeriodAll($this->start, $this->end);
-        $this->delivery = Order::forPeriod($this->start, $this->end);
-        $this->applicationsTotal = Order::query()
+        $start = Carbon::parse($this->start)->startOfDay();
+        $end = Carbon::parse($this->end)->endOfDay();
+
+        $warehouseId = $this->warehouseId !== '' ? (int) $this->warehouseId : null;
+        if ($warehouseId !== null) {
+            $warehouse = Warehouse::query()->select(['id', 'name'])->find($warehouseId);
+            if (!$warehouse) {
+                $warehouseId = null;
+                $this->warehouseId = '';
+            }
+        }
+
+        $this->newClients = User::forPeriod($start->toDateString(), $end->toDateString());
+        $this->trackcodes = Trackcode::forPeriod($start->toDateString(), $end->toDateString());
+
+        $ordersBaseQuery = Order::query()
+            ->whereBetween('created_at', [$start, $end]);
+        $this->applyWarehouseFilterToOrders($ordersBaseQuery, $warehouseId);
+
+        $this->earnings = (clone $ordersBaseQuery)->get();
+        $this->delivery = (clone $ordersBaseQuery)->get();
+        $this->applicationsTotal = (clone $ordersBaseQuery)
             ->whereNotNull('application_id')
-            ->whereBetween('created_at', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
             ->sum('total');
-        $this->cashdeskTotal = Order::query()
+        $this->cashdeskTotal = (clone $ordersBaseQuery)
             ->whereNull('application_id')
-            ->whereBetween('created_at', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
             ->sum('total');
-        $this->deliveryOnlyTotal = Order::query()
-            ->whereBetween('created_at', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
+        $this->deliveryOnlyTotal = (clone $ordersBaseQuery)
             ->sum('delivery_total');
-        $this->netProfit = Order::forPeriod($this->start, $this->end)->sum('total') - $this->expenses->sum('total');
-        $this->expensesDushanbe = Expences::forPeriodDushanbe($this->start, $this->end);
-        $this->expensesIvu = Expences::forPeriodIvu($this->start, $this->end);
-        $this->cubChina = Expences::forPeriodCubeIvu($this->start, $this->end);
-        $this->cubTj = Expences::forPeriodCubeDushanbe($this->start, $this->end);;
-        $this->shipped = Registerpack::shipped($this->start, $this->end);
-        $this->received = RegisterPack::received($this->start, $this->end);
+
+        $expensesBaseQuery = Expences::query()
+            ->whereBetween('data', [$start, $end]);
+        $this->applyWarehouseFilterToExpenses($expensesBaseQuery, $warehouseId);
+
+        $this->expenses = (clone $expensesBaseQuery)->get();
+        $this->netProfit = $this->earnings->sum('total') - $this->expenses->sum('total');
+        $this->expensesDushanbe = (clone $expensesBaseQuery)
+            ->where('sklad', 'Склад Душанбе')
+            ->get();
+        $this->expensesIvu = (clone $expensesBaseQuery)
+            ->where('sklad', 'Склад Иву')
+            ->get();
+        $this->cubChina = (clone $expensesBaseQuery)
+            ->where('sklad', 'Кубатура Иву')
+            ->get();
+        $this->cubTj = (clone $expensesBaseQuery)
+            ->where('sklad', 'Кубатура Душанбе')
+            ->get();
+
+        $this->shipped = Registerpack::shipped($start->toDateString(), $end->toDateString());
+        $this->received = Registerpack::received($start->toDateString(), $end->toDateString());
 
         $labels = [];
         $period = CarbonPeriod::create(
-            Carbon::parse($this->start)->startOfDay(),
-            Carbon::parse($this->end)->startOfDay()
+            $start->copy()->startOfDay(),
+            $end->copy()->startOfDay()
         );
 
         foreach ($period as $date) {
@@ -85,29 +126,35 @@ class Dashboard extends Component
 
         $trackcodesRaw = Trackcode::query()
             ->selectRaw('DATE(china) as day, COUNT(*) as total')
-            ->whereBetween('china', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
+            ->whereBetween('china', [$start, $end])
             ->where('status', 'Получено в Иву')
             ->groupBy('day')
             ->pluck('total', 'day')
             ->toArray();
 
-        $ordersRaw = Order::query()
+        $ordersRawQuery = Order::query()
             ->selectRaw('DATE(created_at) as day, SUM(total) as total')
-            ->whereBetween('created_at', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
+            ->whereBetween('created_at', [$start, $end]);
+        $this->applyWarehouseFilterToOrders($ordersRawQuery, $warehouseId);
+
+        $ordersRaw = $ordersRawQuery
             ->groupBy('day')
             ->pluck('total', 'day')
             ->toArray();
 
-        $expensesRaw = Expences::query()
+        $expensesRawQuery = Expences::query()
             ->selectRaw('DATE(data) as day, SUM(total) as total')
-            ->whereBetween('data', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
+            ->whereBetween('data', [$start, $end]);
+        $this->applyWarehouseFilterToExpenses($expensesRawQuery, $warehouseId);
+
+        $expensesRaw = $expensesRawQuery
             ->groupBy('day')
             ->pluck('total', 'day')
             ->toArray();
 
         $clientsRaw = User::query()
             ->selectRaw('DATE(created_at) as day, COUNT(*) as total')
-            ->whereBetween('created_at', [$this->start . ' 00:00:00', $this->end . ' 23:59:59'])
+            ->whereBetween('created_at', [$start, $end])
             ->groupBy('day')
             ->pluck('total', 'day')
             ->toArray();
@@ -124,6 +171,21 @@ class Dashboard extends Component
             $this->clientsDaily[] = (int) ($clientsRaw[$label] ?? 0);
         }
     }
+
+    protected function applyWarehouseFilterToOrders(Builder $query, ?int $warehouseId): void
+    {
+        if ($warehouseId !== null) {
+            $query->where('warehouse_id', $warehouseId);
+        }
+    }
+
+    protected function applyWarehouseFilterToExpenses(Builder $query, ?int $warehouseId): void
+    {
+        if ($warehouseId !== null) {
+            $query->where('warehouse_id', $warehouseId);
+        }
+    }
+
     public function update()
     {
         $this->load();
