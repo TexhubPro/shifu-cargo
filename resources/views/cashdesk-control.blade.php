@@ -1,51 +1,4 @@
 <x-layouts.empty>
-    <style>
-        :root,
-        #cashdesk-control-root {
-            color-scheme: light;
-        }
-
-        #cashdesk-control-root input:not([type='hidden']):not([data-flux-control]),
-        #cashdesk-control-root textarea:not([data-flux-control]),
-        #cashdesk-control-root select:not([data-flux-control]) {
-            background-color: #fff;
-            color: #171717;
-            caret-color: #171717;
-            -webkit-text-fill-color: #171717;
-        }
-
-        #cashdesk-control-root input:not([type='hidden']):not([data-flux-control])::placeholder,
-        #cashdesk-control-root textarea:not([data-flux-control])::placeholder {
-            color: #737373;
-            opacity: 1;
-        }
-
-        #cashdesk-control-root input:not([type='hidden']):not([data-flux-control]):focus,
-        #cashdesk-control-root input:not([type='hidden']):not([data-flux-control]):focus-visible,
-        #cashdesk-control-root textarea:not([data-flux-control]):focus,
-        #cashdesk-control-root textarea:not([data-flux-control]):focus-visible,
-        #cashdesk-control-root select:not([data-flux-control]):focus,
-        #cashdesk-control-root select:not([data-flux-control]):focus-visible {
-            outline: none;
-            border-color: #84cc16;
-            box-shadow: 0 0 0 3px rgba(132, 204, 22, 0.35);
-        }
-
-        #cashdesk-control-root input:not([data-flux-control]):-webkit-autofill,
-        #cashdesk-control-root input:not([data-flux-control]):-webkit-autofill:hover,
-        #cashdesk-control-root input:not([data-flux-control]):-webkit-autofill:focus,
-        #cashdesk-control-root textarea:not([data-flux-control]):-webkit-autofill,
-        #cashdesk-control-root textarea:not([data-flux-control]):-webkit-autofill:hover,
-        #cashdesk-control-root textarea:not([data-flux-control]):-webkit-autofill:focus,
-        #cashdesk-control-root select:not([data-flux-control]):-webkit-autofill,
-        #cashdesk-control-root select:not([data-flux-control]):-webkit-autofill:hover,
-        #cashdesk-control-root select:not([data-flux-control]):-webkit-autofill:focus {
-            -webkit-text-fill-color: #171717 !important;
-            box-shadow: 0 0 0 1000px #fff inset !important;
-            transition: background-color 99999s ease-in-out 0s;
-        }
-    </style>
-
     <div id="cashdesk-control-root" class="bg-white p-5 space-y-5 min-h-screen">
         <div class="bg-gradient-to-r from-lime-500 via-emerald-500 to-teal-500 rounded-2xl p-3 shadow-lg">
             <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -53,6 +6,7 @@
                     <p class="text-white/80 text-sm uppercase tracking-wider">Панель действий</p>
                     <p class="text-white text-xl font-semibold">Shifu Cargo</p>
                 </div>
+                {{-- adkjf --}}
                 <div class="grid grid-cols-1 lg:grid-cols-6 gap-3 w-full lg:w-auto max-w-6xl">
                     <button id="btn-add-expense" aria-keyshortcuts="Shift+Alt+E" type="button"
                         class="rounded-xl bg-white/15 border border-white/30 shadow-md hover:bg-white/25 transition-all flex items-center gap-3 text-left p-2 text-white">
