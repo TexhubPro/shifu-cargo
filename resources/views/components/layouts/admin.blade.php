@@ -10,7 +10,6 @@
     @livewireStyles
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
-    @fluxAppearance
 </head>
 
 <body class="min-h-full text-gray-900 antialiased bg-slate-50">
