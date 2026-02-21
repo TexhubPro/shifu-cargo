@@ -8,6 +8,7 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('logo/favicon_color.svg') }}">
     <link rel="stylesheet" href="{{ asset('obfuscated.min.css') }}">
     <title>{{ $title ?? 'Page Title' }}</title>
+    @livewireStyles
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     @yield('styles')
@@ -17,7 +18,9 @@
 
     {{ $slot }}
     @livewire('components.alert')
-
+    @include('partials.flux-modal-fallback')
+    @livewireScripts
+    @fluxScripts
 </body>
 
 </html>
