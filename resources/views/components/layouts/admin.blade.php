@@ -7,7 +7,6 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('logo/favicon_color.svg') }}">
     <link rel="stylesheet" href="{{ asset('obfuscated.min.css') }}">
     <title>{{ $title ?? 'Админка' }}</title>
-    @livewireStyles
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
 </head>
