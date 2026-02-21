@@ -7,8 +7,10 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('logo/favicon_color.svg') }}">
     <link rel="stylesheet" href="{{ asset('obfuscated.min.css') }}">
     <title>{{ $title ?? 'Админка' }}</title>
+    @livewireStyles
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
+    @fluxAppearance
 </head>
 
 <body class="min-h-full text-gray-900 antialiased bg-slate-50">
@@ -118,7 +120,6 @@
             });
         })();
     </script>
-    @include('partials.flux-modal-fallback')
     @livewireScripts
     @fluxScripts
 </body>

@@ -1,6 +1,5 @@
-<!DOCTYPE>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" html
-    class="{{ Route::is('cashier') ? 'light' : 'dark' }}{{ Route::is('cashier.reports') ? 'light' : 'dark' }}">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full light">
 
 <head>
     <meta charset="utf-8">
@@ -10,13 +9,12 @@
     <link rel="stylesheet" href="{{ asset('obfuscated.min.css') }}">
     <title>{{ $title ?? 'Page Title' }}</title>
     @livewireStyles
-    @fluxAppearance
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     @yield('styles')
 </head>
 
-<body class="bg-neutral-950">
+<body class="min-h-full bg-neutral-100 text-neutral-900 antialiased">
 
     {{ $slot }}
     @livewire('components.alert')
