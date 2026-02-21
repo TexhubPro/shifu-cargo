@@ -5,45 +5,41 @@
             color-scheme: light;
         }
 
-        #cashdesk-control-root input:not([type='hidden']),
-        #cashdesk-control-root textarea,
-        #cashdesk-control-root select,
-        #cashdesk-control-root [data-flux-autocomplete] [data-flux-control] {
+        #cashdesk-control-root input:not([type='hidden']):not([data-flux-control]),
+        #cashdesk-control-root textarea:not([data-flux-control]),
+        #cashdesk-control-root select:not([data-flux-control]) {
             background-color: #fff;
             color: #171717;
             caret-color: #171717;
             -webkit-text-fill-color: #171717;
         }
 
-        #cashdesk-control-root input:not([type='hidden'])::placeholder,
-        #cashdesk-control-root textarea::placeholder,
-        #cashdesk-control-root [data-flux-autocomplete] [data-flux-control]::placeholder {
+        #cashdesk-control-root input:not([type='hidden']):not([data-flux-control])::placeholder,
+        #cashdesk-control-root textarea:not([data-flux-control])::placeholder {
             color: #737373;
             opacity: 1;
         }
 
-        #cashdesk-control-root input:not([type='hidden']):focus,
-        #cashdesk-control-root input:not([type='hidden']):focus-visible,
-        #cashdesk-control-root textarea:focus,
-        #cashdesk-control-root textarea:focus-visible,
-        #cashdesk-control-root select:focus,
-        #cashdesk-control-root select:focus-visible,
-        #cashdesk-control-root [data-flux-autocomplete] [data-flux-control]:focus,
-        #cashdesk-control-root [data-flux-autocomplete] [data-flux-control]:focus-visible {
+        #cashdesk-control-root input:not([type='hidden']):not([data-flux-control]):focus,
+        #cashdesk-control-root input:not([type='hidden']):not([data-flux-control]):focus-visible,
+        #cashdesk-control-root textarea:not([data-flux-control]):focus,
+        #cashdesk-control-root textarea:not([data-flux-control]):focus-visible,
+        #cashdesk-control-root select:not([data-flux-control]):focus,
+        #cashdesk-control-root select:not([data-flux-control]):focus-visible {
             outline: none;
             border-color: #84cc16;
             box-shadow: 0 0 0 3px rgba(132, 204, 22, 0.35);
         }
 
-        #cashdesk-control-root input:-webkit-autofill,
-        #cashdesk-control-root input:-webkit-autofill:hover,
-        #cashdesk-control-root input:-webkit-autofill:focus,
-        #cashdesk-control-root textarea:-webkit-autofill,
-        #cashdesk-control-root textarea:-webkit-autofill:hover,
-        #cashdesk-control-root textarea:-webkit-autofill:focus,
-        #cashdesk-control-root select:-webkit-autofill,
-        #cashdesk-control-root select:-webkit-autofill:hover,
-        #cashdesk-control-root select:-webkit-autofill:focus {
+        #cashdesk-control-root input:not([data-flux-control]):-webkit-autofill,
+        #cashdesk-control-root input:not([data-flux-control]):-webkit-autofill:hover,
+        #cashdesk-control-root input:not([data-flux-control]):-webkit-autofill:focus,
+        #cashdesk-control-root textarea:not([data-flux-control]):-webkit-autofill,
+        #cashdesk-control-root textarea:not([data-flux-control]):-webkit-autofill:hover,
+        #cashdesk-control-root textarea:not([data-flux-control]):-webkit-autofill:focus,
+        #cashdesk-control-root select:not([data-flux-control]):-webkit-autofill,
+        #cashdesk-control-root select:not([data-flux-control]):-webkit-autofill:hover,
+        #cashdesk-control-root select:not([data-flux-control]):-webkit-autofill:focus {
             -webkit-text-fill-color: #171717 !important;
             box-shadow: 0 0 0 1000px #fff inset !important;
             transition: background-color 99999s ease-in-out 0s;
